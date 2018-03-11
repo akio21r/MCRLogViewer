@@ -20,6 +20,8 @@ namespace MCRLogViewer
 		static public int TXT_header_sectors = 3;	//TXT領域のセクタ数
         int LOG_Version = 6;						//ログのバージョン
 		int LOG_RecordBytes = 17;					//ログの1レコードのバイト数
+		int Camera_N = 32;							//画素の数
+
 		public const int max_log_data_counts = 100000;		//10万行分のデータ★
 		public struct LogData{
 			public int		mode;			//mode
@@ -41,8 +43,16 @@ namespace MCRLogViewer
 			public StringBuilder	sens;	//センサの状態（サイドセンサ含む）
 			public int		pre_sens;		//先読みセンサ
 		}
-	
 		static public LogData[] log = new LogData[max_log_data_counts];	//ログ
+	
+		public struct ImgLogData{
+			public int		Center;
+			public byte		Sens;
+			public byte[]	data;
+		}
+		static public ImgLogData[] imgLog = new ImgLogData[max_log_data_counts];	//画素ログ
+		int imgLog_Count = 0;
+
 		static public int log_count;		//
 		public string path;					//
 		StringBuilder str;
@@ -63,12 +73,13 @@ namespace MCRLogViewer
 			public Pen pen;
 			public Single scale, max, min;
 		}
-		static public myGraphPoints[] gp = new myGraphPoints[graph_points];
+//		static public myGraphPoints[] gp = new myGraphPoints[graph_points];
 
 		static public int y0;							//X軸
 		static public int cur_n1=0, cur_x=0, cur_x1=0;	//グラフ上の現在,前の位置
 		static public bool cur_show = false;			//カーソル表示
-		static public Single graph_v;					//グラフのX増分
+		static public Single graph_v;					//グラフの増分
+		static public Single graph3_vx, graph3_vy;		//グラフの増分
 		static public Point scrPoint1, scrPoint2;		//グラフのスクロール座標
 
 		//==========================================================================
@@ -200,7 +211,8 @@ namespace MCRLogViewer
 
 			lstView.Hide();
             lstView.Items.Clear();
-            readSize = fs.Read(buf, WorkAddress, 512);
+		//	readSize = fs.Read(buf, WorkAddress, 512);
+			readSize = fs.Read(buf, WorkAddress, fileSize - WorkAddress);
 
 			time = 0;			
 			//******************************************************
@@ -279,7 +291,7 @@ namespace MCRLogViewer
 	                {
 						int ii;
 						WorkAddress += 512;
-	                    readSize = fs.Read(buf, WorkAddress, 512);
+	                //	readSize = fs.Read(buf, WorkAddress, 512);
 	                    BuffAddress = 0;
 
 						time -= 4;
@@ -479,7 +491,7 @@ namespace MCRLogViewer
 					{
 						int ii;
 						WorkAddress += 512;
-						readSize = fs.Read(buf, WorkAddress, 512);
+					//	readSize = fs.Read(buf, WorkAddress, 512);
 						BuffAddress = 0;
 
 						time -= 5;
@@ -527,11 +539,86 @@ namespace MCRLogViewer
 
 			lstView.Show();
 
-            log_count = n;
+
+
+            //******************************************************
+			//画素ログの読み込み [Camera]
+            //******************************************************
+			lstImg.Hide();
+			if(LOG_Version >= 9){
+				WorkAddress += 512;			//次のセクタへ
+				BuffAddress = 0;
+				byte[] imgLogBuf = new byte[20];
+
+				lstImg.Items.Clear();
+				imgLog_Count = 0;
+
+				for(imgLog_Count=0; WorkAddress + BuffAddress < fileSize - 512; imgLog_Count++){
+				//	str  = new StringBuilder();
+					str  = new StringBuilder(String.Format("{0, 6}", imgLog_Count));
+					str.Append(" ");
+
+					// １レコード分の切り出し
+					for(int j=0; j<20; j++){
+						imgLogBuf[j] = buf[WorkAddress + BuffAddress++];
+						str.Append( imgLogBuf[j].ToString("x2") );
+						if(j<=2 || j==18) str.Append( " " );
+					}
+
+					// img セクションのログ終了コードを検出したら抜ける
+					if( imgLogBuf[0] == 0xfd || imgLogBuf[0] == 0x00 ) break;
+
+					// imgLog[] へのデータ追加
+					imgLog[imgLog_Count].Center	= imgLogBuf[1];
+					imgLog[imgLog_Count].Sens	= imgLogBuf[2];
+					imgLog[imgLog_Count].Sens  &= 0x7f;				// Sensの最上位ビットを消す
+					imgLog[imgLog_Count].data	= new byte[32];
+					for(int j=0; j<16; j++){
+						byte d = imgLogBuf[3+j];
+						imgLog[imgLog_Count].data[j*2]   = (byte)((d >> 4) & 0x0f);
+						imgLog[imgLog_Count].data[j*2+1] = (byte)(d & 0x0f);
+					}
+
+					// sens を追加
+					str.Append( "  " );
+					byte s = imgLog[imgLog_Count].Sens;
+					s <<= 1;
+					for(i=0; i<7; i++){
+						if((s & 0x80) == 0)
+							str.Append("-");
+						else
+							str.Append("*");
+						s <<= 1;
+					}
+
+					// lstImg へ追加
+					lstImg.Items.Add(str);
+				}
+			//	lstImg.Show();
+				WorkAddress += BuffAddress;
+
+				DrawGraph3();
+				
+				chkImg.Visible = true;
+				chkLstImg.Visible = true;
+				chkImg.Checked = true;
+			}
+			else{
+				chkImg.Visible = false;
+				chkLstImg.Visible = false;
+				chkImg.Checked = false;
+			}
+
+            //******************************************************
+			log_count = n;
+		//	LogFileSize = WorkAddress + BuffAddress + 1024;		//実質のサイズを保存用に記録しておく
 			LogFileSize = WorkAddress + 1024;		//実質のサイズを保存用に記録しておく
 			
 			fs.Dispose();
             menuFileSaveTXT.Enabled = true;
+
+			//グラフのサイズ調整
+			InitGraph();
 
 			//グラフのサイズ調整
 			pctGraph.Width = pnlGraph.Width;
@@ -545,7 +632,8 @@ namespace MCRLogViewer
 			btnX4.Enabled = true;
 			btnX8.Enabled = true;
 
-
+			
+			//----------------------------------------------------------------------
 			// ハードディスクなら自動保存
 			System.IO.DriveType DType;
 			string drive_a, drive_b;
@@ -565,17 +653,187 @@ namespace MCRLogViewer
 				}
 			}
 
+
 		}
 		
+		//==========================================================================
+		// Graph3の描画
+		//==========================================================================
+		public void DrawGraph3()
+		{
+		//	cur_show = false;		//カーソルを非表示に
+
+			//ビットマップイメージを解放
+			if(pctGraph3.Image != null) pctGraph3.Image.Dispose();
+
+			// pctGraph3のサイズ設定
+		//	graph3_vx = (Single)pctGraph3.Width  / (Single)32;				//１画素の幅
+		//	graph3_vy = (Single)pctGraph3.Height / (Single)imgLog_Count;	//１画素の高さ
+			graph3_vx = 4;
+			graph3_vy = 6;
+	
+		//	pctGraph3.Width = 32 * (int)graph3_vx;
+			pctGraph3.Height = imgLog_Count * (int)graph3_vy;
+			pnlGraph3.Width = pctGraph3.Width + SCROLLBAR_WIDTH;
+
+			// PictureBoxと同サイズのBitmapオブジェクトを作成
+			Bitmap bmp3 = new Bitmap(pctGraph3.Size.Width, pctGraph3.Size.Height);
+			pctGraph3.Image = bmp3;
+			Graphics g3 = Graphics.FromImage(pctGraph3.Image);
+			
+			int n, i;
+			
+			int x0 = pctGraph3.Width / 2;									//中心線
+			
+			SolidBrush[] brsh = new SolidBrush[16];
+			for(i=0; i<16; i++){
+				brsh[i] = new SolidBrush(Color.FromArgb(i*17, i*17, i*17));
+			}
+
+
+
+			g3.DrawLine(Pens.Gray,  x0, 0, x0, pctGraph.Height);
+
+			for(n=0; n<imgLog_Count-1; n++){
+				// 画素
+				for(i = 0; i<32; i++){
+					g3.FillRectangle(brsh[imgLog[n].data[i]], i*graph3_vx, n*graph3_vy, graph3_vx, graph3_vy);
+				}
+
+				// 中央値
+			//	g3.DrawRectangle(Pens.Red, imgLog[n].Center * vx + vx*3/8, n*vy + vy*3/8 , vx/4, vy/4);
+			//	g3.DrawRectangle(Pens.Red, imgLog[n].Center * vx + vx/2, n*vy, 1, vy);
+				g3.DrawLine(Pens.Red, imgLog[n].Center * graph3_vx + graph3_vx/2, n*graph3_vy,
+					imgLog[n].Center * graph3_vx + graph3_vx/2, (n+1)*graph3_vy);
+
+
+				// sens を追加
+				byte s = imgLog[n].Sens;
+				s <<= 1;
+				for(i=0; i<7; i++){
+					Brush br;
+					if((s & 0x80) == 0)
+						br = Brushes.Black;
+					else
+						br = Brushes.White;
+					s <<= 1;
+
+					g3.FillRectangle(br, i*(graph3_vx*2) + 32*graph3_vx + 12, n*graph3_vy, graph3_vx, graph3_vy-1);
+					
+				}
+	
+			}
+
+
+
+
+			//スクロール
+			cur_x = (int)((Single)(lstView.SelectedIndex + 1) * graph_v);
+			pnlGraph.AutoScrollPosition = new Point(cur_x - pnlGraph.Width / 2, 0);
+
+
+			pctGraph3.Refresh();		// PictureBoxを更新（再描画させる）
+			
+		//	draw_cursol();
+			
+			for(i=0; i<16; i++){
+				brsh[i].Dispose();
+			}
+			g3.Dispose();
+		}
+
+
+		//==========================================================================
+		// 画素データのグラフ表示
+		//==========================================================================
+		public void DrawGraph2(int sel){
+			int i;
+			int center_x;
+			int x0, y0;
+			int[] Camera = new int[33];
+			x0 = pctGraph2.Width / 2;	//中央線
+			y0 = pctGraph2.Height / 2;	//水平線
+	
+		//	int sel = lstImg.SelectedIndex;
+
+	
+			//----------------------------------------------------------------------
+			//g2への描画
+			//----------------------------------------------------------------------
+
+
+			//ビットマップイメージを解放
+			if(pctGraph2.Image != null) pctGraph2.Image.Dispose();
+
+			// PictureBoxと同サイズのBitmapオブジェクトを作成
+			Bitmap bmp2 = new Bitmap(pctGraph2.Size.Width, pctGraph2.Size.Height);
+			pctGraph2.Image = bmp2;
+			Graphics g2 = Graphics.FromImage(pctGraph2.Image);
+
+
+			int scaleX = pctGraph2.Width / Camera_N;
+			int scaleY = pctGraph2.Height / 16;
+
+	
+			g2.FillRectangle(Brushes.Black, 0, 0, pctGraph2.Width, pctGraph2.Height);
+	
+			//軸描画
+			g2.DrawLine(Pens.Gray,          16*scaleX, 0, 16*scaleX, pctGraph2.Height);
+			g2.DrawLine(Pens.DarkSlateGray,  8*scaleX, 0,  8*scaleX, pctGraph2.Height);
+			g2.DrawLine(Pens.DarkSlateGray, 24*scaleX, 0, 24*scaleX, pctGraph2.Height);
+
+			g2.DrawLine(Pens.Gray,          0,  8*scaleY, pctGraph2.Width,  8*scaleY);
+			g2.DrawLine(Pens.DarkSlateGray, 0,  4*scaleY, pctGraph2.Width,  4*scaleY);
+			g2.DrawLine(Pens.DarkSlateGray, 0, 12*scaleY, pctGraph2.Width, 12*scaleY);
+	
+			
+			
+/*			g2.DrawLine(Pens.Gray,  x0, 0, x0, pctGraph2.Height);
+			for(i = x0+32; i < pctGraph2.Width; i += 32){
+				g2.DrawLine(Pens.DarkSlateGray, i, 0, i, pctGraph2.Height);
+			}
+			for(i = x0-32; i > 0; i -= 32){
+				g2.DrawLine(Pens.DarkSlateGray, i, 0, i, pctGraph2.Height);
+			}
+
+			//横線描画
+			g2.DrawLine(Pens.Gray,  0, y0, pctGraph2.Width, y0);
+			for(i = y0+32; i < pctGraph2.Height; i += 32){
+				g2.DrawLine(Pens.DarkSlateGray, 0, i, pctGraph2.Width, i);
+			}
+			for(i = y0-32; i > 0; i -= 32){
+				g2.DrawLine(Pens.DarkSlateGray, 0, i, pctGraph2.Width, i);
+			}
+*/
+
+			//Cameraの画像を描画
+			for(i=0; i<Camera_N; i++){
+				int y = imgLog[sel].data[i] * scaleY;
+				g2.FillRectangle(Brushes.Green, i*scaleX, pctGraph2.Height-y, scaleX, y);
+				g2.DrawRectangle(Pens.White, i*scaleX, pctGraph2.Height-y, scaleX, y);
+			//	g2.DrawRectangle(Pens.Cyan, i*scale, pctGraph2.Height-y, i*scale+scale, pctGraph2.Height);
+			}
+
+			center_x = imgLog[sel].Center * scaleX;
+			g2.DrawLine(Pens.Red, center_x, 0, center_x, pctGraph2.Height);
+		}
+
+
 		//==========================================================================
 		// Graphの描画
 		//==========================================================================
 		public void DrawGraph()
 		{
+			myGraphPoints[] gp = new myGraphPoints[graph_points];
 			cur_show = false;		//カーソルを非表示に
 
 			//ビットマップイメージを解放
 			if(pctGraph.Image != null) pctGraph.Image.Dispose();
+
+			//pnlGraphのサイズ設定
+		//	pnlGraph.Width = ;
+		//	pnlGraph.Height = ;
+
 
 			// PictureBoxと同サイズのBitmapオブジェクトを作成
 			Bitmap bmp = new Bitmap(pctGraph.Size.Width, pctGraph.Size.Height);
@@ -854,8 +1112,7 @@ namespace MCRLogViewer
 
         private void splitContainer1_Panel2_Resize(object sender, EventArgs e)
         {
-            pnlGraph.Width = splitContainer1.Panel2.Width - SCROLLBAR_WIDTH;
-            pnlGraph.Height = splitContainer1.Panel2.Height - pnlGraph.Top - SCROLLBAR_WIDTH;
+			InitGraph();
         }
 
 		//==========================================================================
@@ -931,6 +1188,8 @@ namespace MCRLogViewer
 					FileOpen(cmds[i]);
 				}
 			}
+
+			InitGraph();
 
 			//PictureBoxのサイズ設定
 			pctGraph.Width = pnlGraph.Width;
@@ -1017,7 +1276,21 @@ namespace MCRLogViewer
 		//==========================================================================
         private void btnOK_Click(object sender, EventArgs e)
 		{
+			InitGraph();
 			DrawGraph();
+		}
+
+		public void InitGraph()
+		{
+			pnlImage.Visible = chkImg.Checked;
+			lstImg.Visible = chkLstImg.Checked;
+
+			if(chkImg.Checked)
+	            pnlGraph.Width = splitContainer1.Panel2.Width - SCROLLBAR_WIDTH - pnlImage.Width;
+			else
+				pnlGraph.Width = splitContainer1.Panel2.Width - SCROLLBAR_WIDTH;
+            pnlGraph.Height = splitContainer1.Panel2.Height - pnlGraph.Top - SCROLLBAR_WIDTH;
+			pnlGraph3.Height = splitContainer1.Panel2.Height - pnlGraph3.Top;
 		}
 
 		//==========================================================================
@@ -1127,6 +1400,50 @@ namespace MCRLogViewer
 				erase_cursol();
 				cur_show = false;
 			}
+		}
+
+		private void lstImg_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DrawGraph2(lstImg.SelectedIndex);
+		}
+
+		private void pctGraph3_MouseDown(object sender, MouseEventArgs e)
+		{
+			if(e.Button == MouseButtons.Left){
+				if(imgLog_Count > 0){
+					int n = (int)(e.Y / graph3_vy);
+					if(n < 0)
+						n = 0;
+					else if(n >= imgLog_Count)
+						n = imgLog_Count - 1;
+					DrawGraph2(n);
+				}
+			}
+
+		}
+
+		private void pctGraph3_MouseMove(object sender, MouseEventArgs e)
+		{
+			if(e.Button == MouseButtons.Left){
+				if(imgLog_Count > 0){
+					int n = (int)(e.Y / graph3_vy);
+					if(n < 0)
+						n = 0;
+					else if(n >= imgLog_Count)
+						n = imgLog_Count - 1;
+					DrawGraph2(n);
+				}
+			}
+		}
+
+		private void chkImg_CheckedChanged(object sender, EventArgs e)
+		{
+			pnlImage.Visible = chkImg.Checked;
+		}
+
+		private void chkLstImg_CheckedChanged(object sender, EventArgs e)
+		{
+			lstImg.Visible = chkLstImg.Checked;
 		}
 	}
 

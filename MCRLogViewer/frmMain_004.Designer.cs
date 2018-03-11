@@ -40,6 +40,7 @@
 			this.menuFileExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.txtPath = new System.Windows.Forms.TextBox();
 			this.pnlGraph = new System.Windows.Forms.Panel();
+			this.lstImg = new System.Windows.Forms.ListBox();
 			this.pctGraph = new System.Windows.Forms.PictureBox();
 			this.btnOK = new System.Windows.Forms.Button();
 			this.btnX4 = new System.Windows.Forms.Button();
@@ -52,9 +53,16 @@
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.lblHead2 = new System.Windows.Forms.Label();
+			this.panel2 = new System.Windows.Forms.Panel();
+			this.chkLstImg = new System.Windows.Forms.CheckBox();
+			this.chkImg = new System.Windows.Forms.CheckBox();
 			this.btnToubai = new System.Windows.Forms.Button();
-			this.btnW8 = new System.Windows.Forms.Button();
 			this.btnX8 = new System.Windows.Forms.Button();
+			this.btnW8 = new System.Windows.Forms.Button();
+			this.pnlImage = new System.Windows.Forms.Panel();
+			this.pctGraph2 = new System.Windows.Forms.PictureBox();
+			this.pnlGraph3 = new System.Windows.Forms.Panel();
+			this.pctGraph3 = new System.Windows.Forms.PictureBox();
 			this.menu.SuspendLayout();
 			this.pnlGraph.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pctGraph)).BeginInit();
@@ -64,6 +72,11 @@
 			this.splitContainer2.Panel1.SuspendLayout();
 			this.splitContainer2.Panel2.SuspendLayout();
 			this.splitContainer2.SuspendLayout();
+			this.panel2.SuspendLayout();
+			this.pnlImage.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pctGraph2)).BeginInit();
+			this.pnlGraph3.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pctGraph3)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// lstView
@@ -76,7 +89,7 @@
 			this.lstView.ItemHeight = 12;
 			this.lstView.Location = new System.Drawing.Point(3, 32);
 			this.lstView.Name = "lstView";
-			this.lstView.Size = new System.Drawing.Size(551, 328);
+			this.lstView.Size = new System.Drawing.Size(551, 184);
 			this.lstView.TabIndex = 5;
 			this.lstView.SelectedIndexChanged += new System.EventHandler(this.lstView_SelectedIndexChanged);
 			// 
@@ -107,7 +120,7 @@
             this.menuFile});
 			this.menu.Location = new System.Drawing.Point(0, 0);
 			this.menu.Name = "menu";
-			this.menu.Size = new System.Drawing.Size(1147, 26);
+			this.menu.Size = new System.Drawing.Size(1538, 26);
 			this.menu.TabIndex = 10;
 			this.menu.Text = "menuStrip1";
 			// 
@@ -165,13 +178,25 @@
 			// pnlGraph
 			// 
 			this.pnlGraph.AutoScroll = true;
+			this.pnlGraph.Controls.Add(this.lstImg);
 			this.pnlGraph.Controls.Add(this.pctGraph);
 			this.pnlGraph.Cursor = System.Windows.Forms.Cursors.Default;
 			this.pnlGraph.Location = new System.Drawing.Point(3, 60);
 			this.pnlGraph.Name = "pnlGraph";
-			this.pnlGraph.Size = new System.Drawing.Size(455, 326);
+			this.pnlGraph.Size = new System.Drawing.Size(455, 387);
 			this.pnlGraph.TabIndex = 12;
 			this.pnlGraph.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pnlGraph_Scroll);
+			// 
+			// lstImg
+			// 
+			this.lstImg.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.lstImg.FormattingEnabled = true;
+			this.lstImg.ItemHeight = 12;
+			this.lstImg.Location = new System.Drawing.Point(3, 29);
+			this.lstImg.Name = "lstImg";
+			this.lstImg.Size = new System.Drawing.Size(407, 316);
+			this.lstImg.TabIndex = 24;
+			this.lstImg.SelectedIndexChanged += new System.EventHandler(this.lstImg_SelectedIndexChanged);
 			// 
 			// pctGraph
 			// 
@@ -229,7 +254,7 @@
 			// 
 			// btnGraphOption
 			// 
-			this.btnGraphOption.Location = new System.Drawing.Point(375, 3);
+			this.btnGraphOption.Location = new System.Drawing.Point(347, 3);
 			this.btnGraphOption.Name = "btnGraphOption";
 			this.btnGraphOption.Size = new System.Drawing.Size(83, 51);
 			this.btnGraphOption.TabIndex = 18;
@@ -281,21 +306,11 @@
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.AutoScroll = true;
-			this.splitContainer1.Panel2.Controls.Add(this.btnToubai);
-			this.splitContainer1.Panel2.Controls.Add(this.btnOpen);
-			this.splitContainer1.Panel2.Controls.Add(this.btnOK);
-			this.splitContainer1.Panel2.Controls.Add(this.pnlGraph);
-			this.splitContainer1.Panel2.Controls.Add(this.btnW8);
-			this.splitContainer1.Panel2.Controls.Add(this.btnW4);
-			this.splitContainer1.Panel2.Controls.Add(this.btnGraphOption);
-			this.splitContainer1.Panel2.Controls.Add(this.btnX1);
-			this.splitContainer1.Panel2.Controls.Add(this.btnW2);
-			this.splitContainer1.Panel2.Controls.Add(this.btnX2);
-			this.splitContainer1.Panel2.Controls.Add(this.btnX8);
-			this.splitContainer1.Panel2.Controls.Add(this.btnX4);
+			this.splitContainer1.Panel2.Controls.Add(this.panel2);
+			this.splitContainer1.Panel2.Controls.Add(this.pnlImage);
 			this.splitContainer1.Panel2.Resize += new System.EventHandler(this.splitContainer1_Panel2_Resize);
-			this.splitContainer1.Size = new System.Drawing.Size(1147, 716);
-			this.splitContainer1.SplitterDistance = 572;
+			this.splitContainer1.Size = new System.Drawing.Size(1538, 546);
+			this.splitContainer1.SplitterDistance = 764;
 			this.splitContainer1.TabIndex = 22;
 			// 
 			// splitContainer2
@@ -317,8 +332,8 @@
 			this.splitContainer2.Panel2.Controls.Add(this.lblHead2);
 			this.splitContainer2.Panel2.Controls.Add(this.lstView);
 			this.splitContainer2.Panel2.Controls.Add(this.lblHead1);
-			this.splitContainer2.Size = new System.Drawing.Size(572, 716);
-			this.splitContainer2.SplitterDistance = 146;
+			this.splitContainer2.Size = new System.Drawing.Size(764, 546);
+			this.splitContainer2.SplitterDistance = 110;
 			this.splitContainer2.TabIndex = 12;
 			this.splitContainer2.SizeChanged += new System.EventHandler(this.splitContainer2_SizeChanged);
 			// 
@@ -335,6 +350,50 @@
 			this.lblHead2.Text = "                           A   B    C     D   E   F   G   H   I      J         K " +
     "    L      ";
 			// 
+			// panel2
+			// 
+			this.panel2.Controls.Add(this.chkLstImg);
+			this.panel2.Controls.Add(this.chkImg);
+			this.panel2.Controls.Add(this.btnOpen);
+			this.panel2.Controls.Add(this.btnX4);
+			this.panel2.Controls.Add(this.pnlGraph);
+			this.panel2.Controls.Add(this.btnToubai);
+			this.panel2.Controls.Add(this.btnX8);
+			this.panel2.Controls.Add(this.btnX2);
+			this.panel2.Controls.Add(this.btnOK);
+			this.panel2.Controls.Add(this.btnW2);
+			this.panel2.Controls.Add(this.btnX1);
+			this.panel2.Controls.Add(this.btnW8);
+			this.panel2.Controls.Add(this.btnGraphOption);
+			this.panel2.Controls.Add(this.btnW4);
+			this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panel2.Location = new System.Drawing.Point(232, 0);
+			this.panel2.Name = "panel2";
+			this.panel2.Size = new System.Drawing.Size(534, 542);
+			this.panel2.TabIndex = 26;
+			// 
+			// chkLstImg
+			// 
+			this.chkLstImg.AutoSize = true;
+			this.chkLstImg.Location = new System.Drawing.Point(452, 30);
+			this.chkLstImg.Name = "chkLstImg";
+			this.chkLstImg.Size = new System.Drawing.Size(67, 16);
+			this.chkLstImg.TabIndex = 25;
+			this.chkLstImg.Text = "lstImage";
+			this.chkLstImg.UseVisualStyleBackColor = true;
+			this.chkLstImg.CheckedChanged += new System.EventHandler(this.chkLstImg_CheckedChanged);
+			// 
+			// chkImg
+			// 
+			this.chkImg.AutoSize = true;
+			this.chkImg.Location = new System.Drawing.Point(452, 10);
+			this.chkImg.Name = "chkImg";
+			this.chkImg.Size = new System.Drawing.Size(54, 16);
+			this.chkImg.TabIndex = 24;
+			this.chkImg.Text = "Image";
+			this.chkImg.UseVisualStyleBackColor = true;
+			this.chkImg.CheckedChanged += new System.EventHandler(this.chkImg_CheckedChanged);
+			// 
 			// btnToubai
 			// 
 			this.btnToubai.Enabled = false;
@@ -345,16 +404,6 @@
 			this.btnToubai.Text = "等倍";
 			this.btnToubai.UseVisualStyleBackColor = true;
 			this.btnToubai.Click += new System.EventHandler(this.btnToubai_Click);
-			// 
-			// btnW8
-			// 
-			this.btnW8.Location = new System.Drawing.Point(284, 31);
-			this.btnW8.Name = "btnW8";
-			this.btnW8.Size = new System.Drawing.Size(41, 23);
-			this.btnW8.TabIndex = 20;
-			this.btnW8.Text = "横x8";
-			this.btnW8.UseVisualStyleBackColor = true;
-			this.btnW8.Click += new System.EventHandler(this.btnW8_Click);
 			// 
 			// btnX8
 			// 
@@ -367,18 +416,67 @@
 			this.btnX8.UseVisualStyleBackColor = true;
 			this.btnX8.Click += new System.EventHandler(this.btnX8_Click);
 			// 
+			// btnW8
+			// 
+			this.btnW8.Location = new System.Drawing.Point(284, 31);
+			this.btnW8.Name = "btnW8";
+			this.btnW8.Size = new System.Drawing.Size(41, 23);
+			this.btnW8.TabIndex = 20;
+			this.btnW8.Text = "横x8";
+			this.btnW8.UseVisualStyleBackColor = true;
+			this.btnW8.Click += new System.EventHandler(this.btnW8_Click);
+			// 
+			// pnlImage
+			// 
+			this.pnlImage.Controls.Add(this.pctGraph2);
+			this.pnlImage.Controls.Add(this.pnlGraph3);
+			this.pnlImage.Dock = System.Windows.Forms.DockStyle.Left;
+			this.pnlImage.Location = new System.Drawing.Point(0, 0);
+			this.pnlImage.Name = "pnlImage";
+			this.pnlImage.Size = new System.Drawing.Size(232, 542);
+			this.pnlImage.TabIndex = 25;
+			// 
+			// pctGraph2
+			// 
+			this.pctGraph2.BackColor = System.Drawing.Color.Black;
+			this.pctGraph2.Location = new System.Drawing.Point(3, 3);
+			this.pctGraph2.Name = "pctGraph2";
+			this.pctGraph2.Size = new System.Drawing.Size(128, 52);
+			this.pctGraph2.TabIndex = 23;
+			this.pctGraph2.TabStop = false;
+			// 
+			// pnlGraph3
+			// 
+			this.pnlGraph3.AutoScroll = true;
+			this.pnlGraph3.Controls.Add(this.pctGraph3);
+			this.pnlGraph3.Location = new System.Drawing.Point(3, 61);
+			this.pnlGraph3.Name = "pnlGraph3";
+			this.pnlGraph3.Size = new System.Drawing.Size(213, 521);
+			this.pnlGraph3.TabIndex = 24;
+			// 
+			// pctGraph3
+			// 
+			this.pctGraph3.BackColor = System.Drawing.Color.SlateBlue;
+			this.pctGraph3.Location = new System.Drawing.Point(0, 0);
+			this.pctGraph3.Name = "pctGraph3";
+			this.pctGraph3.Size = new System.Drawing.Size(203, 387);
+			this.pctGraph3.TabIndex = 0;
+			this.pctGraph3.TabStop = false;
+			this.pctGraph3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pctGraph3_MouseDown);
+			this.pctGraph3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pctGraph3_MouseMove);
+			// 
 			// frmMain
 			// 
 			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1147, 742);
+			this.ClientSize = new System.Drawing.Size(1538, 572);
 			this.Controls.Add(this.splitContainer1);
 			this.Controls.Add(this.menu);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menu;
 			this.Name = "frmMain";
-			this.Text = "MCR LOG Viewer  ver.3.5";
+			this.Text = "MCR LOG Viewer  ver 4.1";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
 			this.Load += new System.EventHandler(this.frmMain_Load);
@@ -397,6 +495,12 @@
 			this.splitContainer2.Panel2.ResumeLayout(false);
 			this.splitContainer2.Panel2.PerformLayout();
 			this.splitContainer2.ResumeLayout(false);
+			this.panel2.ResumeLayout(false);
+			this.panel2.PerformLayout();
+			this.pnlImage.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.pctGraph2)).EndInit();
+			this.pnlGraph3.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.pctGraph3)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -431,6 +535,14 @@
 		private System.Windows.Forms.Button btnW8;
 		private System.Windows.Forms.Button btnX8;
 		private System.Windows.Forms.Button btnToubai;
+		private System.Windows.Forms.PictureBox pctGraph2;
+		private System.Windows.Forms.ListBox lstImg;
+		private System.Windows.Forms.Panel pnlGraph3;
+		private System.Windows.Forms.PictureBox pctGraph3;
+		private System.Windows.Forms.Panel pnlImage;
+		private System.Windows.Forms.Panel panel2;
+		private System.Windows.Forms.CheckBox chkImg;
+		private System.Windows.Forms.CheckBox chkLstImg;
     }
 }
 

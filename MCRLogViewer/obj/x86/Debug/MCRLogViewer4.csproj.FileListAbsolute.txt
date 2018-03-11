@@ -1,0 +1,10 @@
+C:\Users\akio\Documents\Visual Studio 2010\Projects\MCRLogViewer2\MCRLogViewer\bin\Debug\MCRLogViewer4.exe.config
+C:\Users\akio\Documents\Visual Studio 2010\Projects\MCRLogViewer2\MCRLogViewer\obj\x86\Debug\MCRLogViewer4.exe
+C:\Users\akio\Documents\Visual Studio 2010\Projects\MCRLogViewer2\MCRLogViewer\obj\x86\Debug\MCRLogViewer4.pdb
+C:\Users\akio\Documents\Visual Studio 2010\Projects\MCRLogViewer2\MCRLogViewer\bin\Debug\MCRLogViewer4.exe
+C:\Users\akio\Documents\Visual Studio 2010\Projects\MCRLogViewer2\MCRLogViewer\bin\Debug\MCRLogViewer4.pdb
+C:\Users\akio\Documents\Visual Studio 2010\Projects\MCRLogViewer2\MCRLogViewer\obj\x86\Debug\MCRLogViewer4.csprojResolveAssemblyReference.cache
+C:\Users\akio\Documents\Visual Studio 2010\Projects\MCRLogViewer2\MCRLogViewer\obj\x86\Debug\MCRLogViewer.frmMain.resources
+C:\Users\akio\Documents\Visual Studio 2010\Projects\MCRLogViewer2\MCRLogViewer\obj\x86\Debug\MCRLogViewer.frmOption.resources
+C:\Users\akio\Documents\Visual Studio 2010\Projects\MCRLogViewer2\MCRLogViewer\obj\x86\Debug\MCRLogViewer.Properties.Resources.resources
+C:\Users\akio\Documents\Visual Studio 2010\Projects\MCRLogViewer2\MCRLogViewer\obj\x86\Debug\MCRLogViewer4.csproj.GenerateResource.Cache
