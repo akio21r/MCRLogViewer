@@ -830,11 +830,6 @@ namespace MCRLogViewer
 			//ビットマップイメージを解放
 			if(pctGraph.Image != null) pctGraph.Image.Dispose();
 
-			//pnlGraphのサイズ設定
-		//	pnlGraph.Width = ;
-		//	pnlGraph.Height = ;
-
-
 			// PictureBoxと同サイズのBitmapオブジェクトを作成
 			Bitmap bmp = new Bitmap(pctGraph.Size.Width, pctGraph.Size.Height);
 			pctGraph.Image = bmp;
