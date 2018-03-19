@@ -109,10 +109,10 @@
 			this.lblHead1.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.lblHead1.Location = new System.Drawing.Point(0, 18);
 			this.lblHead1.Name = "lblHead1";
-			this.lblHead1.Size = new System.Drawing.Size(557, 12);
+			this.lblHead1.Size = new System.Drawing.Size(563, 12);
 			this.lblHead1.TabIndex = 8;
-			this.lblHead1.Text = "  time mode  sens    pos  hnd ang  sv    vt  v   fl  fr  rl  rr      x  slc   Bat" +
-    "t  Gyro    ";
+			this.lblHead1.Text = "  time mode  sens    pos  hnd ang  sv    vt  v   fl  fr  rl  rr      x  slc   Slo" +
+    "pe  Gyro    ";
 			// 
 			// menu
 			// 

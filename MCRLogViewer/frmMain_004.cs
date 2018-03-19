@@ -335,7 +335,7 @@ namespace MCRLogViewer
 			else if(LOG_Version >= 4){
 				lblHead2.Text     = "                              A   B    C     D   E   F   G   H   I     J         K     L    ";
 				if(LOG_Version >= 7)
-					lblHead1.Text = "  time mode     sens    pos  hnd ang  sv    vt  v   fl  fr  rl  rr     x  slc  GyroEx Gyro  ";
+					lblHead1.Text = "  time mode     sens    pos  hnd ang  sv    vt  v   fl  fr  rl  rr     x  slc  Slope Gyro  ";
 				else
 					lblHead1.Text = "  time mode     sens    pos  hnd ang  sv    vt  v   fl  fr  rl  rr     x  slc   Batt  Gyro  ";
 
@@ -394,12 +394,7 @@ namespace MCRLogViewer
 					log[n].slope_cnt	= slope & 0x0f;
 					log[n].trip			= trip;
 
-
 					log[n].batt         = batt;
-				//	if(LOG_Version == 6)
-				//		log[n].batt		= ((float)batt)*4.0F * (float)frmOption1.nudBatt_a.Value + (float)frmOption1.nudBatt_b.Value;
-				//	else
-				//		log[n].batt		= ((float)batt)*8.0F * (float)frmOption1.nudBatt_a.Value + (float)frmOption1.nudBatt_b.Value;
 
 					log[n].gyroEx       = gyroEx;
 					log[n].gyro			= gyro;
