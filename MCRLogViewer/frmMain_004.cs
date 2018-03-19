@@ -786,26 +786,6 @@ namespace MCRLogViewer
 			g2.DrawLine(Pens.DarkSlateGray, 0,  4*scaleY, pctGraph2.Width,  4*scaleY);
 			g2.DrawLine(Pens.DarkSlateGray, 0, 12*scaleY, pctGraph2.Width, 12*scaleY);
 	
-			
-			
-/*			g2.DrawLine(Pens.Gray,  x0, 0, x0, pctGraph2.Height);
-			for(i = x0+32; i < pctGraph2.Width; i += 32){
-				g2.DrawLine(Pens.DarkSlateGray, i, 0, i, pctGraph2.Height);
-			}
-			for(i = x0-32; i > 0; i -= 32){
-				g2.DrawLine(Pens.DarkSlateGray, i, 0, i, pctGraph2.Height);
-			}
-
-			//横線描画
-			g2.DrawLine(Pens.Gray,  0, y0, pctGraph2.Width, y0);
-			for(i = y0+32; i < pctGraph2.Height; i += 32){
-				g2.DrawLine(Pens.DarkSlateGray, 0, i, pctGraph2.Width, i);
-			}
-			for(i = y0-32; i > 0; i -= 32){
-				g2.DrawLine(Pens.DarkSlateGray, 0, i, pctGraph2.Width, i);
-			}
-*/
-
 			//Cameraの画像を描画
 			for(i=0; i<Camera_N; i++){
 				int y = imgLog[sel].data[i] * scaleY;
