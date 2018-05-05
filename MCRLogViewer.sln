@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCRLogViewer4", "MCRLogViewer\MCRLogViewer4.csproj", "{1FB97A3B-B695-4862-A151-A2667BD80287}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCRLogViewer", "MCRLogViewer\MCRLogViewer.csproj", "{1FB97A3B-B695-4862-A151-A2667BD80287}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
