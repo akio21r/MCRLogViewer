@@ -1,4 +1,7 @@
-﻿using System;
+﻿//==========================================================================
+// MCR Log Viewer    ver5.0
+//==========================================================================
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
