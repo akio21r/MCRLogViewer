@@ -14,16 +14,16 @@ namespace MCRLogViewer
 	//メインフォーム
 	public partial class frmMain : Form
     {
-		//==========================================================================
+		//==================================================================
 		//ログデータ関連
-		//==========================================================================
+		//==================================================================
 		static public int TXT_header_sectors = 3;	//TXT領域のセクタ数
         int LOG_Version = 6;						//ログのバージョン
-		int LOG_RecordBytes = 17;					//ログの1レコードのバイト数
+		int LOG_RecordBytes = 17;					//ログの1レコードサイズ
 		int Camera_N = 32;							//画素の数
 
-		public const int max_log_data_counts = 100000;		//10万行分のデータ★
-		public struct LogData{
+		public const int max_log_data_counts = 100000;	//10万行分のデータ★
+		public struct LogData{				//ログデータ
 			public int		mode;			//mode
 			public int		v, vt;			//速度、目標速度
 			public int		angle, angle_t;	//ハンドル角、目標角度
@@ -42,15 +42,16 @@ namespace MCRLogViewer
 			public int		time;			//時間[ms]
 			public StringBuilder	sens;	//センサの状態（サイドセンサ含む）
 			public int		pre_sens;		//先読みセンサ
+			public int		anL1,anL2,anL,anR,anR2,anR1;	//anセンサ値
 		}
-		static public LogData[] log = new LogData[max_log_data_counts];	//ログ
+		static public LogData[] log = new LogData[max_log_data_counts];
 	
-		public struct ImgLogData{
+		public struct ImgLogData{			//画素ログ
 			public int		Center;
 			public byte		Sens;
 			public byte[]	data;
 		}
-		static public ImgLogData[] imgLog = new ImgLogData[max_log_data_counts];	//画素ログ
+		static public ImgLogData[] imgLog = new ImgLogData[max_log_data_counts];
 		int imgLog_Count = 0;
 
 		static public int log_count;		//
@@ -63,9 +64,9 @@ namespace MCRLogViewer
 		static public int SCROLLBAR_WIDTH = 20;
 //		System.Threading.Mutex mut;			//多重起動禁止用のMutexオブジェクト
 
-		//==========================================================================
+		//==================================================================
 		//グラフ関連
-		//==========================================================================
+		//==================================================================
 		public const int graph_points = 12;
 		public struct myGraphPoints{
 			public bool enabled;
@@ -82,9 +83,9 @@ namespace MCRLogViewer
 		static public Single graph3_vx, graph3_vy;		//グラフの増分
 		static public Point scrPoint1, scrPoint2;		//グラフのスクロール座標
 
-		//==========================================================================
+		//==================================================================
 		//バイナリファイルの圧縮保存
-		//==========================================================================
+		//==================================================================
 		public void FileSave()
 		{
 			string path_save = path.Substring(0, path.Length - 4) + "_new.LOG";
@@ -102,9 +103,9 @@ namespace MCRLogViewer
 			fsw.Dispose();
 		}		
 		
-		//==========================================================================
+		//==================================================================
 		//ファイルを開く
-		//==========================================================================
+		//==================================================================
 		public void FileOpen(string filename)
 		{
             int WorkAddress, BuffAddress;
@@ -198,6 +199,7 @@ namespace MCRLogViewer
 					side,		// サイドセンサ状態
 					pos_sens,	// ポジションセンサ状態
 					pre_sens;	// 先読みセンサ
+			byte	anL1,anL2,anL,anR,anR2,anR1;	//アナログセンサ値
             byte    sens,		// デジタルセンサ状態
 					batt;		// バッテリー電圧
             int     trip;		// スタートからの走行距離	[cm]
@@ -330,9 +332,9 @@ namespace MCRLogViewer
 
                 
             //******************************************************
-			//ログバージョン004以上の読み込み　ここから
+			//ログバージョン004以上009以下の読み込み　ここから
 			//******************************************************
-			else if(LOG_Version >= 4){
+			else if(LOG_Version >= 4 && LOG_Version <= 9){
 				lblHead2.Text     = "                              A   B    C     D   E   F   G   H   I     J         K     L    ";
 				if(LOG_Version >= 7)
 					lblHead1.Text = "  time mode     sens    pos  hnd ang  sv    vt  v   fl  fr  rl  rr     x  slc  Slope Gyro  ";
@@ -529,18 +531,227 @@ namespace MCRLogViewer
 				}
             }
             //******************************************************
-            //ログバージョン004以上の読み込み終了　ここまで
+            //ログバージョン004以上009以下の読み込み終了　ここまで
+            //******************************************************
+
+            //******************************************************
+			//ログバージョン010の読み込み　ここから
+			//******************************************************
+			else if(LOG_Version == 10){
+				lblHead2.Text     = "                     A   B    C    D   E   F   G   H   I     J         K     L                          ";
+					lblHead1.Text = "  time mode  sens   hnd ang  sv   vt  v   fl  fr  rl  rr     x  slc  Slope Gyro  L1  L2   L   R  R2  R1 ";		///////////////////////////
+
+				while (WorkAddress < fileSize - 512){
+					mode	=   (sbyte)buf[WorkAddress + BuffAddress + 0];
+					sens	=   buf[WorkAddress + BuffAddress + 1];
+
+					angle_t	=   (sbyte)buf[WorkAddress + BuffAddress + 2];
+					angle	=   (sbyte)buf[WorkAddress + BuffAddress + 3];
+
+					sv_pow	=	(sbyte)buf[WorkAddress + BuffAddress + 4];
+				
+					vt		=   (sbyte)buf[WorkAddress + BuffAddress + 5];
+					v		=   (sbyte)buf[WorkAddress + BuffAddress + 6];
+					fl		=   (sbyte)buf[WorkAddress + BuffAddress + 7];
+					fr		=	(sbyte)buf[WorkAddress + BuffAddress + 8];
+					rl		=	(sbyte)buf[WorkAddress + BuffAddress + 9];
+					rr		=	(sbyte)buf[WorkAddress + BuffAddress + 10];
+				
+					slope	=   (sbyte)buf[WorkAddress + BuffAddress + 11];
+        
+					trip	=   buf[WorkAddress + BuffAddress + 12];
+					trip	<<= 8;
+					trip	+=  buf[WorkAddress + BuffAddress + 13];
+
+		            batt	=          buf[WorkAddress + BuffAddress + 14];	//batt
+					gyroEx	=   (sbyte)buf[WorkAddress + BuffAddress + 14];	//gyroEx
+					gyro	=   (sbyte)buf[WorkAddress + BuffAddress + 15];	//gyro
+
+					anL1	= buf[WorkAddress + BuffAddress + 17];
+					anL2	= buf[WorkAddress + BuffAddress + 18];
+					anL		= buf[WorkAddress + BuffAddress + 19];
+					anR		= buf[WorkAddress + BuffAddress + 20];
+					anR2	= buf[WorkAddress + BuffAddress + 21];
+					anR1	= buf[WorkAddress + BuffAddress + 22];
+
+					ErrorCount = (int)sens;
+
+					log[n].mode			= mode;
+					log[n].angle_t		= angle_t;
+					log[n].angle		= angle;
+					log[n].sv_pow		= sv_pow;
+					log[n].vt			= vt;
+					log[n].v			= v;
+					log[n].fl			= fl;
+					log[n].fr			= fr;
+					log[n].rl			= rl;
+					log[n].rr			= rr;
+
+					log[n].slope_mode	= (slope >> 6) & 0x03;
+					log[n].slope_sw		= (slope >> 4) & 0x03;
+					log[n].slope_cnt	= slope & 0x0f;
+					log[n].trip			= trip;
+
+					log[n].batt         = batt;
+
+					log[n].gyroEx       = gyroEx;
+					log[n].gyro			= gyro;
+
+					log[n].anL1			= anL1;
+					log[n].anL2			= anL2;
+					log[n].anL			= anL;
+					log[n].anR			= anR;
+					log[n].anR2			= anR2;
+					log[n].anR1			= anR1;
+
+					//ラインセンサ
+					log[n].sens = new StringBuilder(" ");
+					int s = sens;
+                    for(i=0; i<8; i++){
+						switch(i){
+							case 0: case 1: case 3: case 6: case 7:
+								if((s & 0x80) == 0)
+									log[n].sens.Append("-");
+								else
+									log[n].sens.Append("*");
+								break;
+							case 4:
+								break;
+							case 2: case 5:
+								if((s & 0x80) == 0)
+									log[n].sens.Append("-");
+								else
+									log[n].sens.Append("+");
+								break;
+						}		
+							
+						s <<= 1;
+					}
+					log[n].sens.Append(" ");
+
+					str  = new StringBuilder(String.Format("{0, 6}", time));
+					time += 5;
+					str.Append(String.Format("{0, 4}", log[n].mode));
+					str.Append(log[n].sens);
+					str.Append(" ");
+					str.Append(String.Format("{0, 3}", log[n].angle_t));
+					str.Append(" ");
+					str.Append(String.Format("{0, 3}", log[n].angle));
+					str.Append(" ");
+					str.Append(String.Format("{0, 4}", log[n].sv_pow));
+					str.Append(" ");
+					str.Append(String.Format("{0, 3}", log[n].vt));
+					str.Append(String.Format("{0, 4}", log[n].v));
+					str.Append(" ");
+					str.Append(String.Format("{0, 4}", log[n].fl));
+					str.Append(String.Format("{0, 4}", log[n].fr));
+					str.Append(String.Format("{0, 4}", log[n].rl));
+					str.Append(String.Format("{0, 4}", log[n].rr));
+					str.Append(String.Format("{0, 7}", log[n].trip));
+					str.Append("  ");
+					str.Append(String.Format("{0, 1}", log[n].slope_mode));
+					str.Append(String.Format("{0, 1}", log[n].slope_sw));
+					str.Append(String.Format("{0, 1}", log[n].slope_cnt));
+					str.Append(String.Format("{0, 6}", log[n].gyroEx));
+                    str.Append(String.Format("{0, 6}", log[n].gyro));
+
+					//アナログセンサ値
+					str.Append(String.Format("{0, 4}", log[n].anL1));
+					str.Append(String.Format("{0, 4}", log[n].anL2));
+					str.Append(String.Format("{0, 4}", log[n].anL ));
+					str.Append(String.Format("{0, 4}", log[n].anR ));
+					str.Append(String.Format("{0, 4}", log[n].anR2));
+					str.Append(String.Format("{0, 4}", log[n].anR1));
+
+					//--------------------------------------------------
+					// imgLog[] へのデータ追加
+					imgLog[n].Center	= 15;
+					imgLog[n].Sens		= sens;
+					imgLog[n].Sens	   &= 0x7f;				// Sensの最上位ビットを消す
+					imgLog[n].data		= new byte[32];
+					for(int j=0; j<32; j++){
+						imgLog[n].data[j]   = 0;
+					}
+					imgLog[n].data[ 2] = (byte)(log[n].anL1 >> 4);
+					imgLog[n].data[ 7] = (byte)(log[n].anL2 >> 4);
+					imgLog[n].data[12] = (byte)(log[n].anL  >> 4);
+					imgLog[n].data[18] = (byte)(log[n].anR  >> 4);
+					imgLog[n].data[23] = (byte)(log[n].anR2 >> 4);
+					imgLog[n].data[28] = (byte)(log[n].anR1 >> 4);
+
+					//--------------------------------------------------
+					if (mode == -2)             //次のセクタへ
+					{
+						int ii;
+						WorkAddress += 512;
+					//	readSize = fs.Read(buf, WorkAddress, 512);
+						BuffAddress = 0;
+
+						time -= 5;
+
+						//エラーの時はその数の分空行挿入
+						if(LOG_Version >= 2){
+							for(ii=0; ii<ErrorCount; ii++){
+								log[n].mode			= 0;
+								log[n].angle_t		= 0;
+								log[n].angle		= 0;
+								log[n].sv_pow		= 0;
+								log[n].vt			= 0;
+								log[n].v			= 0; 
+								log[n].fl			= 0;
+								log[n].fr			= 0;
+								log[n].rl			= 0;
+								log[n].rr			= 0;
+								log[n].slope_mode	= 0;
+								log[n].slope_sw		= 0;
+								log[n].slope_cnt	= 0;
+								log[n].trip			= 0;
+								log[n].batt			= 0;
+								log[n].gyroEx       = 0;
+								log[n].gyro			= 0;
+								log[n].side			= 0;
+
+								lstView.Items.Add("Err");
+								n++; if (n > 10000) break;
+							}
+						}
+					}
+					else
+					{
+						BuffAddress += LOG_RecordBytes;
+						lstView.Items.Add(str);
+						n++; if (n > 10000) break;
+					}
+
+					if (mode == 0) break;				//modeが0なら終了
+				}
+
+				//画素データ描画
+				imgLog_Count = n-1;
+				DrawGraph3();
+			}
+            //******************************************************
+            //ログバージョン010の読み込み終了　ここまで
             //******************************************************
 
 			lstView.Show();
 
-
+			if(LOG_Version >= 9){
+				chkImg.Visible = true;
+				chkLstImg.Visible = true;
+				chkImg.Checked = true;
+			}
+			else{
+				chkImg.Visible = false;
+				chkLstImg.Visible = false;
+				chkImg.Checked = false;
+			}
 
             //******************************************************
 			//画素ログの読み込み [Camera]
             //******************************************************
 			lstImg.Hide();
-			if(LOG_Version >= 9){
+			if(LOG_Version == 9){
 				WorkAddress += 512;			//次のセクタへ
 				BuffAddress = 0;
 				byte[] imgLogBuf = new byte[20];
@@ -598,11 +809,10 @@ namespace MCRLogViewer
 				chkLstImg.Visible = true;
 				chkImg.Checked = true;
 			}
-			else{
-				chkImg.Visible = false;
-				chkLstImg.Visible = false;
-				chkImg.Checked = false;
-			}
+            //******************************************************
+			//画素ログの読み込み [Camera]　ここまで
+            //******************************************************
+
 
             //******************************************************
 			log_count = n;
@@ -611,6 +821,9 @@ namespace MCRLogViewer
 			
 			fs.Dispose();
             menuFileSaveTXT.Enabled = true;
+
+			//左側のデータ表示領域のサイズ再設定
+			splitContainer1.SplitterDistance = lblHead1.Size.Width + SCROLLBAR_WIDTH;
 
 			//グラフのサイズ調整
 			InitGraph();
@@ -651,9 +864,9 @@ namespace MCRLogViewer
 
 		}
 		
-		//==========================================================================
+		//==================================================================
 		// Graph3の描画
-		//==========================================================================
+		//==================================================================
 		public void DrawGraph3()
 		{
 		//	cur_show = false;		//カーソルを非表示に
@@ -709,8 +922,19 @@ namespace MCRLogViewer
 					Brush br;
 					if((s & 0x80) == 0)
 						br = Brushes.Black;
-					else
-						br = Brushes.White;
+					else{
+						switch(i){
+							case 3:				//Center
+								br = Brushes.Red;
+								break;
+							case 2: case 4:		//anL, anR
+								br = Brushes.Cyan;
+								break;
+							default:
+								br = Brushes.White;
+								break;
+						}
+					}
 					s <<= 1;
 
 					g3.FillRectangle(br, i*(graph3_vx*2) + 32*graph3_vx + 12, n*graph3_vy, graph3_vx, graph3_vy-1);
@@ -738,9 +962,9 @@ namespace MCRLogViewer
 		}
 
 
-		//==========================================================================
+		//==================================================================
 		// 画素データのグラフ表示
-		//==========================================================================
+		//==================================================================
 		public void DrawGraph2(int sel){
 			int i;
 			int center_x;
@@ -794,9 +1018,9 @@ namespace MCRLogViewer
 		}
 
 
-		//==========================================================================
+		//==================================================================
 		// Graphの描画
-		//==========================================================================
+		//==================================================================
 		public void DrawGraph()
 		{
 			myGraphPoints[] gp = new myGraphPoints[graph_points];
@@ -953,9 +1177,9 @@ namespace MCRLogViewer
 			g.Dispose();
 		}
 
-		//==========================================================================
+		//==================================================================
 		//現在位置のカーソルを消去
-		//==========================================================================
+		//==================================================================
 		private void erase_cursol()
 		{
 			Point p1, p2, ps, pe;
@@ -971,9 +1195,9 @@ namespace MCRLogViewer
 			}
 		}
 	
-		//==========================================================================
+		//==================================================================
 		//新しい位置にカーソルを表示
-		//==========================================================================
+		//==================================================================
 		private void draw_cursol()
 		{
 			Point p1, p2, ps, pe;
@@ -1006,17 +1230,17 @@ namespace MCRLogViewer
 		}
 
 
-		//==========================================================================
+		//==================================================================
 		// 縦カーソルの描画
-		//==========================================================================
+		//==================================================================
 		private void lstView_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			draw_cursol();
 		}
 
-		//==========================================================================
+		//==================================================================
 		//画面上のグラフカーソル描画
-		//==========================================================================
+		//==================================================================
 		private void pctGraph_Paint(object sender, PaintEventArgs e)
 		{
 			if(cur_show){
@@ -1025,9 +1249,9 @@ namespace MCRLogViewer
 			}
 		}
 
-		//==========================================================================
+		//==================================================================
         //ファイルを開く（メニュー及びコマンドボタンより）
-		//==========================================================================
+		//==================================================================
         private void FileOpen_Click(object sender, EventArgs e)
         {
             //“開く”ダイアログボックス
@@ -1042,17 +1266,17 @@ namespace MCRLogViewer
             ofd.Dispose();
         }
 
-		//==========================================================================
+		//==================================================================
         //ファイルの保存
-		//==========================================================================
+		//==================================================================
         private void menuFileSave_Click(object sender, EventArgs e)
         {
             FileSave();
         }
 
-		//==========================================================================
+		//==================================================================
         //フォームのリサイズ
-		//==========================================================================
+		//==================================================================
         private void frmMain_Resize(object sender, EventArgs e)
         {
 			try{
@@ -1064,9 +1288,9 @@ namespace MCRLogViewer
 			}
 		}
 
-		//==========================================================================
+		//==================================================================
         //スプリットバー操作
-		//==========================================================================
+		//==================================================================
         private void splitContainer2_Panel1_Resize(object sender, EventArgs e)
         {
             txtHead.Height = splitContainer2.Panel1.Height - txtHead.Location.Y;
@@ -1085,17 +1309,17 @@ namespace MCRLogViewer
 			InitGraph();
         }
 
-		//==========================================================================
+		//==================================================================
         //エクスプローラからのファイルドラッグエンター
-		//==========================================================================
+		//==================================================================
         private void frmMain_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.All;
         }
 
-		//==========================================================================
+		//==================================================================
         //エクスプローラからのファイルドロップ
-		//==========================================================================
+		//==================================================================
         private void frmMain_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop)){
@@ -1105,9 +1329,9 @@ namespace MCRLogViewer
             }
         }
 
-		//==========================================================================
+		//==================================================================
         //メインフォームのコンストラクタ
-		//==========================================================================
+		//==================================================================
         public frmMain()
         {
             InitializeComponent();
@@ -1116,9 +1340,9 @@ namespace MCRLogViewer
 			this.lstView.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lstView_MouseWheel);
         }
 
-		//==========================================================================
+		//==================================================================
         //pctGraphのマウスホイール操作イベント
-		//==========================================================================
+		//==================================================================
 		private void lstView_MouseWheel(object sender, MouseEventArgs e)
 		{
 			int width;
@@ -1138,11 +1362,10 @@ namespace MCRLogViewer
 			DrawGraph();
 
 		}
-		
 
-		//==========================================================================
+		//==================================================================
 		//メインフォームの起動
-		//==========================================================================
+		//==================================================================
         private void frmMain_Load(object sender, EventArgs e)
         {
 		//	//多重起動の禁止
@@ -1166,17 +1389,17 @@ namespace MCRLogViewer
 			pctGraph.Height = pnlGraph.Height;
 		}
 
-		//==========================================================================
+		//==================================================================
 		//メインフォームの終了
-		//==========================================================================
+		//==================================================================
 		private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			//mut.Close();
 		}
 
-		//==========================================================================
+		//==================================================================
         //テキスト形式でファイルセーブ
-		//==========================================================================
+		//==================================================================
         private void menuFileSaveTXT_Click(object sender, EventArgs e)
 		{
 			string path_txt;
@@ -1233,23 +1456,26 @@ namespace MCRLogViewer
             MessageBox.Show(path_txt, "書き込み終了");
 		}
 
-		//==========================================================================
+		//==================================================================
         //メニュー：終了
-		//==========================================================================
+		//==================================================================
         private void menuFileExit_Click(object sender, EventArgs e)
 		{
 			this.Close();
 		}
 
-		//==========================================================================
+		//==================================================================
         //グラフ更新
-		//==========================================================================
+		//==================================================================
         private void btnOK_Click(object sender, EventArgs e)
 		{
 			InitGraph();
 			DrawGraph();
 		}
 
+		//==================================================================
+        //グラフ初期化
+		//==================================================================
 		public void InitGraph()
 		{
 			pnlImage.Visible = chkImg.Checked;
@@ -1263,9 +1489,9 @@ namespace MCRLogViewer
 			pnlGraph3.Height = splitContainer1.Panel2.Height - pnlGraph3.Top;
 		}
 
-		//==========================================================================
+		//==================================================================
         //グラフ縮尺関連
-		//==========================================================================
+		//==================================================================
 		private void btnToubai_Click(object sender, EventArgs e){
 			pctGraph.Width = log_count;
 			DrawGraph();
@@ -1304,9 +1530,9 @@ namespace MCRLogViewer
 			DrawGraph();
 		}
 
-		//==========================================================================
+		//==================================================================
         //オプションボタン
-		//==========================================================================
+		//==================================================================
         private void btnGraphOption_Click(object sender, EventArgs e)
         {
             if (frmOption1.ShowDialog() == DialogResult.OK){
@@ -1314,9 +1540,9 @@ namespace MCRLogViewer
             }
 		}
 
-		//==========================================================================
+		//==================================================================
         //グラフのクリックでlstViewのインデックス変更
-		//==========================================================================
+		//==================================================================
 		private void pctGraph_MouseMove(object sender, MouseEventArgs e)
 		{
 			if(e.Button == MouseButtons.Left){
@@ -1389,7 +1615,6 @@ namespace MCRLogViewer
 					DrawGraph2(n);
 				}
 			}
-
 		}
 
 		private void pctGraph3_MouseMove(object sender, MouseEventArgs e)
@@ -1417,15 +1642,16 @@ namespace MCRLogViewer
 		}
 	}
 
-	//==========================================================================
+		//==================================================================
 	//二重起動の禁止と、最初のインスタンスに後で起動した引数を渡す処理
-	//==========================================================================
+		//==================================================================
 	class myApplication:WindowsFormsApplicationBase{
 		public myApplication() : base() {
 			this.EnableVisualStyles = true;
 			this.IsSingleInstance = true;
 			this.MainForm = new frmMain();//スタートアップフォームを設定
-			this.StartupNextInstance += new StartupNextInstanceEventHandler(myApplication_StartupNextInstance);
+			this.StartupNextInstance += 
+				new StartupNextInstanceEventHandler(myApplication_StartupNextInstance);
 		}
 		void myApplication_StartupNextInstance(object sender, StartupNextInstanceEventArgs e) {
 			//ここに二重起動されたときの処理を書く
@@ -1437,6 +1663,5 @@ namespace MCRLogViewer
                 frmMain1.FileOpen(cmd);
 			}
 		}
-
 	}
 }
