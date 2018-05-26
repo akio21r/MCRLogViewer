@@ -669,8 +669,11 @@ namespace MCRLogViewer
 					//--------------------------------------------------
 					// imgLog[] へのデータ追加
 					imgLog[n].Center	= 15;
-					imgLog[n].Sens		= sens;
-					imgLog[n].Sens	   &= 0x7f;				// Sensの最上位ビットを消す
+
+				//	imgLog[n].Sens		= sens;
+				//	imgLog[n].Sens	   &= 0x7f;				// Sensの最上位ビットを消す
+					imgLog[n].Sens		= (byte)(((sens >> 1) & 0x70) | sens & 0x0f);
+					
 					imgLog[n].data		= new byte[32];
 					for(int j=0; j<32; j++){
 						imgLog[n].data[j]   = 0;
