@@ -81,7 +81,9 @@ namespace MCRLogViewer
 
 		static public int y0;							//X軸
 		static public int cur_n1=0, cur_x=0, cur_x1=0;	//グラフ上の現在,前の位置
+		static public int cur3_n1=0, cur3_y=0, cur3_y1=0;	//グラフ3上の現在,前の位置
 		static public bool cur_show = false;			//カーソル表示
+		static public bool cur3_show = false;			//カーソル3表示
 		static public Single graph_v;					//グラフの増分
 		static public Single graph3_vx, graph3_vy;		//グラフの増分
 		static public Point scrPoint1, scrPoint2;		//グラフのスクロール座標
@@ -538,7 +540,7 @@ namespace MCRLogViewer
             //******************************************************
 
             //******************************************************
-			//ログバージョン010の読み込み　ここから
+			//ログバージョン010の読み込み　ここから　RemoteSens
 			//******************************************************
 			else if(LOG_Version == 10){
 				lblHead2.Text     = "                     A   B    C    D   E   F   G   H   I     J         K     L                          ";
@@ -754,7 +756,7 @@ namespace MCRLogViewer
 			}
 
             //******************************************************
-			//画素ログの読み込み [Camera]
+			//画素ログの読み込み [Camera]　LOG_Version==9
             //******************************************************
 			lstImg.Hide();
 			if(LOG_Version == 9){
@@ -840,7 +842,7 @@ namespace MCRLogViewer
 
 			//グラフ描画
 			DrawGraph();
-
+			
 			btnToubai.Enabled = true;
 			btnX2.Enabled = true;
 			btnX4.Enabled = true;
@@ -871,11 +873,11 @@ namespace MCRLogViewer
 		}
 		
 		//==================================================================
-		// Graph3の描画
+		// Graph3の描画（画素データ）
 		//==================================================================
 		public void DrawGraph3()
 		{
-		//	cur_show = false;		//カーソルを非表示に
+			cur3_show = false;		//カーソルを非表示に
 
 			//ビットマップイメージを解放
 			if(pctGraph3.Image != null) pctGraph3.Image.Dispose();
@@ -946,18 +948,13 @@ namespace MCRLogViewer
 					g3.FillRectangle(br, i*(graph3_vx*2) + 32*graph3_vx + 12, n*graph3_vy, graph3_vx, graph3_vy-1);
 					
 				}
-	
 			}
-
-
-
 
 			//スクロール
 			cur_x = (int)((Single)(lstView.SelectedIndex + 1) * graph_v);
 			pnlGraph.AutoScrollPosition = new Point(cur_x - pnlGraph.Width / 2, 0);
 
-
-			pctGraph3.Refresh();		// PictureBoxを更新（再描画させる）
+//			pctGraph3.Refresh();		// PictureBoxを更新（再描画させる）
 			
 		//	draw_cursol();
 			
@@ -1175,7 +1172,7 @@ namespace MCRLogViewer
 
 			pctGraph.Refresh();		// PictureBoxを更新（再描画させる）
 			
-			draw_cursol();
+		//	draw_cursol();
 			
 			for(i=0; i<graph_points; i++){
 				gp[i].pen.Dispose();
@@ -1191,7 +1188,8 @@ namespace MCRLogViewer
 			Point p1, p2, ps, pe;
 			Point pgx = pnlGraph.PointToScreen(new Point(0, 0));
 
-			//現在のカーソルを消去
+			//--------------------------------------------------------------
+			//graph
 			p1 = new Point((int)cur_x1, 0);
 			p2 = new Point((int)cur_x1, pctGraph.Height);
 			ps = pctGraph.PointToScreen(p1);
@@ -1199,17 +1197,38 @@ namespace MCRLogViewer
 			if(ps.X > pgx.X && ps.X < pgx.X + pnlGraph.Width){
 				ControlPaint.DrawReversibleLine(ps, pe, Color.Black);
 			}
+
 		}
 	
+		private void erase_cursol3()
+		{
+			Point p1, p2, ps, pe;
+			Point pgx3 = pnlGraph3.PointToScreen(new Point(0, 0));
+			//--------------------------------------------------------------
+			//graph3
+			if(LOG_Version == 10){
+				p1 = new Point(0, (int)cur3_y1);
+				p2 = new Point(pctGraph3.Width, (int)cur3_y1);
+				ps = pctGraph3.PointToScreen(p1);
+				pe = pctGraph3.PointToScreen(p2);
+				if(ps.Y > pgx3.Y && ps.Y < pgx3.Y + pnlGraph3.Height){
+					ControlPaint.DrawReversibleLine(ps, pe, Color.Black);
+				}
+			}	
+		}
+
 		//==================================================================
 		//新しい位置にカーソルを表示
 		//==================================================================
 		private void draw_cursol()
 		{
 			Point p1, p2, ps, pe;
-			Point pgx = pnlGraph.PointToScreen(new Point(0, 0));
 			int n;
+			Point pgx = pnlGraph.PointToScreen(new Point(0, 0));
+			Point pgx3 = pnlGraph3.PointToScreen(new Point(0, 0));
 
+			//--------------------------------------------------------------
+			//graph
 			if(cur_show){		//カーソルが表示されていたら現在のカーソルを消去
 				erase_cursol();
 			}
@@ -1233,6 +1252,32 @@ namespace MCRLogViewer
 			//新しい場所をcur_x1に記録
 			cur_n1 = n;
 			cur_x1 = cur_x;
+
+			//--------------------------------------------------------------
+			//graph3
+			if(LOG_Version == 10){
+				if(cur3_show){		//カーソルが表示されていたら現在のカーソルを消去
+					erase_cursol3();
+				}
+				else{
+					cur3_show = true;
+				}
+				//新しい場所の位置を計算
+				cur3_y = (int)((Single)(n-1) * graph3_vy);
+
+				//新しい場所にカーソル表示
+				p1 = new Point(0, (int)cur3_y);
+				p2 = new Point(pctGraph3.Width, (int)cur3_y);
+				ps = pctGraph3.PointToScreen(p1);
+				pe = pctGraph3.PointToScreen(p2);
+				if(ps.Y > pgx3.Y && ps.Y < pgx3.Y + pnlGraph3.Height){
+					ControlPaint.DrawReversibleLine(ps, pe, Color.Black);
+				}
+				//新しい場所をcur3_y1に記録
+				cur3_n1 = n;
+				cur3_y1 = cur3_y;
+
+			}
 		}
 
 
@@ -1253,6 +1298,10 @@ namespace MCRLogViewer
 				erase_cursol();
 				cur_show = false;
 			}
+			if(cur3_show){
+				erase_cursol3();
+				cur3_show = false;
+			}
 		}
 
 		//==================================================================
@@ -1260,7 +1309,7 @@ namespace MCRLogViewer
 		//==================================================================
         private void FileOpen_Click(object sender, EventArgs e)
         {
-            //“開く”ダイアログボックス
+			//“開く”ダイアログボックス
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.InitialDirectory = txtPath.Text;
             ofd.Filter = "MCRログファイル (*.LOG)|*.LOG|" + "すべてのファイル (*.*)|*.*";
@@ -1477,6 +1526,7 @@ namespace MCRLogViewer
 		{
 			InitGraph();
 			DrawGraph();
+			DrawGraph3();
 		}
 
 		//==================================================================
@@ -1593,6 +1643,10 @@ namespace MCRLogViewer
 					erase_cursol();
 					cur_show = false;
 				}
+				if(cur3_show){
+					erase_cursol3();
+					cur3_show = false;
+				}
 			}
 		}
 
@@ -1601,6 +1655,13 @@ namespace MCRLogViewer
 			if(cur_show){
 				erase_cursol();
 				cur_show = false;
+			}
+		}
+		private void pnlGraph3_Scroll(object sender, ScrollEventArgs e)
+		{
+			if(cur3_show){
+				erase_cursol3();
+				cur3_show = false;
 			}
 		}
 
@@ -1646,6 +1707,19 @@ namespace MCRLogViewer
 		{
 			lstImg.Visible = chkLstImg.Checked;
 		}
+
+		private void pctGraph3_Paint(object sender, PaintEventArgs e)
+		{
+			if(cur_show){
+				erase_cursol();
+				cur_show = false;
+			}
+			if(cur3_show){
+				erase_cursol3();
+				cur3_show = false;
+			}
+		}
+
 	}
 
 		//==================================================================
