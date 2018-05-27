@@ -192,7 +192,7 @@
 			this.lstImg.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.lstImg.FormattingEnabled = true;
 			this.lstImg.ItemHeight = 12;
-			this.lstImg.Location = new System.Drawing.Point(3, 29);
+			this.lstImg.Location = new System.Drawing.Point(20, 86);
 			this.lstImg.Name = "lstImg";
 			this.lstImg.Size = new System.Drawing.Size(407, 316);
 			this.lstImg.TabIndex = 24;
@@ -453,6 +453,7 @@
 			this.pnlGraph3.Name = "pnlGraph3";
 			this.pnlGraph3.Size = new System.Drawing.Size(213, 521);
 			this.pnlGraph3.TabIndex = 24;
+			this.pnlGraph3.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pnlGraph3_Scroll);
 			// 
 			// pctGraph3
 			// 
@@ -462,6 +463,7 @@
 			this.pctGraph3.Size = new System.Drawing.Size(203, 387);
 			this.pctGraph3.TabIndex = 0;
 			this.pctGraph3.TabStop = false;
+			this.pctGraph3.Paint += new System.Windows.Forms.PaintEventHandler(this.pctGraph3_Paint);
 			this.pctGraph3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pctGraph3_MouseDown);
 			this.pctGraph3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pctGraph3_MouseMove);
 			// 
@@ -538,11 +540,11 @@
 		private System.Windows.Forms.PictureBox pctGraph2;
 		private System.Windows.Forms.ListBox lstImg;
 		private System.Windows.Forms.Panel pnlGraph3;
-		private System.Windows.Forms.PictureBox pctGraph3;
 		private System.Windows.Forms.Panel pnlImage;
 		private System.Windows.Forms.Panel panel2;
 		private System.Windows.Forms.CheckBox chkImg;
 		private System.Windows.Forms.CheckBox chkLstImg;
+		public System.Windows.Forms.PictureBox pctGraph3;
     }
 }
 
