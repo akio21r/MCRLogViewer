@@ -1,4 +1,7 @@
-﻿using System;
+﻿//==========================================================================
+// LOG_Version = 10  RemoteSens用ログ
+//==========================================================================
+using System;
 using System.Text;
 
 namespace MCRLogViewer
@@ -10,67 +13,44 @@ namespace MCRLogViewer
 			lblHead1.Text = "  time mode  sens   hnd ang  sv   vt  v   fl  fr  rl  rr     x  slc  Slope Gyro  L1  L2   L   R  R2  R1 ";
 
 			while (WorkAddress < fileSize - 512){
-				mode	=   (sbyte)buf[WorkAddress + BuffAddress + 0];
-				sens	=   buf[WorkAddress + BuffAddress + 1];
+				mode			= (sbyte)buf[WorkAddress + BuffAddress + 0];
+				log[n].mode		= mode;
 
-				angle_t	=   (sbyte)buf[WorkAddress + BuffAddress + 2];
-				angle	=   (sbyte)buf[WorkAddress + BuffAddress + 3];
+				sens			= buf[WorkAddress + BuffAddress + 1];
+				ErrorCount		= (int)sens;
 
-				sv_pow	=	(sbyte)buf[WorkAddress + BuffAddress + 4];
+				log[n].angle_t	=   (sbyte)buf[WorkAddress + BuffAddress + 2];
+				log[n].angle	=   (sbyte)buf[WorkAddress + BuffAddress + 3];
+
+				log[n].sv_pow	=	(sbyte)buf[WorkAddress + BuffAddress + 4];
 			
-				vt		=   (sbyte)buf[WorkAddress + BuffAddress + 5];
-				v		=   (sbyte)buf[WorkAddress + BuffAddress + 6];
-				fl		=   (sbyte)buf[WorkAddress + BuffAddress + 7];
-				fr		=	(sbyte)buf[WorkAddress + BuffAddress + 8];
-				rl		=	(sbyte)buf[WorkAddress + BuffAddress + 9];
-				rr		=	(sbyte)buf[WorkAddress + BuffAddress + 10];
+				log[n].vt		=   (sbyte)buf[WorkAddress + BuffAddress + 5];
+				log[n].v		=   (sbyte)buf[WorkAddress + BuffAddress + 6];
+				log[n].fl		=   (sbyte)buf[WorkAddress + BuffAddress + 7];
+				log[n].fr		=	(sbyte)buf[WorkAddress + BuffAddress + 8];
+				log[n].rl		=	(sbyte)buf[WorkAddress + BuffAddress + 9];
+				log[n].rr		=	(sbyte)buf[WorkAddress + BuffAddress + 10];
 			
-				slope	=   (sbyte)buf[WorkAddress + BuffAddress + 11];
-	
-				trip	=   buf[WorkAddress + BuffAddress + 12];
-				trip	<<= 8;
-				trip	+=  buf[WorkAddress + BuffAddress + 13];
+				d_sb				= (sbyte)buf[WorkAddress + BuffAddress + 11];
+				log[n].slope_mode	= (d_sb >> 6) & 0x03;
+				log[n].slope_sw		= (d_sb >> 4) & 0x03;
+				log[n].slope_cnt	= d_sb & 0x0f;
 
-				batt	=          buf[WorkAddress + BuffAddress + 14];	//batt
-				gyroEx	=   (sbyte)buf[WorkAddress + BuffAddress + 14];	//gyroEx
-				gyro	=   (sbyte)buf[WorkAddress + BuffAddress + 15];	//gyro
+				d_int			=  buf[WorkAddress + BuffAddress + 12];
+				d_int			<<= 8;
+				d_int			+= buf[WorkAddress + BuffAddress + 13];
+				log[n].trip		=  d_int;
 
-				anL1	= buf[WorkAddress + BuffAddress + 17];
-				anL2	= buf[WorkAddress + BuffAddress + 18];
-				anL		= buf[WorkAddress + BuffAddress + 19];
-				anR		= buf[WorkAddress + BuffAddress + 20];
-				anR2	= buf[WorkAddress + BuffAddress + 21];
-				anR1	= buf[WorkAddress + BuffAddress + 22];
+				log[n].batt		=          buf[WorkAddress + BuffAddress + 14];	//batt
+				log[n].gyroEx	=   (sbyte)buf[WorkAddress + BuffAddress + 14];	//gyroEx
+				log[n].gyro		=   (sbyte)buf[WorkAddress + BuffAddress + 15];	//gyro
 
-				ErrorCount = (int)sens;
-
-				log[n].mode			= mode;
-				log[n].angle_t		= angle_t;
-				log[n].angle		= angle;
-				log[n].sv_pow		= sv_pow;
-				log[n].vt			= vt;
-				log[n].v			= v;
-				log[n].fl			= fl;
-				log[n].fr			= fr;
-				log[n].rl			= rl;
-				log[n].rr			= rr;
-
-				log[n].slope_mode	= (slope >> 6) & 0x03;
-				log[n].slope_sw		= (slope >> 4) & 0x03;
-				log[n].slope_cnt	= slope & 0x0f;
-				log[n].trip			= trip;
-
-				log[n].batt         = batt;
-
-				log[n].gyroEx       = gyroEx;
-				log[n].gyro			= gyro;
-
-				log[n].anL1			= anL1;
-				log[n].anL2			= anL2;
-				log[n].anL			= anL;
-				log[n].anR			= anR;
-				log[n].anR2			= anR2;
-				log[n].anR1			= anR1;
+				log[n].anL1		= buf[WorkAddress + BuffAddress + 17];
+				log[n].anL2		= buf[WorkAddress + BuffAddress + 18];
+				log[n].anL		= buf[WorkAddress + BuffAddress + 19];
+				log[n].anR		= buf[WorkAddress + BuffAddress + 20];
+				log[n].anR2		= buf[WorkAddress + BuffAddress + 21];
+				log[n].anR1		= buf[WorkAddress + BuffAddress + 22];
 
 				//ラインセンサ
 				log[n].sens = new StringBuilder(" ");

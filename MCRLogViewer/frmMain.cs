@@ -41,6 +41,7 @@ namespace MCRLogViewer
 			public int		gyro, gyroEx;	//ジャイロ出力値
 			public int		side;			//サイドセンサの状態, ハーフライン
 			public int		time;			//時間[ms]
+			public int		floor;			//階
 
 			//Camera用
 			public int		center;			//Cameraのセンター値
@@ -50,7 +51,7 @@ namespace MCRLogViewer
 			public int		anL1,anL2,anL,anR,anR2,anR1;	//anセンサ値
 
 			//以下は現在使っていないもの。
-			public int		pos_sens;		//ポジションセンサ
+		//	public sbyte	pos_sens;		//ポジションセンサ
 			public int		pre_sens;		//先読みセンサ
             public float	batt;           //バッテリ電圧
 		}
@@ -966,9 +967,9 @@ namespace MCRLogViewer
 
 	}
 
-		//==================================================================
+	//==================================================================
 	//二重起動の禁止と、最初のインスタンスに後で起動した引数を渡す処理
-		//==================================================================
+	//==================================================================
 	class myApplication:WindowsFormsApplicationBase{
 		public myApplication() : base() {
 			this.EnableVisualStyles = true;

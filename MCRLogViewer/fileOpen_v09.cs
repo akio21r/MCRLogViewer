@@ -1,4 +1,7 @@
-﻿using System;
+﻿//==========================================================================
+// LOG_Version = 09  Camera用ログ  2019.07.12以前
+//==========================================================================
+using System;
 using System.Text;
 
 namespace MCRLogViewer
@@ -6,57 +9,44 @@ namespace MCRLogViewer
     partial class frmMain
     {
 		public void fileOpen_v09(){
-			lblHead2.Text = "                         A   B    C     D   E   F   G   H   I     J         K    L  ";
+			lblHead2.Text = "                         A   B    C     d_sb   E   F   G   H   I     J         K    L  ";
 			lblHead1.Text = "  time mode   sens   cam hnd ang  sv    vt  v   fl  fr  rl  rr     x  slc  nb  Gyr  ";
 
 			while (WorkAddress < fileSize - 512){
-				mode	= (sbyte)buf[WorkAddress + BuffAddress + 0];
-				sens	=        buf[WorkAddress + BuffAddress + 1];
-				angle_t	= (sbyte)buf[WorkAddress + BuffAddress + 2];
-				angle	= (sbyte)buf[WorkAddress + BuffAddress + 3];
-				sv_pow	= (sbyte)buf[WorkAddress + BuffAddress + 4];
-				vt		= (sbyte)buf[WorkAddress + BuffAddress + 5];
-				v		= (sbyte)buf[WorkAddress + BuffAddress + 6];
-				fl		= (sbyte)buf[WorkAddress + BuffAddress + 7];
-				fr		= (sbyte)buf[WorkAddress + BuffAddress + 8];
-				rl		= (sbyte)buf[WorkAddress + BuffAddress + 9];
-				rr		= (sbyte)buf[WorkAddress + BuffAddress + 10];
-				slope	= (sbyte)buf[WorkAddress + BuffAddress + 11];
-				trip	=        buf[WorkAddress + BuffAddress + 12];
-				trip	<<= 8;
-				trip	+=       buf[WorkAddress + BuffAddress + 13];
-				gyroEx	= (sbyte)buf[WorkAddress + BuffAddress + 14];
-				gyro	= (sbyte)buf[WorkAddress + BuffAddress + 15];
+				mode			= (sbyte)buf[WorkAddress + BuffAddress + 0];
+				log[n].mode		= mode;
 
-				floor	= (sbyte)buf[WorkAddress + BuffAddress + 16];
+				sens			= buf[WorkAddress + BuffAddress + 1];
+				ErrorCount		= (int)sens;
 
-			//	center	= (sbyte)buf[WorkAddress + BuffAddress + 17];	//cam.Center
-			//	side	= (sbyte)buf[WorkAddress + BuffAddress + 18];	//cam.halfLine
-			//	etc		= (sbyte)buf[WorkAddress + BuffAddress + 19];	//10*cam.LineNum + sci_recvNum
-				center	= angle_t;
+				log[n].angle_t	= (sbyte)buf[WorkAddress + BuffAddress + 2];
+				log[n].center	= log[n].angle_t;
 
-				ErrorCount = (int)sens;
+				log[n].angle	= (sbyte)buf[WorkAddress + BuffAddress + 3];
+				log[n].sv_pow	= (sbyte)buf[WorkAddress + BuffAddress + 4];
+				log[n].vt		= (sbyte)buf[WorkAddress + BuffAddress + 5];
+				log[n].v		= (sbyte)buf[WorkAddress + BuffAddress + 6];
+				log[n].fl		= (sbyte)buf[WorkAddress + BuffAddress + 7];
+				log[n].fr		= (sbyte)buf[WorkAddress + BuffAddress + 8];
+				log[n].rl		= (sbyte)buf[WorkAddress + BuffAddress + 9];
+				log[n].rr		= (sbyte)buf[WorkAddress + BuffAddress + 10];
 
-				log[n].mode			= mode;
-				log[n].center		= center;
-				log[n].angle_t		= angle_t;
-				log[n].angle		= angle;
-				log[n].sv_pow		= sv_pow;
-				log[n].vt			= vt;
-				log[n].v			= v;
-				log[n].fl			= fl;
-				log[n].fr			= fr;
-				log[n].rl			= rl;
-				log[n].rr			= rr;
+				d_sb				= (sbyte)buf[WorkAddress + BuffAddress + 11];
+				log[n].slope_mode	= (d_sb >> 6) & 0x03;
+				log[n].slope_sw		= (d_sb >> 4) & 0x03;
+				log[n].slope_cnt	= d_sb & 0x0f;
 
-				log[n].slope_mode	= (slope >> 6) & 0x03;
-				log[n].slope_sw		= (slope >> 4) & 0x03;
-				log[n].slope_cnt	= slope & 0x0f;
-				log[n].trip			= trip;
+				d_int			=  buf[WorkAddress + BuffAddress + 12];
+				d_int			<<= 8;
+				d_int			+= buf[WorkAddress + BuffAddress + 13];
+				log[n].trip		=  d_int;
 
-				log[n].gyroEx       = gyroEx;
-				log[n].gyro			= gyro;
-				log[n].side			= log[n].slope_sw;
+				log[n].gyroEx	= (sbyte)buf[WorkAddress + BuffAddress + 14];
+				log[n].gyro		= (sbyte)buf[WorkAddress + BuffAddress + 15];
+
+				log[n].floor	= (sbyte)buf[WorkAddress + BuffAddress + 16];
+
+				log[n].side		= log[n].slope_sw;
 
 				//log_count			= n;
 
@@ -142,7 +132,6 @@ namespace MCRLogViewer
 							log[n].slope_sw		= 0;
 							log[n].slope_cnt	= 0;
 							log[n].trip			= 0;
-							log[n].batt			= 0;
 							log[n].gyroEx       = 0;
 							log[n].gyro			= 0;
 							log[n].side			= 0;

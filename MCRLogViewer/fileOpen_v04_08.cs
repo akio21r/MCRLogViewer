@@ -1,3 +1,6 @@
+//==========================================================================
+// LOG_Version = 04-08  08は2019年度アームセンサ用ログ
+//==========================================================================
 using System;
 using System.Text;
 
@@ -6,6 +9,7 @@ namespace MCRLogViewer
     partial class frmMain
     {
 		public void fileOpen_v04_08(){
+			sbyte pos_sens;
 			lblHead2.Text     = "                              A   B    C     D   E   F   G   H   I     J         K     L    ";
 			if(LOG_Version >= 7)
 				lblHead1.Text = "  time mode     sens    pos  hnd ang  sv    vt  v   fl  fr  rl  rr     x  slc  Slope Gyro   ";
@@ -13,67 +17,51 @@ namespace MCRLogViewer
 				lblHead1.Text = "  time mode     sens    pos  hnd ang  sv    vt  v   fl  fr  rl  rr     x  slc   Batt  Gyro  ";
 
 			while (WorkAddress < fileSize - 512){
-				mode	=   (sbyte)buf[WorkAddress + BuffAddress + 0];
-				sens	=   buf[WorkAddress + BuffAddress + 1];
+				mode			= (sbyte)buf[WorkAddress + BuffAddress + 0];
+				log[n].mode		= mode;
 
-				angle_t	=   (sbyte)buf[WorkAddress + BuffAddress + 2];
-				angle	=   (sbyte)buf[WorkAddress + BuffAddress + 3];
+				sens			= buf[WorkAddress + BuffAddress + 1];
+				ErrorCount		= (int)sens;
 
-				sv_pow	=	(sbyte)buf[WorkAddress + BuffAddress + 4];
+
+				log[n].angle_t	=   (sbyte)buf[WorkAddress + BuffAddress + 2];
+				log[n].angle	=   (sbyte)buf[WorkAddress + BuffAddress + 3];
+
+				log[n].sv_pow	=	(sbyte)buf[WorkAddress + BuffAddress + 4];
 			
-				vt		=   (sbyte)buf[WorkAddress + BuffAddress + 5];
-				v		=   (sbyte)buf[WorkAddress + BuffAddress + 6];
-				fl		=   (sbyte)buf[WorkAddress + BuffAddress + 7];
-				fr		=	(sbyte)buf[WorkAddress + BuffAddress + 8];
-				rl		=	(sbyte)buf[WorkAddress + BuffAddress + 9];
-				rr		=	(sbyte)buf[WorkAddress + BuffAddress + 10];
+				log[n].vt		=   (sbyte)buf[WorkAddress + BuffAddress + 5];
+				log[n].v		=   (sbyte)buf[WorkAddress + BuffAddress + 6];
+				log[n].fl		=   (sbyte)buf[WorkAddress + BuffAddress + 7];
+				log[n].fr		=	(sbyte)buf[WorkAddress + BuffAddress + 8];
+				log[n].rl		=	(sbyte)buf[WorkAddress + BuffAddress + 9];
+				log[n].rr		=	(sbyte)buf[WorkAddress + BuffAddress + 10];
 			
-				slope	=   (sbyte)buf[WorkAddress + BuffAddress + 11];
-	
-				trip	=   buf[WorkAddress + BuffAddress + 12];
-				trip	<<= 8;
-				trip	+=  buf[WorkAddress + BuffAddress + 13];
+				d_sb				= (sbyte)buf[WorkAddress + BuffAddress + 11];
+				log[n].slope_mode	= (d_sb >> 6) & 0x03;
+				log[n].slope_sw		= (d_sb >> 4) & 0x03;
+				log[n].slope_cnt	= d_sb & 0x0f;
 
-				batt	=          buf[WorkAddress + BuffAddress + 14];	//batt
-				gyroEx	=   (sbyte)buf[WorkAddress + BuffAddress + 14];	//gyroEx
-				gyro	=   (sbyte)buf[WorkAddress + BuffAddress + 15];	//gyro
+				d_int			=  buf[WorkAddress + BuffAddress + 12];
+				d_int			<<= 8;
+				d_int			+= buf[WorkAddress + BuffAddress + 13];
+				log[n].trip		=  d_int;
 
-				side	=	(sbyte)buf[WorkAddress + BuffAddress + 16];
-				side	>>= 6;
-				side	&=  0x03;
+				log[n].batt		=          buf[WorkAddress + BuffAddress + 14];	//batt
+				log[n].gyroEx	=   (sbyte)buf[WorkAddress + BuffAddress + 14];	//gyroEx
+				log[n].gyro		=   (sbyte)buf[WorkAddress + BuffAddress + 15];	//gyro
 
-				pre_sens =  (sbyte)buf[WorkAddress + BuffAddress + 16];
-				pre_sens >>= 5;
-				pre_sens &= 0x01;
+				d_sb			=	(sbyte)buf[WorkAddress + BuffAddress + 16];
+				d_sb			>>= 6;
+				d_sb			&=  0x03;
+				log[n].side		=   d_sb;
 
-				pos_sens =  (sbyte)buf[WorkAddress + BuffAddress + 16];
-				pos_sens &= 0x1f;
+				d_sb			=   (sbyte)buf[WorkAddress + BuffAddress + 16];
+				d_sb			>>= 5;
+				d_sb			&=  0x01;
+				log[n].pre_sens	= d_sb;
 
-				ErrorCount = (int)sens;
-
-				log[n].mode			= mode;
-				log[n].angle_t		= angle_t;
-				log[n].angle		= angle;
-				log[n].sv_pow		= sv_pow;
-				log[n].vt			= vt;
-				log[n].v			= v;
-				log[n].fl			= fl;
-				log[n].fr			= fr;
-				log[n].rl			= rl;
-				log[n].rr			= rr;
-
-				log[n].slope_mode	= (slope >> 6) & 0x03;
-				log[n].slope_sw		= (slope >> 4) & 0x03;
-				log[n].slope_cnt	= slope & 0x0f;
-				log[n].trip			= trip;
-
-				log[n].batt         = batt;
-
-				log[n].gyroEx       = gyroEx;
-				log[n].gyro			= gyro;
-				log[n].side			= side;
-				log[n].pre_sens		= pre_sens;
-				log[n].pos_sens		= pos_sens;
+				pos_sens		=  (sbyte)buf[WorkAddress + BuffAddress + 16];
+				pos_sens		&= 0x1f;
 
 				//log_count			= n;
 

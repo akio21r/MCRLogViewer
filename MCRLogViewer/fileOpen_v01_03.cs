@@ -1,3 +1,6 @@
+//==========================================================================
+// LOG_Version = 01-03
+//==========================================================================
 using System;
 using System.Text;
 
@@ -10,39 +13,37 @@ namespace MCRLogViewer
 			lblHead2.Text = "                     A   B    C    D   E                      F      G    ";
 				
 			while (WorkAddress < fileSize - 512){
-				mode	=   (sbyte)buf[WorkAddress + BuffAddress + 0];
-				sens	=   buf[WorkAddress + BuffAddress + 1];
-				v		=   (sbyte)buf[WorkAddress + BuffAddress + 2];
-				vt		=   (sbyte)buf[WorkAddress + BuffAddress + 3];
-				angle_t	=   (sbyte)buf[WorkAddress + BuffAddress + 4];
-				angle	=   (sbyte)buf[WorkAddress + BuffAddress + 5];
-				power	=   (sbyte)buf[WorkAddress + BuffAddress + 6];
-				slope	=   (sbyte)buf[WorkAddress + BuffAddress + 7];
-				trip	=   buf[WorkAddress + BuffAddress + 8];
-				trip	<<= 8;
-				trip	+=  buf[WorkAddress + BuffAddress + 9];
-				batt	=   buf[WorkAddress + BuffAddress + 10];
-				gyro	=   (sbyte)buf[WorkAddress + BuffAddress + 11];
+				mode			= (sbyte)buf[WorkAddress + BuffAddress + 0];
+				log[n].mode		= mode;
 
-				ErrorCount = (int)sens;
+				sens			= buf[WorkAddress + BuffAddress + 1];
+				ErrorCount		= (int)sens;
 
-				log[n].mode			= mode;
-				log[n].v			= v & 0x3f;
-				log[n].vt			= vt;
-				log[n].angle		= angle;
-				log[n].angle_t		= angle_t;
-				log[n].power		= power;
-				log[n].slope_mode	= (slope >> 6) & 0x03;
-				log[n].slope_sw		= (slope >> 4) & 0x03;
-				log[n].slope_cnt	= slope & 0x0f;
-				log[n].trip			= trip;
-				log[n].batt			= batt;
-				log[n].gyro			= gyro;
+
+				log[n].v		=   (sbyte)buf[WorkAddress + BuffAddress + 2];
+				log[n].vt		=   (sbyte)buf[WorkAddress + BuffAddress + 3];
+				log[n].angle_t	=   (sbyte)buf[WorkAddress + BuffAddress + 4];
+				log[n].angle	=   (sbyte)buf[WorkAddress + BuffAddress + 5];
+				log[n].power	=   (sbyte)buf[WorkAddress + BuffAddress + 6];
+
+				d_sb				= (sbyte)buf[WorkAddress + BuffAddress + 7];
+				log[n].slope_mode	= (d_sb >> 6) & 0x03;
+				log[n].slope_sw		= (d_sb >> 4) & 0x03;
+				log[n].slope_cnt	= d_sb & 0x0f;
+
+				d_int			=  buf[WorkAddress + BuffAddress + 8];
+				d_int			<<= 8;
+				d_int			+= buf[WorkAddress + BuffAddress + 9];
+				log[n].trip		=  d_int;
+
+
+				log[n].batt	=   buf[WorkAddress + BuffAddress + 10];
+				log[n].gyro	=   (sbyte)buf[WorkAddress + BuffAddress + 11];
 
 				//log_count			= n;
 
-				if((v & 0x80) != 0) log[n].sens = new StringBuilder("S");
-				else                log[n].sens = new StringBuilder(" ");
+				if((log[n].v & 0x80) != 0) log[n].sens = new StringBuilder("S");
+				else                       log[n].sens = new StringBuilder(" ");
 				for(i=0; i<8; i++){
 					if(i != 4){
 						if((sens & 0x80) != 0) log[n].sens.Append("*");
@@ -50,8 +51,8 @@ namespace MCRLogViewer
 					}
 					sens <<= 1;
 				}
-				if((v & 0x40) != 0) log[n].sens.Append("S");
-				else                log[n].sens.Append(" ");
+				if((log[n].v & 0x40) != 0) log[n].sens.Append("S");
+				else                       log[n].sens.Append(" ");
 
 				str  = new StringBuilder(String.Format("{0, 6}", time));
 				time += 4;
