@@ -40,8 +40,6 @@ namespace MCRLogViewer
 				log[n].batt	=   buf[WorkAddress + BuffAddress + 10];
 				log[n].gyro	=   (sbyte)buf[WorkAddress + BuffAddress + 11];
 
-				//log_count			= n;
-
 				if((log[n].v & 0x80) != 0) log[n].sens = new StringBuilder("S");
 				else                       log[n].sens = new StringBuilder(" ");
 				for(i=0; i<8; i++){
@@ -78,7 +76,6 @@ namespace MCRLogViewer
 				{
 					int ii;
 					WorkAddress += 512;
-				//	readSize = fs.Read(buf, WorkAddress, 512);
 					BuffAddress = 0;
 
 					time -= 4;

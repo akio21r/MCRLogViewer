@@ -1,5 +1,5 @@
 //==========================================================================
-// LOG_Version = 04-08  08は2019年度アームセンサ用ログ
+// LOG_Version = 04-07  アームセンサ用ログ  ポジションセンサ付
 //==========================================================================
 using System;
 using System.Text;
@@ -8,8 +8,10 @@ namespace MCRLogViewer
 {
     partial class frmMain
     {
-		public void fileOpen_v04_08(){
-			sbyte pos_sens;
+		public void fileOpen_v04_07(){
+			sbyte	pos_sens;
+			int		pre_sens;
+
 			lblHead2.Text     = "                              A   B    C     D   E   F   G   H   I     J         K     L    ";
 			if(LOG_Version >= 7)
 				lblHead1.Text = "  time mode     sens    pos  hnd ang  sv    vt  v   fl  fr  rl  rr     x  slc  Slope Gyro   ";
@@ -58,16 +60,14 @@ namespace MCRLogViewer
 				d_sb			=   (sbyte)buf[WorkAddress + BuffAddress + 16];
 				d_sb			>>= 5;
 				d_sb			&=  0x01;
-				log[n].pre_sens	= d_sb;
+				pre_sens		= d_sb;
 
 				pos_sens		=  (sbyte)buf[WorkAddress + BuffAddress + 16];
 				pos_sens		&= 0x1f;
 
-				//log_count			= n;
-
 				//先読みセンサ
-				if(log[n].pre_sens == 1)	log[n].sens = new StringBuilder(" P ");
-				else						log[n].sens = new StringBuilder("   ");
+				if(pre_sens == 1)	log[n].sens = new StringBuilder(" P ");
+				else				log[n].sens = new StringBuilder("   ");
 
 				//ラインセンサ
 				if((log[n].side & 0x02) != 0) log[n].sens.Append("S");		//★
@@ -140,14 +140,12 @@ namespace MCRLogViewer
 					str.Append(String.Format("{0, 6}", log[n].gyroEx));
 				else
 					str.Append(String.Format("{0, 6}", log[n].batt));
-				//	str.Append(String.Format("{0, 6:f1}", log[n].batt));
 				str.Append(String.Format("{0, 6}", log[n].gyro));
 
 				if (mode == -2)             //次のセクタへ
 				{
 					int ii;
 					WorkAddress += 512;
-				//	readSize = fs.Read(buf, WorkAddress, 512);
 					BuffAddress = 0;
 
 					time -= 5;

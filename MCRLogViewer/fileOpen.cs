@@ -63,7 +63,6 @@ namespace MCRLogViewer
 				//ログのバージョンを読み込む
 				Line = TextFile.ReadLine();
                 LOG_Version = int.Parse(Line);
-                //Form1.Text = Form1.Text + " (" + Line + ")";
 
 				//1レコードのバイト数を決定
 				if(LOG_Version <= 3){
@@ -89,10 +88,7 @@ namespace MCRLogViewer
                     txtHead.Text += Line + System.Environment.NewLine;
                 }while(Line != null);
             }
-			else{
-				//LOG_Version = 6;
-				//LOG_RecordBytes = 17;
-			}
+
 			txtHead.Text += String.Format("Log_Version = {0,3:d3}", LOG_Version) + System.Environment.NewLine;
 			txtHead.Select(0, 0);
 
@@ -111,50 +107,33 @@ namespace MCRLogViewer
 
 			lstView.Hide();
             lstView.Items.Clear();
-		//	readSize = fs.Read(buf, WorkAddress, 512);
 			readSize = fs.Read(buf, WorkAddress, fileSize - WorkAddress);
 
 			time = 0;			
 
-			//******************************************************
-			//ログバージョン003以下の読み込み
-			//******************************************************
-			if(LOG_Version <= 3){
-				fileOpen_v01_03();
+			//==========================================================
+			//ログデータの読み込み
+			//==========================================================
+			switch(LOG_Version){
+				case  1:
+				case  2:
+				case  3:
+					fileOpen_v01_03();
+					break;
+				case  4:
+				case  5:
+				case  6:
+				case  7:
+					fileOpen_v04_07();
+					break;
+				case  8: fileOpen_v08(); break;
+				case  9: fileOpen_v09(); break;
+				case 10: fileOpen_v10(); break;
+				case 11: fileOpen_v11(); break;
 			}
 
-            //******************************************************
-			//ログバージョン004以上008以下の読み込み
-			//******************************************************
-			else if(LOG_Version >= 4 && LOG_Version <= 8){
-				fileOpen_v04_08();
-            }
-
-			//******************************************************
-			//ログバージョン010の読み込み  RemoteSens
-			//******************************************************
-			else if(LOG_Version == 10){
-				fileOpen_v10();
-			}
-
-
-            //******************************************************
-			//ログバージョン009の読み込み  Camera  2019.07.12以前
-			//******************************************************
-			else if(LOG_Version == 9){
-				fileOpen_v09();
-
-            }
-
-            //******************************************************
-			//ログバージョン011の読み込み  Camera  2019.07.13以降
-			//******************************************************
-			else if(LOG_Version == 11){
-				fileOpen_v11();
-            }
-
-            //******************************************************
-            //******************************************************
+			//==========================================================
+			//==========================================================
 			lstView.Show();
 
 			if(LOG_Version >= 9){
@@ -168,9 +147,9 @@ namespace MCRLogViewer
 				chkImg.Checked = false;
 			}
 
-            //******************************************************
+			//==========================================================
 			//画素ログの読み込み [Camera]  LOG_Version==9
-            //******************************************************
+			//==========================================================
 			lstImg.Hide();
 			if(LOG_Version == 9){
 				WorkAddress += 512;			//次のセクタへ
@@ -181,7 +160,6 @@ namespace MCRLogViewer
 				imgLog_Count = 0;
 
 				for(imgLog_Count=0; WorkAddress + BuffAddress < fileSize - 512; imgLog_Count++){
-				//	str  = new StringBuilder();
 					str  = new StringBuilder(String.Format("{0, 6}", imgLog_Count));
 					str.Append(" ");
 
@@ -221,7 +199,6 @@ namespace MCRLogViewer
 					// lstImg へ追加
 					lstImg.Items.Add(str);
 				}
-			//	lstImg.Show();
 				WorkAddress += BuffAddress;
 
 				DrawGraph3();
@@ -230,12 +207,9 @@ namespace MCRLogViewer
 				chkLstImg.Visible = true;
 				chkImg.Checked = true;
 			}
-            //******************************************************
-			//画素ログの読み込み [Camera]  ここまで
-            //******************************************************
 
-
-            //******************************************************
+			//==========================================================
+			//==========================================================
 			log_count = n;
 			LogFileSize = WorkAddress + 1024;		//実質のサイズを保存用に記録しておく
 			
@@ -260,8 +234,9 @@ namespace MCRLogViewer
 			btnX4.Enabled = true;
 			btnX8.Enabled = true;
 			
-			//----------------------------------------------------------------------
+			//==========================================================
 			// ハードディスクなら自動保存
+			//==========================================================
 			System.IO.DriveType DType;
 			string drive_a, drive_b;
 			drive_a = path.ToString().Substring(0,1);
@@ -270,7 +245,6 @@ namespace MCRLogViewer
 				drive_b = DInfo.ToString().Substring(0,1);
 				if( drive_a == drive_b ){
 					if( DType == System.IO.DriveType.Fixed ){
-						//DriveIsFixedDisk = true;
 						FileSave();
 						menuFileSave.Enabled = true;
 					}

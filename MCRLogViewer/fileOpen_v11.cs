@@ -49,8 +49,6 @@ namespace MCRLogViewer
 				log[n].side		= (sbyte)buf[WorkAddress + BuffAddress + 18];	//cam.halfLine
 				log[n].etc		= (sbyte)buf[WorkAddress + BuffAddress + 19];	//10*cam.LineNum + sci_recvNum
 
-				//log_count			= n;
-
 				//ラインセンサ
 				log[n].sens = new StringBuilder(" ");
 				if((log[n].side & 0x02) != 0) log[n].sens.Append("[");
@@ -83,25 +81,18 @@ namespace MCRLogViewer
 				time += 5;
 				str.Append(String.Format("{0, 4}", log[n].mode));
 				str.Append(log[n].sens);
-				str.Append(" ");
-				str.Append(String.Format("{0, 3}", log[n].center));
-				str.Append(" ");
-				str.Append(String.Format("{0, 3}", log[n].angle_t));
-				str.Append(" ");
-				str.Append(String.Format("{0, 3}", log[n].angle));
-				str.Append(" ");
-				str.Append(String.Format("{0, 4}", log[n].sv_pow));
-				str.Append(" ");
-				str.Append(String.Format("{0, 4}", log[n].vt));
+				str.Append(String.Format("{0, 4}", log[n].center));
+				str.Append(String.Format("{0, 4}", log[n].angle_t));
+				str.Append(String.Format("{0, 4}", log[n].angle));
+				str.Append(String.Format("{0, 5}", log[n].sv_pow));
+				str.Append(String.Format("{0, 5}", log[n].vt));
 				str.Append(String.Format("{0, 4}", log[n].v));
-				str.Append(" ");
-				str.Append(String.Format("{0, 4}", log[n].fl));
+				str.Append(String.Format("{0, 5}", log[n].fl));
 				str.Append(String.Format("{0, 4}", log[n].fr));
 				str.Append(String.Format("{0, 4}", log[n].rl));
 				str.Append(String.Format("{0, 4}", log[n].rr));
 				str.Append(String.Format("{0, 7}", log[n].trip));
-				str.Append("  ");
-				str.Append(String.Format("{0, 1}", log[n].slope_mode));
+				str.Append(String.Format("{0, 3}", log[n].slope_mode));
 				str.Append(String.Format("{0, 1}", log[n].slope_sw));
 				str.Append(String.Format("{0, 1}", log[n].slope_cnt));
 				str.Append(String.Format("{0, 6}", log[n].gyroEx));
@@ -112,7 +103,6 @@ namespace MCRLogViewer
 				{
 					int ii;
 					WorkAddress += 512;
-				//	readSize = fs.Read(buf, WorkAddress, 512);
 					BuffAddress = 0;
 
 					time -= 5;

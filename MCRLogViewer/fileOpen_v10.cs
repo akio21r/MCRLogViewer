@@ -81,23 +81,17 @@ namespace MCRLogViewer
 				time += 5;
 				str.Append(String.Format("{0, 4}", log[n].mode));
 				str.Append(log[n].sens);
-				str.Append(" ");
-				str.Append(String.Format("{0, 3}", log[n].angle_t));
-				str.Append(" ");
-				str.Append(String.Format("{0, 3}", log[n].angle));
-				str.Append(" ");
-				str.Append(String.Format("{0, 4}", log[n].sv_pow));
-				str.Append(" ");
-				str.Append(String.Format("{0, 3}", log[n].vt));
+				str.Append(String.Format("{0, 4}", log[n].angle_t));
+				str.Append(String.Format("{0, 4}", log[n].angle));
+				str.Append(String.Format("{0, 5}", log[n].sv_pow));
+				str.Append(String.Format("{0, 4}", log[n].vt));
 				str.Append(String.Format("{0, 4}", log[n].v));
-				str.Append(" ");
-				str.Append(String.Format("{0, 4}", log[n].fl));
+				str.Append(String.Format("{0, 5}", log[n].fl));
 				str.Append(String.Format("{0, 4}", log[n].fr));
 				str.Append(String.Format("{0, 4}", log[n].rl));
 				str.Append(String.Format("{0, 4}", log[n].rr));
 				str.Append(String.Format("{0, 7}", log[n].trip));
-				str.Append("  ");
-				str.Append(String.Format("{0, 1}", log[n].slope_mode));
+				str.Append(String.Format("{0, 3}", log[n].slope_mode));
 				str.Append(String.Format("{0, 1}", log[n].slope_sw));
 				str.Append(String.Format("{0, 1}", log[n].slope_cnt));
 				str.Append(String.Format("{0, 6}", log[n].gyroEx));
@@ -115,8 +109,6 @@ namespace MCRLogViewer
 				// imgLog[] へのデータ追加
 				imgLog[n].Center	= 15;
 
-			//	imgLog[n].Sens		= sens;
-			//	imgLog[n].Sens	   &= 0x7f;				// Sensの最上位ビットを消す
 				imgLog[n].Sens		= (byte)(((sens >> 1) & 0x70) | sens & 0x0f);
 				
 				imgLog[n].data		= new byte[32];
@@ -135,7 +127,6 @@ namespace MCRLogViewer
 				{
 					int ii;
 					WorkAddress += 512;
-				//	readSize = fs.Read(buf, WorkAddress, 512);
 					BuffAddress = 0;
 
 					time -= 5;
