@@ -68,7 +68,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="fileOpen.cs" />
+    <Compile Include="fileOpen_v01_03.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="fileOpen_v04_08.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="fileOpen_v10.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="fileOpen_v09.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="fileOpen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="fileOpen_v11.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
