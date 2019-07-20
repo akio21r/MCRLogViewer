@@ -21,7 +21,6 @@ namespace MCRLogViewer
 		//==================================================================
 		public void DrawGraph()
 		{
-			myGraphPoints[] gp = new myGraphPoints[graph_points];
 			cur_show = false;		//カーソルを非表示に
 
 			//ビットマップイメージを解放
@@ -96,13 +95,13 @@ namespace MCRLogViewer
 			gp[11].scale = (Single)frmOption1.nudL.Value;
 
 			for(n=0; n<log_count; n++){
+				gp[ 0].y = -log[n].angle_t;
+				gp[ 1].y = -log[n].angle;
+				gp[ 3].y = -log[n].vt;
+				gp[ 4].y = -log[n].v;
 
 				if(LOG_Version <= 3){
-					gp[ 0].y = -log[n].angle_t;
-					gp[ 1].y = -log[n].angle;
 					gp[ 2].y = -log[n].power;
-					gp[ 3].y = -log[n].vt;
-					gp[ 4].y = -log[n].v;
 					gp[ 5].y = -log[n].batt;
 					gp[ 6].y = -log[n].gyro;
 					gp[ 7].y = 0;
@@ -112,23 +111,23 @@ namespace MCRLogViewer
 					gp[11].y = 0;
 				}
 				else if(LOG_Version >= 4){
-					gp[ 0].y = -log[n].angle_t;
-					gp[ 1].y = -log[n].angle;
 					gp[ 2].y = -log[n].sv_pow;
-					gp[ 3].y = -log[n].vt;
-					gp[ 4].y = -log[n].v;
 					gp[ 5].y = -log[n].fl;
 					gp[ 6].y = -log[n].fr;
 					gp[ 7].y = -log[n].rl;
 					gp[ 8].y = -log[n].rr;
 					gp[ 9].y = -log[n].trip;
+					gp[11].y = -log[n].gyro;
 
-					if(LOG_Version >= 7)
+					if(LOG_Version == 11)
+						gp[10].y = -log[n].center;
+					else if(LOG_Version >= 7 && LOG_Version <= 8)
 						gp[10].y = -log[n].gyroEx;
 					else
 						gp[10].y = -log[n].batt;
-					gp[11].y = -log[n].gyro;
 				}
+
+				//スケール
 				for(i=0; i<12; i++){
 					gp[i].y = gp[i].y * gp[i].scale * (Single)y0 / 1000;
 				}

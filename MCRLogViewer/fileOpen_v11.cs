@@ -8,9 +8,11 @@ namespace MCRLogViewer
 {
     partial class frmMain
     {
+		public void setGraphPoints(){
+		}
 		public void fileOpen_v11(){
-			lblHead2.Text = "                         A   B    C     D   E   F   G   H   I     J         K     L    ";
-			lblHead1.Text = "  time mode    sens  cam hnd ang  sv    vt  v   fl  fr  rl  rr     x  slc  Slope Gyro  ";
+			lblHead2.Text = "                      K  A   B    C    D  E   F   G   H   I     J         L          ";
+			lblHead1.Text = "  time mode    sens  cam hnd ang  sv   vt v   fl  fr  rl  rr     x  slc  Gyr  L   R  ";
 
 			while (WorkAddress < fileSize - 512){
 				mode			= (sbyte)buf[WorkAddress + BuffAddress + 0];
@@ -40,14 +42,13 @@ namespace MCRLogViewer
 				d_int			+= buf[WorkAddress + BuffAddress + 13];
 				log[n].trip		=  d_int;
 
-				log[n].gyroEx	= (sbyte)buf[WorkAddress + BuffAddress + 14];
+				log[n].floor	= (sbyte)buf[WorkAddress + BuffAddress + 14];
 				log[n].gyro		= (sbyte)buf[WorkAddress + BuffAddress + 15];
 
-				log[n].floor	= (sbyte)buf[WorkAddress + BuffAddress + 16];
-
+				log[n].hlCntL	= buf[WorkAddress + BuffAddress + 16];
 				log[n].center	= (sbyte)buf[WorkAddress + BuffAddress + 17];	//cam.Center
 				log[n].side		= (sbyte)buf[WorkAddress + BuffAddress + 18];	//cam.halfLine
-				log[n].etc		= (sbyte)buf[WorkAddress + BuffAddress + 19];	//10*cam.LineNum + sci_recvNum
+				log[n].hlCntR	= buf[WorkAddress + BuffAddress + 19];	//10*cam.LineNum + sci_recvNum
 
 				//ラインセンサ
 				log[n].sens = new StringBuilder(" ");
@@ -85,19 +86,19 @@ namespace MCRLogViewer
 				str.Append(String.Format("{0, 4}", log[n].angle_t));
 				str.Append(String.Format("{0, 4}", log[n].angle));
 				str.Append(String.Format("{0, 5}", log[n].sv_pow));
-				str.Append(String.Format("{0, 5}", log[n].vt));
-				str.Append(String.Format("{0, 4}", log[n].v));
+				str.Append(String.Format("{0, 4}", log[n].vt));
+				str.Append(String.Format("{0, 3}", log[n].v));
 				str.Append(String.Format("{0, 5}", log[n].fl));
 				str.Append(String.Format("{0, 4}", log[n].fr));
 				str.Append(String.Format("{0, 4}", log[n].rl));
 				str.Append(String.Format("{0, 4}", log[n].rr));
 				str.Append(String.Format("{0, 7}", log[n].trip));
-				str.Append(String.Format("{0, 3}", log[n].slope_mode));
+				str.Append(String.Format("{0, 2}", log[n].slope_mode));
 				str.Append(String.Format("{0, 1}", log[n].slope_sw));
 				str.Append(String.Format("{0, 1}", log[n].slope_cnt));
-				str.Append(String.Format("{0, 6}", log[n].gyroEx));
-				str.Append(String.Format("{0, 6}", log[n].gyro));
-				str.Append(String.Format("{0, 3}", log[n].etc));
+				str.Append(String.Format("{0, 5}", log[n].gyro));
+				str.Append(String.Format("{0, 4}", log[n].hlCntL));
+				str.Append(String.Format("{0, 4}", log[n].hlCntR));
 
 				if (mode == -2)             //次のセクタへ
 				{

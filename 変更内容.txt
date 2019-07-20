@@ -1,1 +1,3 @@
-LOG_Version=11 のとき、濃淡グラフが表示されないバグを修正
+LOG_Version=11 の表示を最適化
+
+hlCntL, hlCntR を一番右に表示させる

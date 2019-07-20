@@ -46,6 +46,7 @@ namespace MCRLogViewer
 			//Camera用
 			public int		center;			//Cameraのセンター値
 			public int		etc;			//他
+			public int		hlCntL, hlCntR;	//ハーフライン検出数カウント
 
 			//Remote Sens用
 			public int		anL1,anL2,anL,anR,anR2,anR1;	//anセンサ値
@@ -83,6 +84,7 @@ namespace MCRLogViewer
 			public Pen pen;
 			public Single scale, max, min;
 		}
+		myGraphPoints[] gp = new myGraphPoints[graph_points];
 
 		static public int y0;							//X軸
 		static public int cur_n1=0, cur_x=0, cur_x1=0;	//グラフ上の現在,前の位置
