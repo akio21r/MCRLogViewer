@@ -89,6 +89,8 @@ namespace MCRLogViewer
 		static public int y0;							//X軸
 		static public int cur_n1=0, cur_x=0, cur_x1=0;	//グラフ上の現在,前の位置
 		static public int cur3_n1=0, cur3_y=0, cur3_y1=0;	//グラフ3上の現在,前の位置
+		static public int cur3b_y1=0;					//グラフ3上の前の位置
+		static public bool cur3b_show = false;			//カーソル3表示
 		static public bool cur_show = false;			//カーソル表示
 		static public bool cur3_show = false;			//カーソル3表示
 		static public Single graph_v;					//グラフの増分
@@ -404,106 +406,9 @@ namespace MCRLogViewer
             }
 		}
 
-		//==================================================================
-        //グラフのクリックでlstViewのインデックス変更
-		//==================================================================
-		private void pctGraph_MouseMove(object sender, MouseEventArgs e)
-		{
-			if(e.Button == MouseButtons.Left){
-				if(lstView.Items.Count > 0){
-					int x = (int)(e.X / graph_v);
-					if(x < 0)
-						x = 0;
-					else if(x >= lstView.Items.Count)
-						x = lstView.Items.Count - 1;
-					lstView.SelectedIndex = x;
-					lstView.Focus();
-				}
-			}
-			else if(e.Button == MouseButtons.Right){
-				Point pnt2 = new Point(e.X, e.Y);
-				pnt2 = pctGraph.PointToScreen(pnt2);
-				int x = pnt2.X - scrPoint2.X;
-				int y = pnt2.Y - scrPoint2.Y;
-				pnlGraph.AutoScrollPosition = new Point(-scrPoint1.X + x * -1, -scrPoint1.Y + y * -1);
-			}
-		}
-
-		private void pctGraph_MouseDown(object sender, MouseEventArgs e)
-		{
-			if(e.Button == MouseButtons.Left){
-				if(lstView.Items.Count > 0){
-					int x = (int)(e.X / graph_v);
-					if(x < 0)
-						x = 0;
-					else if(x >= lstView.Items.Count)
-						x = lstView.Items.Count - 1;
-					lstView.SelectedIndex = x;
-					lstView.Focus();
-				}
-			}
-			else if(e.Button == MouseButtons.Right){
-				scrPoint1 = pnlGraph.AutoScrollPosition;
-				scrPoint2 = new Point(e.X, e.Y);
-				scrPoint2 = pctGraph.PointToScreen(scrPoint2);
-
-				if(cur_show){
-					erase_cursol();
-					cur_show = false;
-				}
-				if(cur3_show){
-					erase_cursol3();
-					cur3_show = false;
-				}
-			}
-		}
-
-		private void pnlGraph_Scroll(object sender, ScrollEventArgs e)
-		{
-			if(cur_show){
-				erase_cursol();
-				cur_show = false;
-			}
-		}
-		private void pnlGraph3_Scroll(object sender, ScrollEventArgs e)
-		{
-			if(cur3_show){
-				erase_cursol3();
-				cur3_show = false;
-			}
-		}
-
 		private void lstImg_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			DrawGraph2(lstImg.SelectedIndex);
-		}
-
-		private void pctGraph3_MouseDown(object sender, MouseEventArgs e)
-		{
-			if(e.Button == MouseButtons.Left){
-				if(imgLog_Count > 0){
-					int n = (int)(e.Y / graph3_vy);
-					if(n < 0)
-						n = 0;
-					else if(n >= imgLog_Count)
-						n = imgLog_Count - 1;
-					DrawGraph2(n);
-				}
-			}
-		}
-
-		private void pctGraph3_MouseMove(object sender, MouseEventArgs e)
-		{
-			if(e.Button == MouseButtons.Left){
-				if(imgLog_Count > 0){
-					int n = (int)(e.Y / graph3_vy);
-					if(n < 0)
-						n = 0;
-					else if(n >= imgLog_Count)
-						n = imgLog_Count - 1;
-					DrawGraph2(n);
-				}
-			}
 		}
 
 		private void chkImg_CheckedChanged(object sender, EventArgs e)
@@ -514,18 +419,6 @@ namespace MCRLogViewer
 		private void chkLstImg_CheckedChanged(object sender, EventArgs e)
 		{
 			lstImg.Visible = chkLstImg.Checked;
-		}
-
-		private void pctGraph3_Paint(object sender, PaintEventArgs e)
-		{
-			if(cur_show){
-				erase_cursol();
-				cur_show = false;
-			}
-			if(cur3_show){
-				erase_cursol3();
-				cur3_show = false;
-			}
 		}
 
 	}

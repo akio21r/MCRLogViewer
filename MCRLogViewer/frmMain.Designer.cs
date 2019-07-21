@@ -451,7 +451,7 @@
 			this.pnlGraph3.Controls.Add(this.pctGraph3);
 			this.pnlGraph3.Location = new System.Drawing.Point(3, 61);
 			this.pnlGraph3.Name = "pnlGraph3";
-			this.pnlGraph3.Size = new System.Drawing.Size(213, 521);
+			this.pnlGraph3.Size = new System.Drawing.Size(223, 521);
 			this.pnlGraph3.TabIndex = 24;
 			this.pnlGraph3.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pnlGraph3_Scroll);
 			// 
@@ -466,6 +466,7 @@
 			this.pctGraph3.Paint += new System.Windows.Forms.PaintEventHandler(this.pctGraph3_Paint);
 			this.pctGraph3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pctGraph3_MouseDown);
 			this.pctGraph3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pctGraph3_MouseMove);
+			this.pctGraph3.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pctGraph3_MouseUp);
 			// 
 			// frmMain
 			// 

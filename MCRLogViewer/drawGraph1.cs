@@ -297,5 +297,68 @@ namespace MCRLogViewer
 				cur3_show = false;
 			}
 		}
+
+		//==================================================================
+        //グラフのクリックでlstViewのインデックス変更
+		//==================================================================
+		private void pctGraph_MouseMove(object sender, MouseEventArgs e)
+		{
+			if(e.Button == MouseButtons.Left){
+				if(lstView.Items.Count > 0){
+					int x = (int)(e.X / graph_v);
+					if(x < 0)
+						x = 0;
+					else if(x >= lstView.Items.Count)
+						x = lstView.Items.Count - 1;
+					lstView.SelectedIndex = x;
+					lstView.Focus();
+				}
+			}
+			else if(e.Button == MouseButtons.Right){
+				Point pnt2 = new Point(e.X, e.Y);
+				pnt2 = pctGraph.PointToScreen(pnt2);
+				int x = pnt2.X - scrPoint2.X;
+				int y = pnt2.Y - scrPoint2.Y;
+				pnlGraph.AutoScrollPosition = new Point(-scrPoint1.X + x * -1, -scrPoint1.Y + y * -1);
+			}
+		}
+
+		private void pctGraph_MouseDown(object sender, MouseEventArgs e)
+		{
+			if(e.Button == MouseButtons.Left){
+				if(lstView.Items.Count > 0){
+					int x = (int)(e.X / graph_v);
+					if(x < 0)
+						x = 0;
+					else if(x >= lstView.Items.Count)
+						x = lstView.Items.Count - 1;
+					lstView.SelectedIndex = x;
+					lstView.Focus();
+				}
+			}
+			else if(e.Button == MouseButtons.Right){
+				scrPoint1 = pnlGraph.AutoScrollPosition;
+				scrPoint2 = new Point(e.X, e.Y);
+				scrPoint2 = pctGraph.PointToScreen(scrPoint2);
+
+				if(cur_show){
+					erase_cursol();
+					cur_show = false;
+				}
+				if(cur3_show){
+					erase_cursol3();
+					cur3_show = false;
+				}
+			}
+		}
+
+		private void pnlGraph_Scroll(object sender, ScrollEventArgs e)
+		{
+			if(cur_show){
+				erase_cursol();
+				cur_show = false;
+			}
+		}
+
 	}
 }
