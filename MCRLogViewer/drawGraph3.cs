@@ -105,5 +105,87 @@ namespace MCRLogViewer
 			}
 			g3.Dispose();
 		}
+
+		private void pctGraph3_MouseDown(object sender, MouseEventArgs e)
+		{
+			if(e.Button == MouseButtons.Left){
+				if(imgLog_Count > 0){
+					int n = (int)(e.Y / graph3_vy);
+					if(n < 0)
+						n = 0;
+					else if(n >= imgLog_Count)
+						n = imgLog_Count - 1;
+					DrawGraph2(n);
+
+					Point p1 = new Point(0, e.Y);
+					Point p2 = new Point(pctGraph3.Width, e.Y);
+					Point ps = pctGraph3.PointToScreen(p1);
+					Point pe = pctGraph3.PointToScreen(p2);
+					ControlPaint.DrawReversibleLine(ps, pe, Color.Black);
+					cur3b_y1 = e.Y;
+					cur3b_show = true;
+				}
+			}
+		}
+
+		private void pctGraph3_MouseMove(object sender, MouseEventArgs e)
+		{
+			if(e.Button == MouseButtons.Left){
+				if(imgLog_Count > 0){
+					int n = (int)(e.Y / graph3_vy);
+					if(n < 0)
+						n = 0;
+					else if(n >= imgLog_Count)
+						n = imgLog_Count - 1;
+					DrawGraph2(n);
+
+					if(cur3b_show){
+						cur3b_show = false;
+						Point p1, p2, ps, pe;
+						p1 = new Point(0, cur3b_y1);
+						p2 = new Point(pctGraph3.Width, cur3b_y1);
+						ps = pctGraph3.PointToScreen(p1);
+						pe = pctGraph3.PointToScreen(p2);
+						ControlPaint.DrawReversibleLine(ps, pe, Color.Black);
+					}
+				}
+			}
+		}
+
+		private void pctGraph3_MouseUp(object sender, MouseEventArgs e)
+		{
+			if(e.Button == MouseButtons.Left){
+				if(cur3b_show){
+					cur3b_show = false;
+					Point p1, p2, ps, pe;
+					p1 = new Point(0, cur3b_y1);
+					p2 = new Point(pctGraph3.Width, cur3b_y1);
+					ps = pctGraph3.PointToScreen(p1);
+					pe = pctGraph3.PointToScreen(p2);
+					ControlPaint.DrawReversibleLine(ps, pe, Color.Black);
+				}
+			}
+		}
+
+		private void pctGraph3_Paint(object sender, PaintEventArgs e)
+		{
+			if(cur_show){
+				erase_cursol();
+				cur_show = false;
+			}
+			if(cur3_show){
+				erase_cursol3();
+				cur3_show = false;
+			}
+		}
+
+		private void pnlGraph3_Scroll(object sender, ScrollEventArgs e)
+		{
+			if(cur3_show){
+				erase_cursol3();
+				cur3_show = false;
+			}
+		}
+
 	}
 }

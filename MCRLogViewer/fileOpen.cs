@@ -151,7 +151,7 @@ namespace MCRLogViewer
 			//画素ログの読み込み [Camera]  LOG_Version==9
 			//==========================================================
 			lstImg.Hide();
-			if(LOG_Version == 9){
+			if(LOG_Version == 9 || LOG_Version == 11){
 				WorkAddress += 512;			//次のセクタへ
 				BuffAddress = 0;
 				byte[] imgLogBuf = new byte[20];

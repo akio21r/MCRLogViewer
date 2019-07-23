@@ -21,7 +21,6 @@ namespace MCRLogViewer
 		//==================================================================
 		public void DrawGraph()
 		{
-			myGraphPoints[] gp = new myGraphPoints[graph_points];
 			cur_show = false;		//カーソルを非表示に
 
 			//ビットマップイメージを解放
@@ -96,13 +95,13 @@ namespace MCRLogViewer
 			gp[11].scale = (Single)frmOption1.nudL.Value;
 
 			for(n=0; n<log_count; n++){
+				gp[ 0].y = -log[n].angle_t;
+				gp[ 1].y = -log[n].angle;
+				gp[ 3].y = -log[n].vt;
+				gp[ 4].y = -log[n].v;
 
 				if(LOG_Version <= 3){
-					gp[ 0].y = -log[n].angle_t;
-					gp[ 1].y = -log[n].angle;
 					gp[ 2].y = -log[n].power;
-					gp[ 3].y = -log[n].vt;
-					gp[ 4].y = -log[n].v;
 					gp[ 5].y = -log[n].batt;
 					gp[ 6].y = -log[n].gyro;
 					gp[ 7].y = 0;
@@ -112,23 +111,23 @@ namespace MCRLogViewer
 					gp[11].y = 0;
 				}
 				else if(LOG_Version >= 4){
-					gp[ 0].y = -log[n].angle_t;
-					gp[ 1].y = -log[n].angle;
 					gp[ 2].y = -log[n].sv_pow;
-					gp[ 3].y = -log[n].vt;
-					gp[ 4].y = -log[n].v;
 					gp[ 5].y = -log[n].fl;
 					gp[ 6].y = -log[n].fr;
 					gp[ 7].y = -log[n].rl;
 					gp[ 8].y = -log[n].rr;
 					gp[ 9].y = -log[n].trip;
+					gp[11].y = -log[n].gyro;
 
-					if(LOG_Version >= 7)
+					if(LOG_Version == 11)
+						gp[10].y = -log[n].center;
+					else if(LOG_Version >= 7 && LOG_Version <= 8)
 						gp[10].y = -log[n].gyroEx;
 					else
 						gp[10].y = -log[n].batt;
-					gp[11].y = -log[n].gyro;
 				}
+
+				//スケール
 				for(i=0; i<12; i++){
 					gp[i].y = gp[i].y * gp[i].scale * (Single)y0 / 1000;
 				}
@@ -298,5 +297,68 @@ namespace MCRLogViewer
 				cur3_show = false;
 			}
 		}
+
+		//==================================================================
+        //グラフのクリックでlstViewのインデックス変更
+		//==================================================================
+		private void pctGraph_MouseMove(object sender, MouseEventArgs e)
+		{
+			if(e.Button == MouseButtons.Left){
+				if(lstView.Items.Count > 0){
+					int x = (int)(e.X / graph_v);
+					if(x < 0)
+						x = 0;
+					else if(x >= lstView.Items.Count)
+						x = lstView.Items.Count - 1;
+					lstView.SelectedIndex = x;
+					lstView.Focus();
+				}
+			}
+			else if(e.Button == MouseButtons.Right){
+				Point pnt2 = new Point(e.X, e.Y);
+				pnt2 = pctGraph.PointToScreen(pnt2);
+				int x = pnt2.X - scrPoint2.X;
+				int y = pnt2.Y - scrPoint2.Y;
+				pnlGraph.AutoScrollPosition = new Point(-scrPoint1.X + x * -1, -scrPoint1.Y + y * -1);
+			}
+		}
+
+		private void pctGraph_MouseDown(object sender, MouseEventArgs e)
+		{
+			if(e.Button == MouseButtons.Left){
+				if(lstView.Items.Count > 0){
+					int x = (int)(e.X / graph_v);
+					if(x < 0)
+						x = 0;
+					else if(x >= lstView.Items.Count)
+						x = lstView.Items.Count - 1;
+					lstView.SelectedIndex = x;
+					lstView.Focus();
+				}
+			}
+			else if(e.Button == MouseButtons.Right){
+				scrPoint1 = pnlGraph.AutoScrollPosition;
+				scrPoint2 = new Point(e.X, e.Y);
+				scrPoint2 = pctGraph.PointToScreen(scrPoint2);
+
+				if(cur_show){
+					erase_cursol();
+					cur_show = false;
+				}
+				if(cur3_show){
+					erase_cursol3();
+					cur3_show = false;
+				}
+			}
+		}
+
+		private void pnlGraph_Scroll(object sender, ScrollEventArgs e)
+		{
+			if(cur_show){
+				erase_cursol();
+				cur_show = false;
+			}
+		}
+
 	}
 }
