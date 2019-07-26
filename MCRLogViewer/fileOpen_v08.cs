@@ -42,7 +42,6 @@ namespace MCRLogViewer
 				d_int			+=  buf[WorkAddress + BuffAddress + 13];
 				log[n].trip		=   d_int;
 
-				log[n].batt		=        buf[WorkAddress + BuffAddress + 14];	//batt
 				log[n].gyroEx	= (sbyte)buf[WorkAddress + BuffAddress + 14];	//gyroEx
 				log[n].gyro		= (sbyte)buf[WorkAddress + BuffAddress + 15];	//gyro
 
@@ -117,7 +116,6 @@ namespace MCRLogViewer
 							log[n].slope_sw		= 0;
 							log[n].slope_cnt	= 0;
 							log[n].trip			= 0;
-							log[n].batt			= 0;
 							log[n].gyroEx       = 0;
 							log[n].gyro			= 0;
 							log[n].side			= 0;
