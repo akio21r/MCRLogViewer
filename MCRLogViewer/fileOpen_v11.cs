@@ -8,8 +8,8 @@ namespace MCRLogViewer
 {
     partial class frmMain
     {
-		public void setGraphPoints(){
-		}
+		//==================================================================
+		//==================================================================
 		public void fileOpen_v11(){
 			lblHead2.Text = "                      K  A   B    C    D  E   F   G   H   I     J         L          ";
 			lblHead1.Text = "  time mode    sens  cam hnd ang  sv   vt v   fl  fr  rl  rr     x  slc  Gyr  L   R  ";
@@ -145,5 +145,66 @@ namespace MCRLogViewer
 				if (mode == 0) break;				//modeが0なら終了
 			}
 		}
+
+		//==================================================================
+		//==================================================================
+		public void fileOpenImg_v11(){
+			WorkAddress += 512;			//次のセクタへ
+			BuffAddress = 0;
+			byte[] imgLogBuf = new byte[20];
+
+			lstImg.Items.Clear();
+			imgLog_Count = 0;
+
+			for(imgLog_Count=0; WorkAddress + BuffAddress < fileSize - 512; imgLog_Count++){
+				str  = new StringBuilder(String.Format("{0, 6}", imgLog_Count));
+				str.Append(" ");
+
+				// １レコード分の切り出し
+				for(int j=0; j<20; j++){
+					imgLogBuf[j] = buf[WorkAddress + BuffAddress++];
+					str.Append( imgLogBuf[j].ToString("x2") );
+					if(j<=2 || j==18) str.Append( " " );
+				}
+
+				// img セクションのログ終了コードを検出したら抜ける
+				if( imgLogBuf[0] == 0xfd || imgLogBuf[0] == 0x00 ) break;
+
+				// imgLog[] へのデータ追加
+				imgLog[imgLog_Count].Center	= imgLogBuf[1];
+				imgLog[imgLog_Count].Sens	= imgLogBuf[2];
+				imgLog[imgLog_Count].Sens  &= 0x7f;				// Sensの最上位ビットを消す
+				imgLog[imgLog_Count].data	= new byte[32];
+				for(int j=0; j<16; j++){
+					byte d = imgLogBuf[3+j];
+					imgLog[imgLog_Count].data[j*2]   = (byte)((d >> 4) & 0x0f);
+					imgLog[imgLog_Count].data[j*2+1] = (byte)(d & 0x0f);
+				}
+
+				// sens を追加
+				str.Append( "  " );
+				byte s = imgLog[imgLog_Count].Sens;
+				s <<= 1;
+				for(i=0; i<7; i++){
+					if((s & 0x80) == 0)
+						str.Append("-");
+					else
+						str.Append("*");
+					s <<= 1;
+				}
+
+				// lstImg へ追加
+				lstImg.Items.Add(str);
+			}
+			WorkAddress += BuffAddress;
+
+			DrawGraph3();
+			
+			chkImg.Visible = true;
+			chkLstImg.Visible = true;
+			chkImg.Checked = true;
+		
+		}
+
 	}
 }

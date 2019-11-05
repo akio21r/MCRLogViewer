@@ -1,5 +1,5 @@
-﻿//==========================================================================
-// LOG_Version = 09  Camera用ログ  2019.07.12以前
+//==========================================================================
+// LOG_Version = 12  Camera用ログ  2019.11.05以降
 //==========================================================================
 using System;
 using System.Text;
@@ -10,9 +10,9 @@ namespace MCRLogViewer
     {
 		//==================================================================
 		//==================================================================
-		public void fileOpen_v09(){
-			lblHead2.Text = "                          A   B    C     D   E   F   G   H   I     J       K    L   ";
-			lblHead1.Text = "  time mode   sens   cam hnd ang  sv    vt  v   fl  fr  rl  rr     x  slc  nb  Gyro ";
+		public void fileOpen_v12(){
+			lblHead2.Text = "                      K  A   B    C    D  E   F   G   H   I     J         L          ";
+			lblHead1.Text = "  time mode    sens  cam hnd ang  sv   vt v   fl  fr  rl  rr     x  slc  Gyr  L   R  ";
 
 			while (WorkAddress < fileSize - 512){
 				mode			= (sbyte)buf[WorkAddress + BuffAddress + 0];
@@ -21,9 +21,8 @@ namespace MCRLogViewer
 				sens			= buf[WorkAddress + BuffAddress + 1];
 				ErrorCount		= (int)sens;
 
-				log[n].angle_t	= (sbyte)buf[WorkAddress + BuffAddress + 2];
-				log[n].center	= log[n].angle_t;
 
+				log[n].angle_t	= (sbyte)buf[WorkAddress + BuffAddress + 2];
 				log[n].angle	= (sbyte)buf[WorkAddress + BuffAddress + 3];
 				log[n].sv_pow	= (sbyte)buf[WorkAddress + BuffAddress + 4];
 				log[n].vt		= (sbyte)buf[WorkAddress + BuffAddress + 5];
@@ -43,12 +42,13 @@ namespace MCRLogViewer
 				d_int			+= buf[WorkAddress + BuffAddress + 13];
 				log[n].trip		=  d_int;
 
-				log[n].gyroEx	= (sbyte)buf[WorkAddress + BuffAddress + 14];
+				log[n].floor	= (sbyte)buf[WorkAddress + BuffAddress + 14];
 				log[n].gyro		= (sbyte)buf[WorkAddress + BuffAddress + 15];
 
-				log[n].floor	= (sbyte)buf[WorkAddress + BuffAddress + 16];
-
-				log[n].side		= log[n].slope_sw;
+				log[n].hlCntL	= buf[WorkAddress + BuffAddress + 16];
+				log[n].center	= (sbyte)buf[WorkAddress + BuffAddress + 17];	//cam.Center
+				log[n].side		= (sbyte)buf[WorkAddress + BuffAddress + 18];	//cam.halfLine
+				log[n].hlCntR	= buf[WorkAddress + BuffAddress + 19];	//10*cam.LineNum + sci_recvNum
 
 				//ラインセンサ
 				log[n].sens = new StringBuilder(" ");
@@ -86,18 +86,19 @@ namespace MCRLogViewer
 				str.Append(String.Format("{0, 4}", log[n].angle_t));
 				str.Append(String.Format("{0, 4}", log[n].angle));
 				str.Append(String.Format("{0, 5}", log[n].sv_pow));
-				str.Append(String.Format("{0, 5}", log[n].vt));
-				str.Append(String.Format("{0, 4}", log[n].v));
+				str.Append(String.Format("{0, 4}", log[n].vt));
+				str.Append(String.Format("{0, 3}", log[n].v));
 				str.Append(String.Format("{0, 5}", log[n].fl));
 				str.Append(String.Format("{0, 4}", log[n].fr));
 				str.Append(String.Format("{0, 4}", log[n].rl));
 				str.Append(String.Format("{0, 4}", log[n].rr));
 				str.Append(String.Format("{0, 7}", log[n].trip));
-				str.Append(String.Format("{0, 3}", log[n].slope_mode));
+				str.Append(String.Format("{0, 2}", log[n].slope_mode));
 				str.Append(String.Format("{0, 1}", log[n].slope_sw));
 				str.Append(String.Format("{0, 1}", log[n].slope_cnt));
-				str.Append(String.Format("{0, 3}", log[n].gyroEx));
 				str.Append(String.Format("{0, 5}", log[n].gyro));
+				str.Append(String.Format("{0, 4}", log[n].hlCntL));
+				str.Append(String.Format("{0, 4}", log[n].hlCntR));
 
 				if (mode == -2)             //次のセクタへ
 				{
@@ -124,6 +125,7 @@ namespace MCRLogViewer
 							log[n].slope_sw		= 0;
 							log[n].slope_cnt	= 0;
 							log[n].trip			= 0;
+							log[n].batt			= 0;
 							log[n].gyroEx       = 0;
 							log[n].gyro			= 0;
 							log[n].side			= 0;
@@ -146,10 +148,10 @@ namespace MCRLogViewer
 
 		//==================================================================
 		//==================================================================
-		public void fileOpenImg_v09(){
+		public void fileOpenImg_v12(){
 			WorkAddress += 512;			//次のセクタへ
 			BuffAddress = 0;
-			byte[] imgLogBuf = new byte[20];
+			byte[] imgLogBuf = new byte[18];
 
 			lstImg.Items.Clear();
 			imgLog_Count = 0;
@@ -159,22 +161,22 @@ namespace MCRLogViewer
 				str.Append(" ");
 
 				// １レコード分の切り出し
-				for(int j=0; j<20; j++){
+				for(int j=0; j<18; j++){
 					imgLogBuf[j] = buf[WorkAddress + BuffAddress++];
 					str.Append( imgLogBuf[j].ToString("x2") );
-					if(j<=2 || j==18) str.Append( " " );
+					if(j<=1 || j==17) str.Append( " " );
 				}
 
 				// img セクションのログ終了コードを検出したら抜ける
-				if( imgLogBuf[0] == 0xfd || imgLogBuf[0] == 0x00 ) break;
+				if( imgLogBuf[0] == 0xfd ) break;
 
 				// imgLog[] へのデータ追加
-				imgLog[imgLog_Count].Center	= imgLogBuf[1];
-				imgLog[imgLog_Count].Sens	= imgLogBuf[2];
+				imgLog[imgLog_Count].Center	= imgLogBuf[0];
+				imgLog[imgLog_Count].Sens	= imgLogBuf[1];
 				imgLog[imgLog_Count].Sens  &= 0x7f;				// Sensの最上位ビットを消す
 				imgLog[imgLog_Count].data	= new byte[32];
 				for(int j=0; j<16; j++){
-					byte d = imgLogBuf[3+j];
+					byte d = imgLogBuf[2+j];
 					imgLog[imgLog_Count].data[j*2]   = (byte)((d >> 4) & 0x0f);
 					imgLog[imgLog_Count].data[j*2+1] = (byte)(d & 0x0f);
 				}
