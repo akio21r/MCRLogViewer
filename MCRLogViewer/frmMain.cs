@@ -25,7 +25,7 @@ namespace MCRLogViewer
 		int LOG_RecordBytes = 17;					//ログの1レコードサイズ
 		int Camera_N = 32;							//画素の数
 
-		public const int max_log_data_counts = 100000;	//10万行分のデータ★
+		public const int max_log_data_counts = 5000000;	//500万行分のデータ★
 		public struct LogData{				//ログデータ
 			public int		mode;			//mode
 			public StringBuilder	sens;	//センサの状態
@@ -336,7 +336,10 @@ namespace MCRLogViewer
 		{
 			InitGraph();
 			DrawGraph();
-			DrawGraph3();
+			if(chkImg.Checked){
+				DrawGraph3();
+				DrawGraph2(0);
+			}
 		}
 
 		//==================================================================

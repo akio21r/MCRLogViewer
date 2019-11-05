@@ -3,6 +3,7 @@
 //==========================================================================
 using System;
 using System.Text;
+using System.Drawing;
 
 namespace MCRLogViewer
 {
@@ -178,7 +179,9 @@ namespace MCRLogViewer
 			WorkAddress += BuffAddress;
 
 			DrawGraph3();
-			
+			DrawGraph2(0);
+			pnlGraph3.AutoScrollPosition = new Point(0, 0);
+
 			chkImg.Visible = true;
 			chkImg.Checked = true;
 		

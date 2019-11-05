@@ -3,6 +3,7 @@
 //==========================================================================
 using System;
 using System.Text;
+using System.Drawing;
 
 namespace MCRLogViewer
 {
@@ -171,6 +172,8 @@ namespace MCRLogViewer
 			//画素データ描画
 			imgLog_Count = n-1;
 			DrawGraph3();
+			DrawGraph2(0);
+			pnlGraph3.AutoScrollPosition = new Point(0, 0);
 		}
 	}
 }
