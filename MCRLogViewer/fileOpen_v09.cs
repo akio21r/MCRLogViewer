@@ -3,11 +3,14 @@
 //==========================================================================
 using System;
 using System.Text;
+using System.Drawing;
 
 namespace MCRLogViewer
 {
     partial class frmMain
     {
+		//==================================================================
+		//==================================================================
 		public void fileOpen_v09(){
 			lblHead2.Text = "                          A   B    C     D   E   F   G   H   I     J       K    L   ";
 			lblHead1.Text = "  time mode   sens   cam hnd ang  sv    vt  v   fl  fr  rl  rr     x  slc  nb  Gyro ";
@@ -141,5 +144,45 @@ namespace MCRLogViewer
 				if (mode == 0) break;				//modeが0なら終了
 			}
 		}
+
+		//==================================================================
+		//==================================================================
+		public void fileOpenImg_v09(){
+			WorkAddress += 512;			//次のセクタへ
+			BuffAddress = 0;
+			byte[] imgLogBuf = new byte[20];
+
+			imgLog_Count = 0;
+
+			for(imgLog_Count=0; WorkAddress + BuffAddress < fileSize - 512; imgLog_Count++){
+				// １レコード分の切り出し
+				for(int j=0; j<20; j++){
+					imgLogBuf[j] = buf[WorkAddress + BuffAddress++];
+				}
+
+				// img セクションのログ終了コードを検出したら抜ける
+				if( imgLogBuf[0] == 0xfd || imgLogBuf[0] == 0x00 ) break;
+
+				// imgLog[] へのデータ追加
+				imgLog[imgLog_Count].Center	= imgLogBuf[1];
+				imgLog[imgLog_Count].Sens	= imgLogBuf[2];
+				imgLog[imgLog_Count].Sens  &= 0x7f;				// Sensの最上位ビットを消す
+				imgLog[imgLog_Count].data	= new byte[32];
+				for(int j=0; j<16; j++){
+					byte d = imgLogBuf[3+j];
+					imgLog[imgLog_Count].data[j*2]   = (byte)((d >> 4) & 0x0f);
+					imgLog[imgLog_Count].data[j*2+1] = (byte)(d & 0x0f);
+				}
+			}
+			WorkAddress += BuffAddress;
+
+			DrawGraph3();
+			DrawGraph2(0);
+			pnlGraph3.AutoScrollPosition = new Point(0, 0);
+			
+			chkImg.Visible = true;
+			chkImg.Checked = true;
+		}
+
 	}
 }

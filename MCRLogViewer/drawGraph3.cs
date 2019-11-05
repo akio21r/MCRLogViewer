@@ -185,6 +185,9 @@ namespace MCRLogViewer
 				erase_cursol3();
 				cur3_show = false;
 			}
+
+			int n = -pnlGraph3.AutoScrollPosition.Y / (int)graph3_vy;
+			DrawGraph2(n);
 		}
 
 	}

@@ -25,7 +25,7 @@ namespace MCRLogViewer
 		int LOG_RecordBytes = 17;					//ログの1レコードサイズ
 		int Camera_N = 32;							//画素の数
 
-		public const int max_log_data_counts = 100000;	//10万行分のデータ★
+		public const int max_log_data_counts = 5000000;	//500万行分のデータ★
 		public struct LogData{				//ログデータ
 			public int		mode;			//mode
 			public StringBuilder	sens;	//センサの状態
@@ -336,7 +336,10 @@ namespace MCRLogViewer
 		{
 			InitGraph();
 			DrawGraph();
-			DrawGraph3();
+			if(chkImg.Checked){
+				DrawGraph3();
+				DrawGraph2(0);
+			}
 		}
 
 		//==================================================================
@@ -345,8 +348,6 @@ namespace MCRLogViewer
 		public void InitGraph()
 		{
 			pnlImage.Visible = chkImg.Checked;
-			lstImg.Visible = chkLstImg.Checked;
-
 			if(chkImg.Checked)
 	            pnlGraph.Width = splitContainer1.Panel2.Width - SCROLLBAR_WIDTH - pnlImage.Width;
 			else
@@ -406,21 +407,10 @@ namespace MCRLogViewer
             }
 		}
 
-		private void lstImg_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			DrawGraph2(lstImg.SelectedIndex);
-		}
-
 		private void chkImg_CheckedChanged(object sender, EventArgs e)
 		{
 			pnlImage.Visible = chkImg.Checked;
 		}
-
-		private void chkLstImg_CheckedChanged(object sender, EventArgs e)
-		{
-			lstImg.Visible = chkLstImg.Checked;
-		}
-
 	}
 
 	//==================================================================

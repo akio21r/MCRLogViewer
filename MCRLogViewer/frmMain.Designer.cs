@@ -40,7 +40,6 @@
 			this.menuFileExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.txtPath = new System.Windows.Forms.TextBox();
 			this.pnlGraph = new System.Windows.Forms.Panel();
-			this.lstImg = new System.Windows.Forms.ListBox();
 			this.pctGraph = new System.Windows.Forms.PictureBox();
 			this.btnOK = new System.Windows.Forms.Button();
 			this.btnX4 = new System.Windows.Forms.Button();
@@ -54,7 +53,6 @@
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.lblHead2 = new System.Windows.Forms.Label();
 			this.panel2 = new System.Windows.Forms.Panel();
-			this.chkLstImg = new System.Windows.Forms.CheckBox();
 			this.chkImg = new System.Windows.Forms.CheckBox();
 			this.btnToubai = new System.Windows.Forms.Button();
 			this.btnX8 = new System.Windows.Forms.Button();
@@ -178,7 +176,6 @@
 			// pnlGraph
 			// 
 			this.pnlGraph.AutoScroll = true;
-			this.pnlGraph.Controls.Add(this.lstImg);
 			this.pnlGraph.Controls.Add(this.pctGraph);
 			this.pnlGraph.Cursor = System.Windows.Forms.Cursors.Default;
 			this.pnlGraph.Location = new System.Drawing.Point(3, 60);
@@ -186,17 +183,6 @@
 			this.pnlGraph.Size = new System.Drawing.Size(455, 387);
 			this.pnlGraph.TabIndex = 12;
 			this.pnlGraph.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pnlGraph_Scroll);
-			// 
-			// lstImg
-			// 
-			this.lstImg.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.lstImg.FormattingEnabled = true;
-			this.lstImg.ItemHeight = 12;
-			this.lstImg.Location = new System.Drawing.Point(20, 86);
-			this.lstImg.Name = "lstImg";
-			this.lstImg.Size = new System.Drawing.Size(407, 316);
-			this.lstImg.TabIndex = 24;
-			this.lstImg.SelectedIndexChanged += new System.EventHandler(this.lstImg_SelectedIndexChanged);
 			// 
 			// pctGraph
 			// 
@@ -352,7 +338,6 @@
 			// 
 			// panel2
 			// 
-			this.panel2.Controls.Add(this.chkLstImg);
 			this.panel2.Controls.Add(this.chkImg);
 			this.panel2.Controls.Add(this.btnOpen);
 			this.panel2.Controls.Add(this.btnX4);
@@ -371,17 +356,6 @@
 			this.panel2.Name = "panel2";
 			this.panel2.Size = new System.Drawing.Size(534, 542);
 			this.panel2.TabIndex = 26;
-			// 
-			// chkLstImg
-			// 
-			this.chkLstImg.AutoSize = true;
-			this.chkLstImg.Location = new System.Drawing.Point(452, 30);
-			this.chkLstImg.Name = "chkLstImg";
-			this.chkLstImg.Size = new System.Drawing.Size(67, 16);
-			this.chkLstImg.TabIndex = 25;
-			this.chkLstImg.Text = "lstImage";
-			this.chkLstImg.UseVisualStyleBackColor = true;
-			this.chkLstImg.CheckedChanged += new System.EventHandler(this.chkLstImg_CheckedChanged);
 			// 
 			// chkImg
 			// 
@@ -479,7 +453,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menu;
 			this.Name = "frmMain";
-			this.Text = "MCR LOG Viewer  ver5.2";
+			this.Text = "MCR LOG Viewer  ver5.3";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
 			this.Load += new System.EventHandler(this.frmMain_Load);
@@ -539,12 +513,10 @@
 		private System.Windows.Forms.Button btnX8;
 		private System.Windows.Forms.Button btnToubai;
 		private System.Windows.Forms.PictureBox pctGraph2;
-		private System.Windows.Forms.ListBox lstImg;
 		private System.Windows.Forms.Panel pnlGraph3;
 		private System.Windows.Forms.Panel pnlImage;
 		private System.Windows.Forms.Panel panel2;
 		private System.Windows.Forms.CheckBox chkImg;
-		private System.Windows.Forms.CheckBox chkLstImg;
 		public System.Windows.Forms.PictureBox pctGraph3;
     }
 }

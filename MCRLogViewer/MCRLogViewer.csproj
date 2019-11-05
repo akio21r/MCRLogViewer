@@ -98,6 +98,9 @@
     <Compile Include="fileOpen_v11.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="fileOpen_v12.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
