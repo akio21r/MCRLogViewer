@@ -139,20 +139,16 @@ namespace MCRLogViewer
 
 			if(LOG_Version >= 9){
 				chkImg.Visible = true;
-				chkLstImg.Visible = true;
 				chkImg.Checked = true;
 			}
 			else{
 				chkImg.Visible = false;
-				chkLstImg.Visible = false;
 				chkImg.Checked = false;
 			}
 
 			//==========================================================
 			//画素ログの読み込み [Camera]  LOG_Version==9
 			//==========================================================
-			lstImg.Hide();
-
 			switch(LOG_Version){
 				case  9: fileOpenImg_v09(); break;
 				case 11: fileOpenImg_v11(); break;

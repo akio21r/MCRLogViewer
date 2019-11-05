@@ -345,8 +345,6 @@ namespace MCRLogViewer
 		public void InitGraph()
 		{
 			pnlImage.Visible = chkImg.Checked;
-			lstImg.Visible = chkLstImg.Checked;
-
 			if(chkImg.Checked)
 	            pnlGraph.Width = splitContainer1.Panel2.Width - SCROLLBAR_WIDTH - pnlImage.Width;
 			else
@@ -406,21 +404,10 @@ namespace MCRLogViewer
             }
 		}
 
-		private void lstImg_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			DrawGraph2(lstImg.SelectedIndex);
-		}
-
 		private void chkImg_CheckedChanged(object sender, EventArgs e)
 		{
 			pnlImage.Visible = chkImg.Checked;
 		}
-
-		private void chkLstImg_CheckedChanged(object sender, EventArgs e)
-		{
-			lstImg.Visible = chkLstImg.Checked;
-		}
-
 	}
 
 	//==================================================================

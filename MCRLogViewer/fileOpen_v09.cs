@@ -151,18 +151,12 @@ namespace MCRLogViewer
 			BuffAddress = 0;
 			byte[] imgLogBuf = new byte[20];
 
-			lstImg.Items.Clear();
 			imgLog_Count = 0;
 
 			for(imgLog_Count=0; WorkAddress + BuffAddress < fileSize - 512; imgLog_Count++){
-				str  = new StringBuilder(String.Format("{0, 6}", imgLog_Count));
-				str.Append(" ");
-
 				// １レコード分の切り出し
 				for(int j=0; j<20; j++){
 					imgLogBuf[j] = buf[WorkAddress + BuffAddress++];
-					str.Append( imgLogBuf[j].ToString("x2") );
-					if(j<=2 || j==18) str.Append( " " );
 				}
 
 				// img セクションのログ終了コードを検出したら抜ける
@@ -178,28 +172,12 @@ namespace MCRLogViewer
 					imgLog[imgLog_Count].data[j*2]   = (byte)((d >> 4) & 0x0f);
 					imgLog[imgLog_Count].data[j*2+1] = (byte)(d & 0x0f);
 				}
-
-				// sens を追加
-				str.Append( "  " );
-				byte s = imgLog[imgLog_Count].Sens;
-				s <<= 1;
-				for(i=0; i<7; i++){
-					if((s & 0x80) == 0)
-						str.Append("-");
-					else
-						str.Append("*");
-					s <<= 1;
-				}
-
-				// lstImg へ追加
-				lstImg.Items.Add(str);
 			}
 			WorkAddress += BuffAddress;
 
 			DrawGraph3();
 			
 			chkImg.Visible = true;
-			chkLstImg.Visible = true;
 			chkImg.Checked = true;
 		}
 
