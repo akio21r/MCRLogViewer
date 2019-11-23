@@ -4,8 +4,11 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # Build results
-#[Bb]in/
+[Bb]in/
 [Oo]bj/
 [Ll]og/
+
+#無視しないファイル
+!./MCRLogViewer/bin/Release/MCRLogViewer.exe
 
 #*.suo
