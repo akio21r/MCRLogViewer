@@ -4,7 +4,12 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # Build results
-[Bb]in/
+#[Bb]in/
+/MCRLogViewer/bin/*
+!/MCRLogViewer/bin/Release/
+/MCRLogViewer/bin/Release/*
+!/MCRLogViewer/bin/Release/*.exe
+
 [Oo]bj/
 [Ll]og/
 
