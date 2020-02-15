@@ -5,6 +5,7 @@ using System;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace MCRLogViewer
 {
@@ -94,6 +95,15 @@ namespace MCRLogViewer
 
             TextFile.Close();
             TextFile.Dispose();
+
+
+			// hlPos の値を取得		記述例：hlPos=8,
+			Match	matche = Regex.Match(txtHead.Text, @"hlPos=\d*,");
+			String	tmpStr	= matche.Value;
+			int		p0		= tmpStr.IndexOf("=") + 1;
+			int		p1		= tmpStr.Length - 1;
+			hlPos	= int.Parse(tmpStr.Substring(p0, p1-p0));
+			if(hlPos > 0) lblHlPos.Text = "hlPos=" + hlPos.ToString();
 
             //
             // バイナリログデータの読み込み

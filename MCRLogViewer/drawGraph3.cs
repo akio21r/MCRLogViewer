@@ -59,10 +59,18 @@ namespace MCRLogViewer
 				}
 
 				// 中央値
-			//	g3.DrawRectangle(Pens.Red, imgLog[n].Center * vx + vx*3/8, n*vy + vy*3/8 , vx/4, vy/4);
-			//	g3.DrawRectangle(Pens.Red, imgLog[n].Center * vx + vx/2, n*vy, 1, vy);
-				g3.DrawLine(Pens.Red, imgLog[n].Center * graph3_vx + graph3_vx/2, n*graph3_vy,
-					imgLog[n].Center * graph3_vx + graph3_vx/2, (n+1)*graph3_vy);
+				float center_x;
+				center_x = imgLog[n].Center * graph3_vx + graph3_vx/2;
+				g3.DrawLine(Pens.Red, center_x, n*graph3_vy, center_x, (n+1)*graph3_vy);
+
+				// ハーフライン
+				if(hlPos > 0){
+					float x_hlPos;
+					x_hlPos = (imgLog[n].Center - hlPos) * graph3_vx + graph3_vx/2;
+					g3.DrawLine(Pens.DarkMagenta, x_hlPos, n*graph3_vy, x_hlPos, (n+1)*graph3_vy);
+					x_hlPos = (imgLog[n].Center + hlPos) * graph3_vx + graph3_vx/2;
+					g3.DrawLine(Pens.DarkMagenta, x_hlPos, n*graph3_vy, x_hlPos, (n+1)*graph3_vy);
+				}
 
 
 				// sens を追加

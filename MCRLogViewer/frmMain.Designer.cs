@@ -58,6 +58,7 @@
 			this.btnX8 = new System.Windows.Forms.Button();
 			this.btnW8 = new System.Windows.Forms.Button();
 			this.pnlImage = new System.Windows.Forms.Panel();
+			this.lblHlPos = new System.Windows.Forms.Label();
 			this.pctGraph2 = new System.Windows.Forms.PictureBox();
 			this.pnlGraph3 = new System.Windows.Forms.Panel();
 			this.pctGraph3 = new System.Windows.Forms.PictureBox();
@@ -402,6 +403,7 @@
 			// 
 			// pnlImage
 			// 
+			this.pnlImage.Controls.Add(this.lblHlPos);
 			this.pnlImage.Controls.Add(this.pctGraph2);
 			this.pnlImage.Controls.Add(this.pnlGraph3);
 			this.pnlImage.Dock = System.Windows.Forms.DockStyle.Left;
@@ -409,6 +411,15 @@
 			this.pnlImage.Name = "pnlImage";
 			this.pnlImage.Size = new System.Drawing.Size(232, 542);
 			this.pnlImage.TabIndex = 25;
+			// 
+			// lblHlPos
+			// 
+			this.lblHlPos.AutoSize = true;
+			this.lblHlPos.Location = new System.Drawing.Point(137, 6);
+			this.lblHlPos.Name = "lblHlPos";
+			this.lblHlPos.Size = new System.Drawing.Size(45, 12);
+			this.lblHlPos.TabIndex = 25;
+			this.lblHlPos.Text = "hlPos=0";
 			// 
 			// pctGraph2
 			// 
@@ -453,7 +464,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menu;
 			this.Name = "frmMain";
-			this.Text = "MCR LOG Viewer  ver5.3";
+			this.Text = "MCR LOG Viewer  ver5.41";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
 			this.Load += new System.EventHandler(this.frmMain_Load);
@@ -475,6 +486,7 @@
 			this.panel2.ResumeLayout(false);
 			this.panel2.PerformLayout();
 			this.pnlImage.ResumeLayout(false);
+			this.pnlImage.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pctGraph2)).EndInit();
 			this.pnlGraph3.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.pctGraph3)).EndInit();
@@ -518,6 +530,7 @@
 		private System.Windows.Forms.Panel panel2;
 		private System.Windows.Forms.CheckBox chkImg;
 		public System.Windows.Forms.PictureBox pctGraph3;
-    }
+		private System.Windows.Forms.Label lblHlPos;
+	}
 }
 

@@ -21,7 +21,6 @@ namespace MCRLogViewer
 		//==================================================================
 		public void DrawGraph2(int sel){
 			int i;
-			int center_x;
 			int x0, y0;
 			int[] Camera = new int[33];
 			x0 = pctGraph2.Width / 2;	//中央線
@@ -61,8 +60,19 @@ namespace MCRLogViewer
 			//	g2.DrawRectangle(Pens.Cyan, i*scale, pctGraph2.Height-y, i*scale+scale, pctGraph2.Height);
 			}
 
-			center_x = imgLog[sel].Center * scaleX;
+			// 中央値
+			int center_x = imgLog[sel].Center * scaleX;
 			g2.DrawLine(Pens.Red, center_x, 0, center_x, pctGraph2.Height);
+
+			// ハーフライン
+			if(hlPos > 0){
+				int x_hlPos;
+				x_hlPos = center_x - hlPos * scaleX;
+				g2.DrawLine(Pens.DarkMagenta, x_hlPos, 0, x_hlPos, pctGraph2.Height);
+				x_hlPos = center_x + hlPos * scaleX;
+				g2.DrawLine(Pens.DarkMagenta, x_hlPos, 0, x_hlPos, pctGraph2.Height);
+			}
+
 		}
 	}
 }

@@ -21,9 +21,10 @@ namespace MCRLogViewer
 		//ログデータ関連
 		//==================================================================
 		static public int TXT_header_sectors = 3;	//TXT領域のセクタ数
-        int LOG_Version = 6;						//ログのバージョン
-		int LOG_RecordBytes = 17;					//ログの1レコードサイズ
-		int Camera_N = 32;							//画素の数
+        int LOG_Version		= 6;			//ログのバージョン
+		int LOG_RecordBytes	= 17;			//ログの1レコードサイズ
+		int Camera_N		= 32;			//画素の数
+		int hlPos			= 0;			//ハーフラインを読む位置(Camera)
 
 		public const int max_log_data_counts = 5000000;	//500万行分のデータ★
 		public struct LogData{				//ログデータ
