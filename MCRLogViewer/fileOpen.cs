@@ -98,12 +98,14 @@ namespace MCRLogViewer
 
 
 			// hlPos の値を取得		記述例：hlPos=8,
-			Match	matche = Regex.Match(txtHead.Text, @"hlPos=\d*,");
-			String	tmpStr	= matche.Value;
-			int		p0		= tmpStr.IndexOf("=") + 1;
-			int		p1		= tmpStr.Length - 1;
-			hlPos	= int.Parse(tmpStr.Substring(p0, p1-p0));
-			if(hlPos > 0) lblHlPos.Text = "hlPos=" + hlPos.ToString();
+			String	tmpStr	= Regex.Match(txtHead.Text, @"hlPos=\d*,").Value;
+			if(tmpStr.Length > 0){
+				int		p0		= tmpStr.IndexOf("=") + 1;
+				int		p1		= tmpStr.Length - 1;
+				if(p1-p0 > 0)
+					hlPos	= int.Parse(tmpStr.Substring(p0, p1-p0));
+				lblHlPos.Text = "hlPos=" + hlPos.ToString();
+			}
 
             //
             // バイナリログデータの読み込み
