@@ -106,8 +106,8 @@ namespace MCRLogViewer
 			string path_save = path.Substring(0, path.Length - 4) + "_new.LOG";
 	
             FileStream fsr = new FileStream(path, FileMode.Open, FileAccess.Read);
-            int fileSize = (int)fsr.Length;			// ファイルのサイズ
-            byte[] buf = new byte[fileSize];		// データ格納用配列
+            int fileSize = (int)fsr.Length;				// ファイルのサイズ
+            byte[] buf = new byte[fileSize + 1024];		// データ格納用配列
 			fsr.Read(buf, 0, fileSize);
 			fsr.Close();
 			fsr.Dispose();

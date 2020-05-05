@@ -63,7 +63,7 @@ namespace MCRLogViewer
 
 				//ログのバージョンを読み込む
 				Line = TextFile.ReadLine();
-                LOG_Version = int.Parse(Line);
+				LOG_Version = int.Parse(Line);
 
 				//1レコードのバイト数を決定
 				if(LOG_Version <= 3){
@@ -82,19 +82,19 @@ namespace MCRLogViewer
 
 				//テキストログの読み込み
 				n = 0;
-                do{
-                    Line = TextFile.ReadLine();
-                    if(Line == "<END>") break;
-                    if(n++ > 128) break;
-                    txtHead.Text += Line + System.Environment.NewLine;
-                }while(Line != null);
-            }
+				do{
+					Line = TextFile.ReadLine();
+					if(Line == "<END>") break;
+					if(n++ > 128) break;
+					txtHead.Text += Line + System.Environment.NewLine;
+				}while(Line != null);
+				}
 
 			txtHead.Text += String.Format("Log_Version = {0,3:d3}", LOG_Version) + System.Environment.NewLine;
 			txtHead.Select(0, 0);
 
-            TextFile.Close();
-            TextFile.Dispose();
+			TextFile.Close();
+			TextFile.Dispose();
 
 
 			// hlPos の値を取得		記述例：hlPos=8,
@@ -107,21 +107,21 @@ namespace MCRLogViewer
 				lblHlPos.Text = "hlPos=" + hlPos.ToString();
 			}
 
-            //
-            // バイナリログデータの読み込み
-            //
-            if(c == '#') WorkAddress = TXT_header_sectors * 512;
-            else         WorkAddress = 0;
-            BuffAddress = 0;
+			//
+			// バイナリログデータの読み込み
+			//
+			if(c == '#') WorkAddress = TXT_header_sectors * 512;
+			else         WorkAddress = 0;
+			BuffAddress = 0;
 
-            n = 0;
-            fs.Seek(TXT_header_sectors * 512, SeekOrigin.Begin);
+			n = 0;
+			fs.Seek(TXT_header_sectors * 512, SeekOrigin.Begin);
 
 			lstView.Hide();
-            lstView.Items.Clear();
+			lstView.Items.Clear();
 			readSize = fs.Read(buf, WorkAddress, fileSize - WorkAddress);
 
-			time = 0;			
+			time = 0;
 
 			//==========================================================
 			//ログデータの読み込み
@@ -143,6 +143,7 @@ namespace MCRLogViewer
 				case 10: fileOpen_v10(); break;
 				case 11: fileOpen_v11(); break;
 				case 12: fileOpen_v12(); break;
+				case 50: fileOpen_v50(); break;		// C Class
 			}
 
 			//==========================================================
@@ -165,12 +166,13 @@ namespace MCRLogViewer
 				case  9: fileOpenImg_v09(); break;
 				case 11: fileOpenImg_v11(); break;
 				case 12: fileOpenImg_v12(); break;
+				case 50: fileOpenImg_v50(); break;
 			}
 
 			//==========================================================
 			//==========================================================
 			log_count = n;
-			LogFileSize = WorkAddress + 1024;		//実質のサイズを保存用に記録しておく
+			LogFileSize = WorkAddress + 1024;	//実質のサイズを保存用に記録しておく
 			
 			fs.Dispose();
             menuFileSaveTXT.Enabled = true;
