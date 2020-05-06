@@ -42,7 +42,7 @@ namespace MCRLogViewer
 				d_int			=  buf[WorkAddress + BuffAddress + 12];
 				d_int			<<= 8;
 				d_int			+= buf[WorkAddress + BuffAddress + 13];
-				log[n].trip		=  d_int;
+				log[n].time		=  d_int;
 
 				log[n].floor	= (sbyte)buf[WorkAddress + BuffAddress + 14];
 				log[n].gyro		= (sbyte)buf[WorkAddress + BuffAddress + 15];
@@ -80,8 +80,9 @@ namespace MCRLogViewer
 				if((log[n].side & 0x01) != 0) log[n].sens.Append("]");
 				else                          log[n].sens.Append(" ");
 
-				str  = new StringBuilder(String.Format("{0, 6}", time));
-				time += 5;
+				str  = new StringBuilder(String.Format("{0, 6}", log[n].time));
+			//	str  = new StringBuilder(String.Format("{0, 6}", time));
+			//	time += 5;
 				str.Append(String.Format("{0, 4}", log[n].mode));
 				str.Append(log[n].sens);
 				str.Append(String.Format("{0, 4}", log[n].center));
