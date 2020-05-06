@@ -9,6 +9,7 @@ namespace MCRLogViewer
     partial class frmMain
     {
 		public void fileOpen_v08(){
+			int		n = 0;
 		//	sbyte pos_sens;
 			lblHead2.Text = "                      A   B    C     D   E   F   G   H   I     J         K     L    ";
 			lblHead1.Text = "  time mode   sens   hnd ang  sv    vt  v   fl  fr  rl  rr     x  slc  Slope Gyro   ";
@@ -134,6 +135,11 @@ namespace MCRLogViewer
 
 				if (mode == 0) break;				//modeが0なら終了
 			}
+
+			//------------------------------
+			//ログデータの個数，サイズを記録
+			log_count = n;						//バイナリログデータの個数
+			LogFileSize = WorkAddress + 1024;	//実質のサイズ
 		}
 	}
 }

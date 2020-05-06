@@ -15,7 +15,8 @@ namespace MCRLogViewer
 		//変数
 		//==================================================================
 		int		WorkAddress, BuffAddress;
-		int		n=0, i;
+	//	int		n=0, i;
+		int		i;
 		int		d_int;		// バッファ読込一時作業用
 		sbyte	d_sb;		// バッファ読込一時作業用
 
@@ -42,6 +43,50 @@ namespace MCRLogViewer
 				return;
 			}
 
+			//前回開いたログデータの初期化
+			for(i=0; i<max_log_data_counts; i++){
+				log[i].mode		= 0;		//mode
+				//log[i].sens.Clear();		//センサの状態
+				log[i].v		= 0;
+				log[i].vt		= 0;		//速度、目標速度
+				log[i].angle	= 0;
+				log[i].angle_t	= 0;		//ハンドル角、目標角度
+				log[i].power	= 0;		//モータ出力
+				log[i].sv_pow	= 0;		//サーボモータの出力
+				log[i].fl		= 0;
+				log[i].fr		= 0;
+				log[i].rl		= 0;
+				log[i].rr		= 0;		//各輪のモータ出力
+				log[i].slope_mode	= 0;	//slope_mode;
+				log[i].slope_sw		= 0;	//坂SWの状態
+				log[i].slope_cnt	= 0;	//出発してからの坂の数
+				log[i].trip		= 0;		//トリップメータ
+				log[i].gyro		= 0;
+				log[i].gyroEx	= 0;		//ジャイロ出力値
+				log[i].side		= 0;		//サイドセンサの状態, ハーフライン
+				log[i].time		= 0;		//時間[ms]
+				log[i].floor	= 0;		//階
+
+				//Camera用
+				log[i].center	= 0;		//Cameraのセンター値
+				log[i].etc		= 0;		//他
+				log[i].hlCntL	= 0;
+				log[i].hlCntR	= 0;		//ハーフライン検出数カウント
+
+				//Remote Sens用
+				log[i].anL1	= 0;
+				log[i].anL2	= 0;
+				log[i].anL	= 0;
+				log[i].anR	= 0;
+				log[i].anR2	= 0;
+				log[i].anR1	= 0;			//anセンサ値
+
+				//以下は現在使っていないもの。
+				log[i].pre_sens	= 0;		//先読みセンサ
+				log[i].batt		= 0;        //バッテリ電圧
+			}
+
+
 			path = filename;
 			txtPath.Text = filename;
 
@@ -49,17 +94,17 @@ namespace MCRLogViewer
 			fileSize = (int)fs.Length;		// ファイルのサイズ
 			buf = new byte[fileSize];		// データ格納用配列
 
-            //            
-            // テキストログの読み込み
-            //
-            System.IO.StreamReader TextFile;
-            TextFile = new System.IO.StreamReader(path, System.Text.Encoding.Default);
-            int c;
-            c = TextFile.Read();
-            txtHead.Clear();
+			//==========================================================
+			// テキストログの読み込み
+			//
+			System.IO.StreamReader TextFile;
+			TextFile = new System.IO.StreamReader(path, System.Text.Encoding.Default);
+			int c;
+			c = TextFile.Read();
+			txtHead.Clear();
 
-            if(c == '#'){
-                string Line;
+			if(c == '#'){
+				string Line;
 
 				//ログのバージョンを読み込む
 				Line = TextFile.ReadLine();
@@ -81,11 +126,11 @@ namespace MCRLogViewer
 				}
 
 				//テキストログの読み込み
-				n = 0;
+				i = 0;
 				do{
 					Line = TextFile.ReadLine();
 					if(Line == "<END>") break;
-					if(n++ > 128) break;
+					if(i++ > 128) break;
 					txtHead.Text += Line + System.Environment.NewLine;
 				}while(Line != null);
 				}
@@ -107,14 +152,13 @@ namespace MCRLogViewer
 				lblHlPos.Text = "hlPos=" + hlPos.ToString();
 			}
 
-			//
+			//==========================================================
 			// バイナリログデータの読み込み
 			//
 			if(c == '#') WorkAddress = TXT_header_sectors * 512;
 			else         WorkAddress = 0;
 			BuffAddress = 0;
 
-			n = 0;
 			fs.Seek(TXT_header_sectors * 512, SeekOrigin.Begin);
 
 			lstView.Hide();
@@ -123,9 +167,7 @@ namespace MCRLogViewer
 
 			time = 0;
 
-			//==========================================================
 			//ログデータの読み込み
-			//==========================================================
 			switch(LOG_Version){
 				case  1:
 				case  2:
@@ -160,22 +202,9 @@ namespace MCRLogViewer
 			}
 
 			//==========================================================
-			//画素ログの読み込み [Camera]  LOG_Version==9
 			//==========================================================
-			switch(LOG_Version){
-				case  9: fileOpenImg_v09(); break;
-				case 11: fileOpenImg_v11(); break;
-				case 12: fileOpenImg_v12(); break;
-				case 50: fileOpenImg_v50(); break;
-			}
-
-			//==========================================================
-			//==========================================================
-			log_count = n;
-			LogFileSize = WorkAddress + 1024;	//実質のサイズを保存用に記録しておく
-			
 			fs.Dispose();
-            menuFileSaveTXT.Enabled = true;
+			menuFileSaveTXT.Enabled = true;
 
 			//左側のデータ表示領域のサイズ再設定
 			splitContainer1.SplitterDistance = lblHead1.Size.Width + SCROLLBAR_WIDTH;
@@ -196,21 +225,23 @@ namespace MCRLogViewer
 			btnX8.Enabled = true;
 			
 			//==========================================================
-			// ハードディスクなら自動保存
+			// ハードディスクなら自動保存 (Log_Version < 50 のときのみ)
 			//==========================================================
-			System.IO.DriveType DType;
-			string drive_a, drive_b;
-			drive_a = path.ToString().Substring(0,1);
-			foreach(System.IO.DriveInfo DInfo in System.IO.DriveInfo.GetDrives()){
-				DType = DInfo.DriveType;
-				drive_b = DInfo.ToString().Substring(0,1);
-				if( drive_a == drive_b ){
-					if( DType == System.IO.DriveType.Fixed ){
-						FileSave();
-						menuFileSave.Enabled = true;
-					}
-					else{
-						menuFileSave.Enabled = false;
+			if(LOG_Version < 50){
+				System.IO.DriveType DType;
+				string drive_a, drive_b;
+				drive_a = path.ToString().Substring(0,1);
+				foreach(System.IO.DriveInfo DInfo in System.IO.DriveInfo.GetDrives()){
+					DType = DInfo.DriveType;
+					drive_b = DInfo.ToString().Substring(0,1);
+					if( drive_a == drive_b ){
+						if( DType == System.IO.DriveType.Fixed ){
+							FileSave();
+							menuFileSave.Enabled = true;
+						}
+						else{
+							menuFileSave.Enabled = false;
+						}
 					}
 				}
 			}

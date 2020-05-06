@@ -9,6 +9,7 @@ namespace MCRLogViewer
     partial class frmMain
     {
 		public void fileOpen_v04_07(){
+			int		n = 0;
 			sbyte	pos_sens;
 			int		pre_sens;
 
@@ -186,6 +187,11 @@ namespace MCRLogViewer
 
 				if (mode == 0) break;				//modeが0なら終了
 			}
+
+			//------------------------------
+			//ログデータの個数，サイズを記録
+			log_count = n;						//バイナリログデータの個数
+			LogFileSize = WorkAddress + 1024;	//実質のサイズ
 		}
 	}
 }
