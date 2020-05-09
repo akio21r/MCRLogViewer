@@ -186,6 +186,7 @@ namespace MCRLogViewer
 				case 11: fileOpen_v11(); break;
 				case 12: fileOpen_v12(); break;
 				case 50: fileOpen_v50(); break;		// C Class
+				case 51: fileOpen_v51(); break;		// C Class 2DLog
 			}
 
 			//==========================================================

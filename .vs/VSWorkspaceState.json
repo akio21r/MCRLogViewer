@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\MCRLogViewer"
   ],
-  "SelectedNode": "\\変更内容.txt",
+  "SelectedNode": "\\MCRLogViewer\\drawGraph3.cs",
   "PreviewInSolutionExplorer": false
 }

@@ -23,8 +23,11 @@ namespace MCRLogViewer
 		static public int TXT_header_sectors = 3;	//TXT領域のセクタ数
 		int LOG_Version		= 6;			//ログのバージョン
 		int LOG_RecordBytes	= 17;			//ログの1レコードサイズ
-		int Camera_N		= 32;			//画素の数
+		const int Camera_N	= 32;			//画素数
+		const int GASO_HW	= 32;			//画素数（横）
+		const int GASO_VW	= 24;			//画素数（縦）
 		int hlPos			= 0;			//ハーフラインを読む位置(Camera)
+		int line_vPos		= 20;			//横１ラインを読む縦の位置(Cam)
 
 		public const int max_log_data_counts = 5000000;	//500万行分のデータ★
 		public struct LogData{				//ログデータ
@@ -86,6 +89,8 @@ namespace MCRLogViewer
 			public Single scale, max, min;
 		}
 		myGraphPoints[] gp = new myGraphPoints[graph_points];
+		SolidBrush[] brsh = new SolidBrush[16];
+
 
 		static public int y0;							//X軸
 		static public int cur_n1=0, cur_x=0, cur_x1=0;	//グラフ上の現在,前の位置
@@ -355,6 +360,13 @@ namespace MCRLogViewer
 				pnlGraph.Width = splitContainer1.Panel2.Width - SCROLLBAR_WIDTH;
 			pnlGraph.Height = splitContainer1.Panel2.Height - pnlGraph.Top - SCROLLBAR_WIDTH;
 			pnlGraph3.Height = splitContainer1.Panel2.Height - pnlGraph3.Top;
+
+			//濃淡グラフのブラシ濃度
+		//	SolidBrush[] brsh = new SolidBrush[16];
+			for(i=0; i<16; i++){
+				brsh[i] = new SolidBrush(Color.FromArgb(i*17, i*17, i*17));
+			}
+
 		}
 
 		//==================================================================
