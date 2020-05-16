@@ -163,7 +163,7 @@ namespace MCRLogViewer
 
 			}
 */
-
+			line_vPos = 20;
 			imgLog_Count = log_count = n;		//ログデータの個数
 			WorkAddress += BuffAddress;
 

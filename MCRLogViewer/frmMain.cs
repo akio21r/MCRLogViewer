@@ -27,7 +27,7 @@ namespace MCRLogViewer
 		const int GASO_HW	= 32;			//画素数（横）
 		const int GASO_VW	= 24;			//画素数（縦）
 		int hlPos			= 0;			//ハーフラインを読む位置(Camera)
-		int line_vPos		= 20;			//横１ラインを読む縦の位置(Cam)
+		int line_vPos		= 0;			//横１ラインを読む縦の位置(Cam)
 
 		public const int max_log_data_counts = 5000000;	//500万行分のデータ★
 		public struct LogData{				//ログデータ

@@ -85,7 +85,7 @@ namespace MCRLogViewer
 				log[i].pre_sens	= 0;		//先読みセンサ
 				log[i].batt		= 0;        //バッテリ電圧
 			}
-
+			line_vPos = 0;
 
 			path = filename;
 			txtPath.Text = filename;

@@ -45,17 +45,12 @@ namespace MCRLogViewer
 			
 			int x0 = pctGraph3.Width / 2;									//中心線
 			
-		//	SolidBrush[] brsh = new SolidBrush[16];
-		//	for(i=0; i<16; i++){
-		//		brsh[i] = new SolidBrush(Color.FromArgb(i*17, i*17, i*17));
-		//	}
 
 			g3.DrawLine(Pens.Gray,  x0, 0, x0, pctGraph.Height);
 
 			for(n=0; n<imgLog_Count-1; n++){
 				// 画素
 				for(i = 0; i<32; i++){
-				//	g3.FillRectangle(brsh[imgLog[n].data[i]], i*graph3_vx, n*graph3_vy, graph3_vx, graph3_vy);
 					g3.FillRectangle(brsh[imgLog[n].data[GASO_HW * line_vPos + i]], i*graph3_vx, n*graph3_vy, graph3_vx, graph3_vy);
 				}
 
