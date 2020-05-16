@@ -119,7 +119,7 @@ namespace MCRLogViewer
 					gp[ 9].y = -log[n].trip;
 					gp[11].y = -log[n].gyro;
 
-					if(LOG_Version == 11)
+					if(LOG_Version >= 11 || LOG_Version == 9)
 						gp[10].y = -log[n].center;
 					else if(LOG_Version >= 7 && LOG_Version <= 8)
 						gp[10].y = -log[n].gyroEx;

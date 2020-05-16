@@ -1,5 +1,5 @@
 //==========================================================================
-// LOG_Version = 11  Camera用ログ  2019.07.13以降
+// LOG_Version = 50  Camera Class 用ログ  2020.05.05以降
 //==========================================================================
 using System;
 using System.Text;
@@ -11,7 +11,7 @@ namespace MCRLogViewer
     {
 		//==================================================================
 		//==================================================================
-		public void fileOpen_v11(){
+		public void fileOpen_v50(){
 			int		n = 0;
 			lblHead2.Text = "                      K  A   B    C    D  E   F   G   H   I     J         L          ";
 			lblHead1.Text = "  time mode    sens  cam hnd ang  sv   vt v   fl  fr  rl  rr     x  slc  Gyr  L   R  ";
@@ -42,7 +42,7 @@ namespace MCRLogViewer
 				d_int			=  buf[WorkAddress + BuffAddress + 12];
 				d_int			<<= 8;
 				d_int			+= buf[WorkAddress + BuffAddress + 13];
-				log[n].trip		=  d_int;
+				log[n].time		=  d_int;
 
 				log[n].floor	= (sbyte)buf[WorkAddress + BuffAddress + 14];
 				log[n].gyro		= (sbyte)buf[WorkAddress + BuffAddress + 15];
@@ -80,8 +80,9 @@ namespace MCRLogViewer
 				if((log[n].side & 0x01) != 0) log[n].sens.Append("]");
 				else                          log[n].sens.Append(" ");
 
-				str  = new StringBuilder(String.Format("{0, 6}", time));
-				time += 5;
+				str  = new StringBuilder(String.Format("{0, 6}", log[n].time));
+			//	str  = new StringBuilder(String.Format("{0, 6}", time));
+			//	time += 5;
 				str.Append(String.Format("{0, 4}", log[n].mode));
 				str.Append(log[n].sens);
 				str.Append(String.Format("{0, 4}", log[n].center));
@@ -102,7 +103,9 @@ namespace MCRLogViewer
 				str.Append(String.Format("{0, 4}", log[n].hlCntL));
 				str.Append(String.Format("{0, 4}", log[n].hlCntR));
 
-				if (mode == -2)             //次のセクタへ
+				if(mode == 0)
+					break;						//modeが0なら終了
+				else if(mode == -2)             //次のセクタへ
 				{
 					int ii;
 					WorkAddress += 512;
@@ -144,34 +147,35 @@ namespace MCRLogViewer
 					n++; if (n > 10000) break;
 				}
 
-				if (mode == 0) break;				//modeが0なら終了
 			}
 
 			//==================================================================
 			//画素データの読み込み
 			//==================================================================
-			WorkAddress += 512;			//次のセクタへ
-			BuffAddress = 0;
-			byte[] imgLogBuf = new byte[20];
+		//	WorkAddress += 512;			//次のセクタへ
+		//	BuffAddress = 0;
+			BuffAddress += (18 + 2);	// 18 + 2;
+
+			byte[] imgLogBuf = new byte[18];
 
 			imgLog_Count = 0;
 
 			for(imgLog_Count=0; WorkAddress + BuffAddress < fileSize - 512; imgLog_Count++){
 				// １レコード分の切り出し
-				for(int j=0; j<20; j++){
+				for(int j=0; j<18; j++){
 					imgLogBuf[j] = buf[WorkAddress + BuffAddress++];
 				}
 
 				// img セクションのログ終了コードを検出したら抜ける
-				if( imgLogBuf[0] == 0xfd || imgLogBuf[0] == 0x00 ) break;
+				if( imgLogBuf[0] == 0xfd ) break;
 
 				// imgLog[] へのデータ追加
-				imgLog[imgLog_Count].Center	= imgLogBuf[1];
-				imgLog[imgLog_Count].Sens	= imgLogBuf[2];
+				imgLog[imgLog_Count].Center	= imgLogBuf[0];
+				imgLog[imgLog_Count].Sens	= imgLogBuf[1];
 				imgLog[imgLog_Count].Sens  &= 0x7f;				// Sensの最上位ビットを消す
 				imgLog[imgLog_Count].data	= new byte[32];
 				for(int j=0; j<16; j++){
-					byte d = imgLogBuf[3+j];
+					byte d = imgLogBuf[2+j];
 					imgLog[imgLog_Count].data[j*2]   = (byte)((d >> 4) & 0x0f);
 					imgLog[imgLog_Count].data[j*2+1] = (byte)(d & 0x0f);
 				}
@@ -184,11 +188,10 @@ namespace MCRLogViewer
 
 			chkImg.Visible = true;
 			chkImg.Checked = true;
-		
+
 			//------------------------------
-			//ログデータの個数，サイズを記録
 			log_count = n;						//バイナリログデータの個数
-			LogFileSize = WorkAddress + 1024;	//実質のサイズ
+			LogFileSize = WorkAddress + 512;	//実質のサイズ (not 1024)
 		}
 	}
 }

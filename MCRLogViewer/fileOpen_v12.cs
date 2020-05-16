@@ -12,6 +12,7 @@ namespace MCRLogViewer
 		//==================================================================
 		//==================================================================
 		public void fileOpen_v12(){
+			int		n = 0;
 			lblHead2.Text = "                      K  A   B    C    D  E   F   G   H   I     J         L          ";
 			lblHead1.Text = "  time mode    sens  cam hnd ang  sv   vt v   fl  fr  rl  rr     x  slc  Gyr  L   R  ";
 
@@ -145,11 +146,10 @@ namespace MCRLogViewer
 
 				if (mode == 0) break;				//modeが0なら終了
 			}
-		}
 
-		//==================================================================
-		//==================================================================
-		public void fileOpenImg_v12(){
+			//==================================================================
+			//画素データの読み込み
+			//==================================================================
 			WorkAddress += 512;			//次のセクタへ
 			BuffAddress = 0;
 			byte[] imgLogBuf = new byte[18];
@@ -184,6 +184,11 @@ namespace MCRLogViewer
 
 			chkImg.Visible = true;
 			chkImg.Checked = true;
+		
+			//------------------------------
+			//ログデータの個数，サイズを記録
+			log_count = n;						//バイナリログデータの個数
+			LogFileSize = WorkAddress + 1024;	//実質のサイズ
 		}
 	}
 }
