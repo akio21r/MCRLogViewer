@@ -12,6 +12,7 @@ namespace MCRLogViewer
 		//==================================================================
 		//==================================================================
 		public void fileOpen_v50(){
+			int		n = 0;
 			lblHead2.Text = "                      K  A   B    C    D  E   F   G   H   I     J         L          ";
 			lblHead1.Text = "  time mode    sens  cam hnd ang  sv   vt v   fl  fr  rl  rr     x  slc  Gyr  L   R  ";
 
@@ -41,7 +42,7 @@ namespace MCRLogViewer
 				d_int			=  buf[WorkAddress + BuffAddress + 12];
 				d_int			<<= 8;
 				d_int			+= buf[WorkAddress + BuffAddress + 13];
-				log[n].trip		=  d_int;
+				log[n].time		=  d_int;
 
 				log[n].floor	= (sbyte)buf[WorkAddress + BuffAddress + 14];
 				log[n].gyro		= (sbyte)buf[WorkAddress + BuffAddress + 15];
@@ -79,8 +80,9 @@ namespace MCRLogViewer
 				if((log[n].side & 0x01) != 0) log[n].sens.Append("]");
 				else                          log[n].sens.Append(" ");
 
-				str  = new StringBuilder(String.Format("{0, 6}", time));
-				time += 5;
+				str  = new StringBuilder(String.Format("{0, 6}", log[n].time));
+			//	str  = new StringBuilder(String.Format("{0, 6}", time));
+			//	time += 5;
 				str.Append(String.Format("{0, 4}", log[n].mode));
 				str.Append(log[n].sens);
 				str.Append(String.Format("{0, 4}", log[n].center));
@@ -146,11 +148,10 @@ namespace MCRLogViewer
 				}
 
 			}
-		}
 
-		//==================================================================
-		//==================================================================
-		public void fileOpenImg_v50(){
+			//==================================================================
+			//画素データの読み込み
+			//==================================================================
 		//	WorkAddress += 512;			//次のセクタへ
 		//	BuffAddress = 0;
 			BuffAddress += (18 + 2);	// 18 + 2;
@@ -188,8 +189,9 @@ namespace MCRLogViewer
 			chkImg.Visible = true;
 			chkImg.Checked = true;
 
-
-			WorkAddress -= 512;		//ファイルサイズの微調整（対処療法）
+			//------------------------------
+			log_count = n;						//バイナリログデータの個数
+			LogFileSize = WorkAddress + 512;	//実質のサイズ (not 1024)
 		}
 	}
 }

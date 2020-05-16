@@ -9,6 +9,7 @@ namespace MCRLogViewer
     partial class frmMain
     {
 		public void fileOpen_v01_03(){
+			int		n = 0;
 			lblHead1.Text = "  time mode  sens   hnd ang  pow  vt   v slc    trip  diff   Batt   Gyro  ";
 			lblHead2.Text = "                     A   B    C    D   E                      F      G    ";
 				
@@ -107,6 +108,11 @@ namespace MCRLogViewer
 
 				if (mode == 0) break;       //modeが0なら終了
 			}
+
+			//------------------------------
+			//ログデータの個数，サイズを記録
+			log_count = n;						//バイナリログデータの個数
+			LogFileSize = WorkAddress + 1024;	//実質のサイズ
 		}
 	}
 }

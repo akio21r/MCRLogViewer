@@ -16,15 +16,18 @@ namespace MCRLogViewer
 {
 	//メインフォーム
 	public partial class frmMain : Form
-    {
+	{
 		//==================================================================
 		//ログデータ関連
 		//==================================================================
 		static public int TXT_header_sectors = 3;	//TXT領域のセクタ数
-        int LOG_Version		= 6;			//ログのバージョン
+		int LOG_Version		= 6;			//ログのバージョン
 		int LOG_RecordBytes	= 17;			//ログの1レコードサイズ
-		int Camera_N		= 32;			//画素の数
+		const int Camera_N	= 32;			//画素数
+		const int GASO_HW	= 32;			//画素数（横）
+		const int GASO_VW	= 24;			//画素数（縦）
 		int hlPos			= 0;			//ハーフラインを読む位置(Camera)
+		int line_vPos		= 0;			//横１ラインを読む縦の位置(Cam)
 
 		public const int max_log_data_counts = 5000000;	//500万行分のデータ★
 		public struct LogData{				//ログデータ
@@ -86,6 +89,8 @@ namespace MCRLogViewer
 			public Single scale, max, min;
 		}
 		myGraphPoints[] gp = new myGraphPoints[graph_points];
+		SolidBrush[] brsh = new SolidBrush[16];
+
 
 		static public int y0;							//X軸
 		static public int cur_n1=0, cur_x=0, cur_x1=0;	//グラフ上の現在,前の位置
@@ -103,51 +108,51 @@ namespace MCRLogViewer
 		//==================================================================
 		public void FileSave()
 		{
-			string path_save = path.Substring(0, path.Length - 4) + "_new.LOG";
+		//	string path_save = path.Substring(0, path.Length - 4) + "_new.LOG";
 	
-            FileStream fsr = new FileStream(path, FileMode.Open, FileAccess.Read);
-            int fileSize = (int)fsr.Length;				// ファイルのサイズ
-            byte[] buf = new byte[fileSize + 1024];		// データ格納用配列
+			FileStream fsr = new FileStream(path, FileMode.Open, FileAccess.Read);
+			int fileSize = (int)fsr.Length;				// ファイルのサイズ
+			byte[] buf = new byte[fileSize + 1024];		// データ格納用配列
 			fsr.Read(buf, 0, fileSize);
 			fsr.Close();
 			fsr.Dispose();
 
-            FileStream fsw = new FileStream(path, FileMode.Create, FileAccess.Write);
+			FileStream fsw = new FileStream(path, FileMode.Create, FileAccess.Write);
 			fsw.Write(buf, 0, LogFileSize);
 			fsw.Close();
 			fsw.Dispose();
 		}		
 		
 		//==================================================================
-        //ファイルを開く（メニュー及びコマンドボタンより）
+		//ファイルを開く（メニュー及びコマンドボタンより）
 		//==================================================================
-        private void FileOpen_Click(object sender, EventArgs e)
-        {
+		private void FileOpen_Click(object sender, EventArgs e)
+		{
 			//“開く”ダイアログボックス
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.InitialDirectory = txtPath.Text;
-            ofd.Filter = "MCRログファイル (*.LOG)|*.LOG|" + "すべてのファイル (*.*)|*.*";
-            ofd.FilterIndex = 1;
-            ofd.Multiselect = false;
-            if (ofd.ShowDialog() == DialogResult.OK){
+			OpenFileDialog ofd = new OpenFileDialog();
+			ofd.InitialDirectory = txtPath.Text;
+			ofd.Filter = "MCRログファイル (*.LOG)|*.LOG|" + "すべてのファイル (*.*)|*.*";
+			ofd.FilterIndex = 1;
+			ofd.Multiselect = false;
+			if (ofd.ShowDialog() == DialogResult.OK){
 				FileOpen(ofd.FileName);
-            }
-            ofd.Dispose();
-        }
+			}
+			ofd.Dispose();
+		}
 
 		//==================================================================
-        //ファイルの保存
+		//ファイルの保存
 		//==================================================================
-        private void menuFileSave_Click(object sender, EventArgs e)
-        {
-            FileSave();
-        }
+		private void menuFileSave_Click(object sender, EventArgs e)
+		{
+			FileSave();
+		}
 
 		//==================================================================
-        //フォームのリサイズ
+		//フォームのリサイズ
 		//==================================================================
-        private void frmMain_Resize(object sender, EventArgs e)
-        {
+		private void frmMain_Resize(object sender, EventArgs e)
+		{
 			try{
 				if(lblHead1.Size.Width > 0){
 					splitContainer1.SplitterDistance = lblHead1.Size.Width + SCROLLBAR_WIDTH;
@@ -158,59 +163,59 @@ namespace MCRLogViewer
 		}
 
 		//==================================================================
-        //スプリットバー操作
+		//スプリットバー操作
 		//==================================================================
-        private void splitContainer2_Panel1_Resize(object sender, EventArgs e)
-        {
-            txtHead.Height = splitContainer2.Panel1.Height - txtHead.Location.Y;
-        }
+		private void splitContainer2_Panel1_Resize(object sender, EventArgs e)
+		{
+			txtHead.Height = splitContainer2.Panel1.Height - txtHead.Location.Y;
+		}
 
-        private void splitContainer2_SizeChanged(object sender, EventArgs e)
-        {
-            txtHead.Width = splitContainer2.Panel1.Width - txtHead.Location.X * 3;
-            txtPath.Width = txtHead.Width;
-            lstView.Width = txtHead.Width;
-            lstView.Height = splitContainer2.Panel2.Height - lstView.Location.Y;
-        }
+		private void splitContainer2_SizeChanged(object sender, EventArgs e)
+		{
+			txtHead.Width = splitContainer2.Panel1.Width - txtHead.Location.X * 3;
+			txtPath.Width = txtHead.Width;
+			lstView.Width = txtHead.Width;
+			lstView.Height = splitContainer2.Panel2.Height - lstView.Location.Y;
+		}
 
-        private void splitContainer1_Panel2_Resize(object sender, EventArgs e)
-        {
+		private void splitContainer1_Panel2_Resize(object sender, EventArgs e)
+		{
 			InitGraph();
-        }
+		}
 
 		//==================================================================
-        //エクスプローラからのファイルドラッグエンター
+		//エクスプローラからのファイルドラッグエンター
 		//==================================================================
-        private void frmMain_DragEnter(object sender, DragEventArgs e)
-        {
-            e.Effect = DragDropEffects.All;
-        }
+		private void frmMain_DragEnter(object sender, DragEventArgs e)
+		{
+			e.Effect = DragDropEffects.All;
+		}
 
 		//==================================================================
-        //エクスプローラからのファイルドロップ
+		//エクスプローラからのファイルドロップ
 		//==================================================================
-        private void frmMain_DragDrop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)){
-                foreach (string fileName in (string[])e.Data.GetData(DataFormats.FileDrop)){
+		private void frmMain_DragDrop(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent(DataFormats.FileDrop)){
+				foreach (string fileName in (string[])e.Data.GetData(DataFormats.FileDrop)){
 					FileOpen(fileName);
-                }
-            }
-        }
+				}
+			}
+		}
 
 		//==================================================================
-        //メインフォームのコンストラクタ
+		//メインフォームのコンストラクタ
 		//==================================================================
-        public frmMain()
-        {
-            InitializeComponent();
+		public frmMain()
+		{
+			InitializeComponent();
 
 			//マウスホイールのイベント追加
 			this.lstView.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lstView_MouseWheel);
-        }
+		}
 
 		//==================================================================
-        //pctGraphのマウスホイール操作イベント
+		//pctGraphのマウスホイール操作イベント
 		//==================================================================
 		private void lstView_MouseWheel(object sender, MouseEventArgs e)
 		{
@@ -235,8 +240,8 @@ namespace MCRLogViewer
 		//==================================================================
 		//メインフォームの起動
 		//==================================================================
-        private void frmMain_Load(object sender, EventArgs e)
-        {
+		private void frmMain_Load(object sender, EventArgs e)
+		{
 		//	//多重起動の禁止
 		//	mut = new System.Threading.Mutex(false, "myMutex");
 		//	if(mut.WaitOne(0, false) == false){
@@ -267,73 +272,73 @@ namespace MCRLogViewer
 		}
 
 		//==================================================================
-        //テキスト形式でファイルセーブ
+		//テキスト形式でファイルセーブ
 		//==================================================================
-        private void menuFileSaveTXT_Click(object sender, EventArgs e)
+		private void menuFileSaveTXT_Click(object sender, EventArgs e)
 		{
 			string path_txt;
-            int i, n=0;
+			int i, n=0;
 
-            if (path == ""){
-                MessageBox.Show("ファイルがありません");
-                return;
-            }
+			if (path == ""){
+				MessageBox.Show("ファイルがありません");
+				return;
+			}
 
-            if(lstView.Items.Count == 0){
-                return;
-            }
+			if(lstView.Items.Count == 0){
+				return;
+			}
 
 			path_txt = path.Substring(0, path.Length - 3) + "TXT";
-            //“保存”ダイアログボックス
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.InitialDirectory = path_txt;// txtPath.Text;
-            sfd.FileName = path_txt;
-            sfd.Filter = "MCR TXTログファイル (*.TXT)|*.TXT|" + "すべてのファイル (*.*)|*.*";
-            sfd.FilterIndex = 1;
-            if (sfd.ShowDialog() == DialogResult.OK){
-                path_txt = sfd.FileName;
-            }
-            else{
-                sfd.Dispose();
-                return;
-            }
-            sfd.Dispose();
+			//“保存”ダイアログボックス
+			SaveFileDialog sfd = new SaveFileDialog();
+			sfd.InitialDirectory = path_txt;// txtPath.Text;
+			sfd.FileName = path_txt;
+			sfd.Filter = "MCR TXTログファイル (*.TXT)|*.TXT|" + "すべてのファイル (*.*)|*.*";
+			sfd.FilterIndex = 1;
+			if (sfd.ShowDialog() == DialogResult.OK){
+				path_txt = sfd.FileName;
+			}
+			else{
+				sfd.Dispose();
+				return;
+			}
+			sfd.Dispose();
 
 			//            
-            // テキストデータの書き込み
-            //
-            System.IO.StreamWriter TextFile;
-            TextFile = new System.IO.StreamWriter(path_txt);
-            if(txtHead.Text.Length > 0){
-                TextFile.WriteLine(txtHead.Text);
-            }
-                     
-            TextFile.WriteLine(lblHead1.Text);
+			// テキストデータの書き込み
+			//
+			System.IO.StreamWriter TextFile;
+			TextFile = new System.IO.StreamWriter(path_txt);
+			if(txtHead.Text.Length > 0){
+				TextFile.WriteLine(txtHead.Text);
+			}
+					
+			TextFile.WriteLine(lblHead1.Text);
 			for(i = 0; i < lblHead1.Text.Length; i++){
-	            TextFile.Write("-");
+				TextFile.Write("-");
 			}	
-            TextFile.WriteLine();
+			TextFile.WriteLine();
 		
 			for(n=0; n<lstView.Items.Count; n++){
-                TextFile.WriteLine(lstView.Items[n]);
-            }
-            TextFile.Close();
-            TextFile.Dispose();
-            MessageBox.Show(path_txt, "書き込み終了");
+				TextFile.WriteLine(lstView.Items[n]);
+			}
+			TextFile.Close();
+			TextFile.Dispose();
+			MessageBox.Show(path_txt, "書き込み終了");
 		}
 
 		//==================================================================
-        //メニュー：終了
+		//メニュー：終了
 		//==================================================================
-        private void menuFileExit_Click(object sender, EventArgs e)
+		private void menuFileExit_Click(object sender, EventArgs e)
 		{
 			this.Close();
 		}
 
 		//==================================================================
-        //グラフ更新
+		//グラフ更新
 		//==================================================================
-        private void btnOK_Click(object sender, EventArgs e)
+		private void btnOK_Click(object sender, EventArgs e)
 		{
 			InitGraph();
 			DrawGraph();
@@ -344,21 +349,28 @@ namespace MCRLogViewer
 		}
 
 		//==================================================================
-        //グラフ初期化
+		//グラフ初期化
 		//==================================================================
 		public void InitGraph()
 		{
 			pnlImage.Visible = chkImg.Checked;
 			if(chkImg.Checked)
-	            pnlGraph.Width = splitContainer1.Panel2.Width - SCROLLBAR_WIDTH - pnlImage.Width;
+				pnlGraph.Width = splitContainer1.Panel2.Width - SCROLLBAR_WIDTH - pnlImage.Width;
 			else
 				pnlGraph.Width = splitContainer1.Panel2.Width - SCROLLBAR_WIDTH;
-            pnlGraph.Height = splitContainer1.Panel2.Height - pnlGraph.Top - SCROLLBAR_WIDTH;
+			pnlGraph.Height = splitContainer1.Panel2.Height - pnlGraph.Top - SCROLLBAR_WIDTH;
 			pnlGraph3.Height = splitContainer1.Panel2.Height - pnlGraph3.Top;
+
+			//濃淡グラフのブラシ濃度
+		//	SolidBrush[] brsh = new SolidBrush[16];
+			for(i=0; i<16; i++){
+				brsh[i] = new SolidBrush(Color.FromArgb(i*17, i*17, i*17));
+			}
+
 		}
 
 		//==================================================================
-        //グラフ縮尺関連
+		//グラフ縮尺関連
 		//==================================================================
 		private void btnToubai_Click(object sender, EventArgs e){
 			pctGraph.Width = log_count;
@@ -399,13 +411,13 @@ namespace MCRLogViewer
 		}
 
 		//==================================================================
-        //オプションボタン
+		//オプションボタン
 		//==================================================================
-        private void btnGraphOption_Click(object sender, EventArgs e)
-        {
-            if (frmOption1.ShowDialog() == DialogResult.OK){
-                DrawGraph();
-            }
+		private void btnGraphOption_Click(object sender, EventArgs e)
+		{
+			if (frmOption1.ShowDialog() == DialogResult.OK){
+				DrawGraph();
+			}
 		}
 
 		private void chkImg_CheckedChanged(object sender, EventArgs e)
@@ -431,8 +443,8 @@ namespace MCRLogViewer
 			frmMain frmMain1 = (frmMain)MainForm;
 
 			//起動時のファイル名取得
-            foreach(string cmd in e.CommandLine){
-                frmMain1.FileOpen(cmd);
+			foreach(string cmd in e.CommandLine){
+				frmMain1.FileOpen(cmd);
 			}
 		}
 	}
