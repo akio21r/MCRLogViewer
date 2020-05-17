@@ -40,6 +40,12 @@ namespace MCRLogViewer
 				//----------------------------------------------
 				// imgLog[] へのデータセット
 				imgLog[n].Center	= buf[WorkAddress + BuffAddress + 9];
+				
+				byte s				= buf[WorkAddress + BuffAddress + 3];
+				byte s1				= (byte)((s >> 1) & 0x70);
+				byte s2				= (byte)(s & 0x0f);
+				imgLog[n].Sens		= (byte)(s1 | s2);
+
 				imgLog[n].data		= new byte[GASO_HW * GASO_VW];
 				gasoBuffPos = 0;
 				for(int y=0; y<GASO_VW; y++){
