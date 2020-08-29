@@ -92,7 +92,8 @@ namespace MCRLogViewer
 
 				//中央線
 				g2.DrawLine(Pens.Gray,  pctGraph.Width / 2, 0, pctGraph.Width / 2, pctGraph.Height);
-				g2.DrawRectangle(Pens.Red, 0, line_vPos*graph_vy, pctGraph.Width-3, graph_vy);
+				g2.DrawRectangle(Pens.Red, 0, vPos*graph_vy, pctGraph.Width-3, graph_vy);
+				g2.DrawRectangle(Pens.Magenta, 0, vPos2*graph_vy, pctGraph.Width-3, graph_vy);
 
 			}
 		}

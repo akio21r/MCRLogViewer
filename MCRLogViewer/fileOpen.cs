@@ -85,7 +85,8 @@ namespace MCRLogViewer
 				log[i].pre_sens	= 0;		//先読みセンサ
 				log[i].batt		= 0;        //バッテリ電圧
 			}
-			line_vPos = 0;
+			vPos = 0;
+			vPos2 = 0;
 
 			path = filename;
 			txtPath.Text = filename;
@@ -141,9 +142,12 @@ namespace MCRLogViewer
 			TextFile.Close();
 			TextFile.Dispose();
 
+			//----------------------------------------------
+			// テキスト中の特定文字列から値を読み取る
+			String	tmpStr;
 
 			// hlPos の値を取得		記述例：hlPos=8,
-			String	tmpStr	= Regex.Match(txtHead.Text, @"hlPos=\d*,").Value;
+			tmpStr	= Regex.Match(txtHead.Text, @"hlPos=\d*,").Value;
 			if(tmpStr.Length > 0){
 				int		p0		= tmpStr.IndexOf("=") + 1;
 				int		p1		= tmpStr.Length - 1;
@@ -151,6 +155,38 @@ namespace MCRLogViewer
 					hlPos	= int.Parse(tmpStr.Substring(p0, p1-p0));
 				lblHlPos.Text = "hlPos=" + hlPos.ToString();
 			}
+			else{
+				lblHlPos.Text = "";
+			}
+
+			// vPos の値を取得		記述例：vPos=20,
+			tmpStr	= Regex.Match(txtHead.Text, @"vPos=\d*,").Value;
+			if(tmpStr.Length > 0){
+				int		p0		= tmpStr.IndexOf("=") + 1;
+				int		p1		= tmpStr.Length - 1;
+				if(p1-p0 > 0)
+					vPos	= int.Parse(tmpStr.Substring(p0, p1-p0));
+				if(vPos == 0) vPos = 20;
+				lblVPos.Text = "vPos=" + vPos.ToString();
+			}
+			else{
+				lblVPos.Text = "";
+			}
+
+			// vPos2 の値を取得		記述例：vPos2=12,
+			tmpStr	= Regex.Match(txtHead.Text, @"vPos2=\d*,").Value;
+			if(tmpStr.Length > 0){
+				int		p0		= tmpStr.IndexOf("=") + 1;
+				int		p1		= tmpStr.Length - 1;
+				if(p1-p0 > 0)
+					vPos2	= int.Parse(tmpStr.Substring(p0, p1-p0));
+			//	if(vPos2 == 0) vPos2 = 12;
+				lblVPos2.Text = "vPos2=" + vPos2.ToString();
+			}
+			else{
+				lblVPos2.Text = "";
+			}
+
 
 			//==========================================================
 			// バイナリログデータの読み込み

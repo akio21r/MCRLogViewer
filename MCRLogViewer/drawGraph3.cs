@@ -51,7 +51,7 @@ namespace MCRLogViewer
 			for(n=0; n<imgLog_Count-1; n++){
 				// 画素
 				for(i = 0; i<32; i++){
-					g3.FillRectangle(brsh[imgLog[n].data[GASO_HW * line_vPos + i]], i*graph3_vx, n*graph3_vy, graph3_vx, graph3_vy);
+					g3.FillRectangle(brsh[imgLog[n].data[GASO_HW * vPos + i]], i*graph3_vx, n*graph3_vy, graph3_vx, graph3_vy);
 				}
 
 				// 中央値
@@ -119,7 +119,15 @@ namespace MCRLogViewer
 						n = 0;
 					else if(n >= imgLog_Count)
 						n = imgLog_Count - 1;
+
+					//棒グラフ・２次元画像の表示
 					DrawGraph2(n);
+
+					//lstViewのカーソル位置変更
+					if(LOG_Version >= 51){
+						lstView.SelectedIndex = n;
+						lstView.Focus();
+					}
 
 					Point p1 = new Point(0, e.Y);
 					Point p2 = new Point(pctGraph3.Width, e.Y);
@@ -141,7 +149,15 @@ namespace MCRLogViewer
 						n = 0;
 					else if(n >= imgLog_Count)
 						n = imgLog_Count - 1;
+					
+					//棒グラフ・２次元画像の表示
 					DrawGraph2(n);
+
+					//lstViewのカーソル位置変更
+					if(LOG_Version >= 51){
+						lstView.SelectedIndex = n;
+						lstView.Focus();
+					}
 
 					if(cur3b_show){
 						cur3b_show = false;
@@ -191,7 +207,16 @@ namespace MCRLogViewer
 			}
 
 			int n = -pnlGraph3.AutoScrollPosition.Y / (int)graph3_vy;
+
+			//棒グラフ・２次元画像の表示
 			DrawGraph2(n);
+			
+			//lstViewのカーソル位置変更
+		//	if(LOG_Version >= 51){
+		//		lstView.SelectedIndex = n;
+		//		lstView.Focus();
+		//	}
+
 		}
 
 	}
