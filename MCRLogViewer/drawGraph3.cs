@@ -51,7 +51,7 @@ namespace MCRLogViewer
 			for(n=0; n<imgLog_Count-1; n++){
 				// 画素
 				for(i = 0; i<32; i++){
-					g3.FillRectangle(brsh[imgLog[n].data[GASO_HW * line_vPos + i]], i*graph3_vx, n*graph3_vy, graph3_vx, graph3_vy);
+					g3.FillRectangle(brsh[imgLog[n].data[GASO_HW * vPos + i]], i*graph3_vx, n*graph3_vy, graph3_vx, graph3_vy);
 				}
 
 				// 中央値

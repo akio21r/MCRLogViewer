@@ -62,6 +62,8 @@
 			this.pctGraph2 = new System.Windows.Forms.PictureBox();
 			this.pnlGraph3 = new System.Windows.Forms.Panel();
 			this.pctGraph3 = new System.Windows.Forms.PictureBox();
+			this.lblVPos = new System.Windows.Forms.Label();
+			this.lblVPos2 = new System.Windows.Forms.Label();
 			this.menu.SuspendLayout();
 			this.pnlGraph.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pctGraph)).BeginInit();
@@ -403,6 +405,8 @@
 			// 
 			// pnlImage
 			// 
+			this.pnlImage.Controls.Add(this.lblVPos2);
+			this.pnlImage.Controls.Add(this.lblVPos);
 			this.pnlImage.Controls.Add(this.lblHlPos);
 			this.pnlImage.Controls.Add(this.pctGraph2);
 			this.pnlImage.Controls.Add(this.pnlGraph3);
@@ -452,6 +456,24 @@
 			this.pctGraph3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pctGraph3_MouseDown);
 			this.pctGraph3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pctGraph3_MouseMove);
 			this.pctGraph3.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pctGraph3_MouseUp);
+			// 
+			// lblVPos
+			// 
+			this.lblVPos.AutoSize = true;
+			this.lblVPos.Location = new System.Drawing.Point(137, 24);
+			this.lblVPos.Name = "lblVPos";
+			this.lblVPos.Size = new System.Drawing.Size(42, 12);
+			this.lblVPos.TabIndex = 25;
+			this.lblVPos.Text = "vPos=0";
+			// 
+			// lblVPos2
+			// 
+			this.lblVPos2.AutoSize = true;
+			this.lblVPos2.Location = new System.Drawing.Point(137, 42);
+			this.lblVPos2.Name = "lblVPos2";
+			this.lblVPos2.Size = new System.Drawing.Size(48, 12);
+			this.lblVPos2.TabIndex = 25;
+			this.lblVPos2.Text = "vPos2=0";
 			// 
 			// frmMain
 			// 
@@ -531,6 +553,8 @@
 		private System.Windows.Forms.CheckBox chkImg;
 		public System.Windows.Forms.PictureBox pctGraph3;
 		private System.Windows.Forms.Label lblHlPos;
+		private System.Windows.Forms.Label lblVPos2;
+		private System.Windows.Forms.Label lblVPos;
 	}
 }
 
