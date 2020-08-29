@@ -58,12 +58,12 @@
 			this.btnX8 = new System.Windows.Forms.Button();
 			this.btnW8 = new System.Windows.Forms.Button();
 			this.pnlImage = new System.Windows.Forms.Panel();
+			this.lblVPos2 = new System.Windows.Forms.Label();
+			this.lblVPos = new System.Windows.Forms.Label();
 			this.lblHlPos = new System.Windows.Forms.Label();
 			this.pctGraph2 = new System.Windows.Forms.PictureBox();
 			this.pnlGraph3 = new System.Windows.Forms.Panel();
 			this.pctGraph3 = new System.Windows.Forms.PictureBox();
-			this.lblVPos = new System.Windows.Forms.Label();
-			this.lblVPos2 = new System.Windows.Forms.Label();
 			this.menu.SuspendLayout();
 			this.pnlGraph.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pctGraph)).BeginInit();
@@ -416,6 +416,24 @@
 			this.pnlImage.Size = new System.Drawing.Size(232, 542);
 			this.pnlImage.TabIndex = 25;
 			// 
+			// lblVPos2
+			// 
+			this.lblVPos2.AutoSize = true;
+			this.lblVPos2.Location = new System.Drawing.Point(137, 24);
+			this.lblVPos2.Name = "lblVPos2";
+			this.lblVPos2.Size = new System.Drawing.Size(48, 12);
+			this.lblVPos2.TabIndex = 25;
+			this.lblVPos2.Text = "vPos2=0";
+			// 
+			// lblVPos
+			// 
+			this.lblVPos.AutoSize = true;
+			this.lblVPos.Location = new System.Drawing.Point(137, 42);
+			this.lblVPos.Name = "lblVPos";
+			this.lblVPos.Size = new System.Drawing.Size(42, 12);
+			this.lblVPos.TabIndex = 25;
+			this.lblVPos.Text = "vPos=0";
+			// 
 			// lblHlPos
 			// 
 			this.lblHlPos.AutoSize = true;
@@ -457,24 +475,6 @@
 			this.pctGraph3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pctGraph3_MouseMove);
 			this.pctGraph3.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pctGraph3_MouseUp);
 			// 
-			// lblVPos
-			// 
-			this.lblVPos.AutoSize = true;
-			this.lblVPos.Location = new System.Drawing.Point(137, 24);
-			this.lblVPos.Name = "lblVPos";
-			this.lblVPos.Size = new System.Drawing.Size(42, 12);
-			this.lblVPos.TabIndex = 25;
-			this.lblVPos.Text = "vPos=0";
-			// 
-			// lblVPos2
-			// 
-			this.lblVPos2.AutoSize = true;
-			this.lblVPos2.Location = new System.Drawing.Point(137, 42);
-			this.lblVPos2.Name = "lblVPos2";
-			this.lblVPos2.Size = new System.Drawing.Size(48, 12);
-			this.lblVPos2.TabIndex = 25;
-			this.lblVPos2.Text = "vPos2=0";
-			// 
 			// frmMain
 			// 
 			this.AllowDrop = true;
@@ -486,7 +486,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menu;
 			this.Name = "frmMain";
-			this.Text = "MCR LOG Viewer  ver5.44";
+			this.Text = "MCR LOG Viewer  ver5.45";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
 			this.Load += new System.EventHandler(this.frmMain_Load);

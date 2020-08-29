@@ -155,6 +155,9 @@ namespace MCRLogViewer
 					hlPos	= int.Parse(tmpStr.Substring(p0, p1-p0));
 				lblHlPos.Text = "hlPos=" + hlPos.ToString();
 			}
+			else{
+				lblHlPos.Text = "";
+			}
 
 			// vPos の値を取得		記述例：vPos=20,
 			tmpStr	= Regex.Match(txtHead.Text, @"vPos=\d*,").Value;
@@ -166,6 +169,9 @@ namespace MCRLogViewer
 				if(vPos == 0) vPos = 20;
 				lblVPos.Text = "vPos=" + vPos.ToString();
 			}
+			else{
+				lblVPos.Text = "";
+			}
 
 			// vPos2 の値を取得		記述例：vPos2=12,
 			tmpStr	= Regex.Match(txtHead.Text, @"vPos2=\d*,").Value;
@@ -176,6 +182,9 @@ namespace MCRLogViewer
 					vPos2	= int.Parse(tmpStr.Substring(p0, p1-p0));
 			//	if(vPos2 == 0) vPos2 = 12;
 				lblVPos2.Text = "vPos2=" + vPos2.ToString();
+			}
+			else{
+				lblVPos2.Text = "";
 			}
 
 

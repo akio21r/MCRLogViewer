@@ -13,6 +13,7 @@ namespace MCRLogViewer
 		//==================================================================
 		public void fileOpen_v51(){
 			int		n = 0, gasoBuffPos;
+			byte tmp;
 			lblHead2.Text = "                      K  A   B    C    D  E   F   G   H   I     J         L          ";
 			lblHead1.Text = "  time mode    sens  cam hnd ang  sv   vt v   fl  fr  rl  rr     x  slc  Gyr  L   R  ";
 
@@ -27,7 +28,8 @@ namespace MCRLogViewer
 				d_int			+= buf[WorkAddress + BuffAddress + 2];
 				log[n].time		=  d_int;
 
-				sens			= buf[WorkAddress + BuffAddress + 3];			//sens
+			//	sens			= buf[WorkAddress + BuffAddress + 3];			//sens
+				sens			= buf[WorkAddress + BuffAddress + 9];			//sens
 				ErrorCount		= (int)sens;
 
 				log[n].angle_t	= (sbyte)buf[WorkAddress + BuffAddress + 4];	//handle
@@ -37,9 +39,11 @@ namespace MCRLogViewer
 				log[n].center	= (sbyte)buf[WorkAddress + BuffAddress + 7];	//cam.Center
 				log[n].side		= (sbyte)buf[WorkAddress + BuffAddress + 8];	//cam.halfLine
 
-				//----------------------------------------------
-				// imgLog[] へのデータセット
-				imgLog[n].Center	= buf[WorkAddress + BuffAddress + 9];
+				tmp					= buf[WorkAddress + BuffAddress + 8];		//halfLine | centerIndex
+				log[n].side			= tmp >> 6;
+				imgLog[n].Center	= tmp & 0x3f;
+
+			//	imgLog[n].Center	= buf[WorkAddress + BuffAddress + 9];
 				
 				byte s				= buf[WorkAddress + BuffAddress + 3];
 				byte s1				= (byte)((s >> 1) & 0x70);
