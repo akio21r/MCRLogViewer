@@ -465,7 +465,7 @@
 			// pctGraph3
 			// 
 			this.pctGraph3.BackColor = System.Drawing.Color.SlateBlue;
-			this.pctGraph3.Location = new System.Drawing.Point(0, 0);
+			this.pctGraph3.Location = new System.Drawing.Point(0, 3);
 			this.pctGraph3.Name = "pctGraph3";
 			this.pctGraph3.Size = new System.Drawing.Size(203, 387);
 			this.pctGraph3.TabIndex = 0;
@@ -486,7 +486,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menu;
 			this.Name = "frmMain";
-			this.Text = "MCR LOG Viewer  ver5.45";
+			this.Text = "MCR LOG Viewer  ver5.46";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
 			this.Load += new System.EventHandler(this.frmMain_Load);

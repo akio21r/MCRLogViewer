@@ -17,6 +17,10 @@ namespace MCRLogViewer
 			lblHead2.Text = "                      K  A   B    C    D  E   F   G   H   I     J         L          ";
 			lblHead1.Text = "  time mode    sens  cam hnd ang  sv   vt v   fl  fr  rl  rr     x  slc  Gyr  L   R  ";
 
+			//遠方のセンター値が有効かどうかをセット
+			if(LOG_RecordBytes >= 11)	enableCenter2 = true;
+			else						enableCenter2 = false;
+
 			while (WorkAddress < fileSize - 512){
 				//----------------------------------------------
 				// log[] へのデータセット
@@ -41,9 +45,13 @@ namespace MCRLogViewer
 
 				tmp					= buf[WorkAddress + BuffAddress + 8];		//halfLine | centerIndex
 				log[n].side			= tmp >> 6;
-				imgLog[n].Center	= tmp & 0x3f;
+				imgLog[n].Center	= (byte)(tmp & 0x3f);
 
 			//	imgLog[n].Center	= buf[WorkAddress + BuffAddress + 9];
+				if(enableCenter2)
+					imgLog[n].Center2	= buf[WorkAddress + BuffAddress + 10];
+				else
+					imgLog[n].Center2	= 255;
 				
 				byte s				= buf[WorkAddress + BuffAddress + 3];
 				byte s1				= (byte)((s >> 1) & 0x70);

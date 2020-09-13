@@ -63,12 +63,14 @@ namespace MCRLogViewer
 		static public LogData[] log = new LogData[max_log_data_counts];
 	
 		public struct ImgLogData{			//画素ログ
-			public int		Center;
+			public byte		Center;
+			public byte		Center2;		//遠方
 			public byte		Sens;
 			public byte[]	data;
 		}
 		static public ImgLogData[] imgLog = new ImgLogData[max_log_data_counts];
 		int imgLog_Count = 0;
+		bool enableCenter2 = false;			//遠方センター値のデータがあるか
 
 		static public int log_count;		//
 		public string path;					//

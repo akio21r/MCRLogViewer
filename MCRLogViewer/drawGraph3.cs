@@ -56,18 +56,25 @@ namespace MCRLogViewer
 
 				// 中央値
 				float center_x;
-				center_x = imgLog[n].Center * graph3_vx + graph3_vx/2;
-				g3.DrawLine(Pens.Red, center_x, n*graph3_vy, center_x, (n+1)*graph3_vy);
+				if(enableCenter2){
+					center_x = imgLog[n].Center * graph3_vx + graph3_vx/2;
+					g3.FillRectangle(Brushes.Red, center_x, n*graph3_vy, 2, graph3_vy);
+					center_x = imgLog[n].Center2 * graph3_vx + graph3_vx/2;
+					g3.DrawLine(Pens.Magenta, center_x, n*graph3_vy, center_x, (n+1)*graph3_vy);
+				}
+				else{
+					center_x = imgLog[n].Center * graph3_vx + graph3_vx/2;
+					g3.DrawLine(Pens.Red, center_x, n*graph3_vy, center_x, (n+1)*graph3_vy);
+				}
 
 				// ハーフライン
 				if(hlPos > 0){
 					float x_hlPos;
 					x_hlPos = (imgLog[n].Center - hlPos) * graph3_vx + graph3_vx/2;
-					g3.DrawLine(Pens.DarkMagenta, x_hlPos, n*graph3_vy, x_hlPos, (n+1)*graph3_vy);
+					g3.DrawLine(Pens.Teal, x_hlPos, n*graph3_vy, x_hlPos, (n+1)*graph3_vy);
 					x_hlPos = (imgLog[n].Center + hlPos) * graph3_vx + graph3_vx/2;
-					g3.DrawLine(Pens.DarkMagenta, x_hlPos, n*graph3_vy, x_hlPos, (n+1)*graph3_vy);
+					g3.DrawLine(Pens.Teal, x_hlPos, n*graph3_vy, x_hlPos, (n+1)*graph3_vy);
 				}
-
 
 				// sens を追加
 				byte s = imgLog[n].Sens;
