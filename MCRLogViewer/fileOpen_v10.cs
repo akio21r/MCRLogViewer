@@ -10,119 +10,122 @@ namespace MCRLogViewer
     partial class frmMain
     {
 		public void fileOpen_v10(){
-			int		n = 0;
+			LogData		l		= new LogData();
+			ImgLogData	imgl	= new ImgLogData();
+			int			n		= 0;
+
 			lblHead2.Text = "                     A   B    C    D   E   F   G   H   I     J         K     L                          ";
 			lblHead1.Text = "  time mode  sens   hnd ang  sv   vt  v   fl  fr  rl  rr     x  slc  Slope Gyro  L1  L2   L   R  R2  R1 ";
 
 			while (WorkAddress < fileSize - 512){
-				mode			= (sbyte)buf[WorkAddress + BuffAddress + 0];
-				log[n].mode		= mode;
+				mode		= (sbyte)buf[WorkAddress + BuffAddress + 0];
+				l.mode		= mode;
 
-				sens			= buf[WorkAddress + BuffAddress + 1];
-				ErrorCount		= (int)sens;
+				sens		= buf[WorkAddress + BuffAddress + 1];
+				ErrorCount	= (int)sens;
 
-				log[n].angle_t	=   (sbyte)buf[WorkAddress + BuffAddress + 2];
-				log[n].angle	=   (sbyte)buf[WorkAddress + BuffAddress + 3];
+				l.angle_t	=   (sbyte)buf[WorkAddress + BuffAddress + 2];
+				l.angle		=   (sbyte)buf[WorkAddress + BuffAddress + 3];
 
-				log[n].sv_pow	=	(sbyte)buf[WorkAddress + BuffAddress + 4];
+				l.sv_pow	=	(sbyte)buf[WorkAddress + BuffAddress + 4];
 			
-				log[n].vt		=   (sbyte)buf[WorkAddress + BuffAddress + 5];
-				log[n].v		=   (sbyte)buf[WorkAddress + BuffAddress + 6];
-				log[n].fl		=   (sbyte)buf[WorkAddress + BuffAddress + 7];
-				log[n].fr		=	(sbyte)buf[WorkAddress + BuffAddress + 8];
-				log[n].rl		=	(sbyte)buf[WorkAddress + BuffAddress + 9];
-				log[n].rr		=	(sbyte)buf[WorkAddress + BuffAddress + 10];
+				l.vt		=   (sbyte)buf[WorkAddress + BuffAddress + 5];
+				l.v			=   (sbyte)buf[WorkAddress + BuffAddress + 6];
+				l.fl		=   (sbyte)buf[WorkAddress + BuffAddress + 7];
+				l.fr		=	(sbyte)buf[WorkAddress + BuffAddress + 8];
+				l.rl		=	(sbyte)buf[WorkAddress + BuffAddress + 9];
+				l.rr		=	(sbyte)buf[WorkAddress + BuffAddress + 10];
 			
-				d_sb				= (sbyte)buf[WorkAddress + BuffAddress + 11];
-				log[n].slope_mode	= (d_sb >> 6) & 0x03;
-				log[n].slope_sw		= (d_sb >> 4) & 0x03;
-				log[n].slope_cnt	= d_sb & 0x0f;
+				d_sb			= (sbyte)buf[WorkAddress + BuffAddress + 11];
+				l.slope_mode	= (d_sb >> 6) & 0x03;
+				l.slope_sw		= (d_sb >> 4) & 0x03;
+				l.slope_cnt		= d_sb & 0x0f;
 
-				d_int			=  buf[WorkAddress + BuffAddress + 12];
-				d_int			<<= 8;
-				d_int			+= buf[WorkAddress + BuffAddress + 13];
-				log[n].trip		=  d_int;
+				d_int		=  buf[WorkAddress + BuffAddress + 12];
+				d_int		<<= 8;
+				d_int		+= buf[WorkAddress + BuffAddress + 13];
+				l.trip		=  d_int;
 
-				log[n].batt		=          buf[WorkAddress + BuffAddress + 14];	//batt
-				log[n].gyroEx	=   (sbyte)buf[WorkAddress + BuffAddress + 14];	//gyroEx
-				log[n].gyro		=   (sbyte)buf[WorkAddress + BuffAddress + 15];	//gyro
+				l.batt		=          buf[WorkAddress + BuffAddress + 14];	//batt
+				l.gyroEx	=   (sbyte)buf[WorkAddress + BuffAddress + 14];	//gyroEx
+				l.gyro		=   (sbyte)buf[WorkAddress + BuffAddress + 15];	//gyro
 
-				log[n].anL1		= buf[WorkAddress + BuffAddress + 17];
-				log[n].anL2		= buf[WorkAddress + BuffAddress + 18];
-				log[n].anL		= buf[WorkAddress + BuffAddress + 19];
-				log[n].anR		= buf[WorkAddress + BuffAddress + 20];
-				log[n].anR2		= buf[WorkAddress + BuffAddress + 21];
-				log[n].anR1		= buf[WorkAddress + BuffAddress + 22];
+				l.anL1		= buf[WorkAddress + BuffAddress + 17];
+				l.anL2		= buf[WorkAddress + BuffAddress + 18];
+				l.anL		= buf[WorkAddress + BuffAddress + 19];
+				l.anR		= buf[WorkAddress + BuffAddress + 20];
+				l.anR2		= buf[WorkAddress + BuffAddress + 21];
+				l.anR1		= buf[WorkAddress + BuffAddress + 22];
 
 				//ラインセンサ
-				log[n].sens = new StringBuilder(" ");
+				l.sens = new StringBuilder(" ");
 				int s = sens;
 				for(i=0; i<8; i++){
 					switch(i){
 						case 0: case 1: case 3: case 6: case 7:
 							if((s & 0x80) == 0)
-								log[n].sens.Append("-");
+								l.sens.Append("-");
 							else
-								log[n].sens.Append("*");
+								l.sens.Append("*");
 							break;
 						case 4:
 							break;
 						case 2: case 5:
 							if((s & 0x80) == 0)
-								log[n].sens.Append("-");
+								l.sens.Append("-");
 							else
-								log[n].sens.Append("+");
+								l.sens.Append("+");
 							break;
 					}		
 						
 					s <<= 1;
 				}
-				log[n].sens.Append(" ");
+				l.sens.Append(" ");
 
 				str  = new StringBuilder(String.Format("{0, 6}", time));
 				time += 5;
-				str.Append(String.Format("{0, 4}", log[n].mode));
-				str.Append(log[n].sens);
-				str.Append(String.Format("{0, 4}", log[n].angle_t));
-				str.Append(String.Format("{0, 4}", log[n].angle));
-				str.Append(String.Format("{0, 5}", log[n].sv_pow));
-				str.Append(String.Format("{0, 4}", log[n].vt));
-				str.Append(String.Format("{0, 4}", log[n].v));
-				str.Append(String.Format("{0, 5}", log[n].fl));
-				str.Append(String.Format("{0, 4}", log[n].fr));
-				str.Append(String.Format("{0, 4}", log[n].rl));
-				str.Append(String.Format("{0, 4}", log[n].rr));
-				str.Append(String.Format("{0, 7}", log[n].trip));
-				str.Append(String.Format("{0, 3}", log[n].slope_mode));
-				str.Append(String.Format("{0, 1}", log[n].slope_sw));
-				str.Append(String.Format("{0, 1}", log[n].slope_cnt));
-				str.Append(String.Format("{0, 6}", log[n].gyroEx));
-				str.Append(String.Format("{0, 6}", log[n].gyro));
+				str.Append(String.Format("{0, 4}", l.mode));
+				str.Append(l.sens);
+				str.Append(String.Format("{0, 4}", l.angle_t));
+				str.Append(String.Format("{0, 4}", l.angle));
+				str.Append(String.Format("{0, 5}", l.sv_pow));
+				str.Append(String.Format("{0, 4}", l.vt));
+				str.Append(String.Format("{0, 4}", l.v));
+				str.Append(String.Format("{0, 5}", l.fl));
+				str.Append(String.Format("{0, 4}", l.fr));
+				str.Append(String.Format("{0, 4}", l.rl));
+				str.Append(String.Format("{0, 4}", l.rr));
+				str.Append(String.Format("{0, 7}", l.trip));
+				str.Append(String.Format("{0, 3}", l.slope_mode));
+				str.Append(String.Format("{0, 1}", l.slope_sw));
+				str.Append(String.Format("{0, 1}", l.slope_cnt));
+				str.Append(String.Format("{0, 6}", l.gyroEx));
+				str.Append(String.Format("{0, 6}", l.gyro));
 
 				//アナログセンサ値
-				str.Append(String.Format("{0, 4}", log[n].anL1));
-				str.Append(String.Format("{0, 4}", log[n].anL2));
-				str.Append(String.Format("{0, 4}", log[n].anL ));
-				str.Append(String.Format("{0, 4}", log[n].anR ));
-				str.Append(String.Format("{0, 4}", log[n].anR2));
-				str.Append(String.Format("{0, 4}", log[n].anR1));
+				str.Append(String.Format("{0, 4}", l.anL1));
+				str.Append(String.Format("{0, 4}", l.anL2));
+				str.Append(String.Format("{0, 4}", l.anL ));
+				str.Append(String.Format("{0, 4}", l.anR ));
+				str.Append(String.Format("{0, 4}", l.anR2));
+				str.Append(String.Format("{0, 4}", l.anR1));
 
 				//--------------------------------------------------
 				// imgLog[] へのデータ追加
-				imgLog[n].Center	= 15;
+				imgl.Center	= 15;
 
-				imgLog[n].Sens		= (byte)(((sens >> 1) & 0x70) | sens & 0x0f);
+				imgl.Sens		= (byte)(((sens >> 1) & 0x70) | sens & 0x0f);
 				
-				imgLog[n].data		= new byte[32];
+				imgl.data		= new byte[32];
 				for(int j=0; j<32; j++){
-					imgLog[n].data[j]   = 0;
+					imgl.data[j]   = 0;
 				}
-				imgLog[n].data[ 2] = (byte)(log[n].anL1 >> 4);
-				imgLog[n].data[ 7] = (byte)(log[n].anL2 >> 4);
-				imgLog[n].data[12] = (byte)(log[n].anL  >> 4);
-				imgLog[n].data[18] = (byte)(log[n].anR  >> 4);
-				imgLog[n].data[23] = (byte)(log[n].anR2 >> 4);
-				imgLog[n].data[28] = (byte)(log[n].anR1 >> 4);
+				imgl.data[ 2] = (byte)(l.anL1 >> 4);
+				imgl.data[ 7] = (byte)(l.anL2 >> 4);
+				imgl.data[12] = (byte)(l.anL  >> 4);
+				imgl.data[18] = (byte)(l.anR  >> 4);
+				imgl.data[23] = (byte)(l.anR2 >> 4);
+				imgl.data[28] = (byte)(l.anR1 >> 4);
 
 				//--------------------------------------------------
 				if (mode == -2)             //次のセクタへ
@@ -136,27 +139,29 @@ namespace MCRLogViewer
 					//エラーの時はその数の分空行挿入
 					if(LOG_Version >= 2){
 						for(ii=0; ii<ErrorCount; ii++){
-							log[n].mode			= 0;
-							log[n].angle_t		= 0;
-							log[n].angle		= 0;
-							log[n].sv_pow		= 0;
-							log[n].vt			= 0;
-							log[n].v			= 0; 
-							log[n].fl			= 0;
-							log[n].fr			= 0;
-							log[n].rl			= 0;
-							log[n].rr			= 0;
-							log[n].slope_mode	= 0;
-							log[n].slope_sw		= 0;
-							log[n].slope_cnt	= 0;
-							log[n].trip			= 0;
-							log[n].batt			= 0;
-							log[n].gyroEx       = 0;
-							log[n].gyro			= 0;
-							log[n].side			= 0;
+							l.mode			= 0;
+							l.angle_t		= 0;
+							l.angle			= 0;
+							l.sv_pow		= 0;
+							l.vt			= 0;
+							l.v				= 0; 
+							l.fl			= 0;
+							l.fr			= 0;
+							l.rl			= 0;
+							l.rr			= 0;
+							l.slope_mode	= 0;
+							l.slope_sw		= 0;
+							l.slope_cnt		= 0;
+							l.trip			= 0;
+							l.batt			= 0;
+							l.gyroEx		= 0;
+							l.gyro			= 0;
+							l.side			= 0;
 
 							lstView.Items.Add("Err");
-							n++; if (n > 10000) break;
+							log.Add(l);
+							imgLog.Add(imgl);
+							n++; if (n > max_log_data_counts) break;
 						}
 					}
 				}
@@ -164,11 +169,17 @@ namespace MCRLogViewer
 				{
 					BuffAddress += LOG_RecordBytes;
 					lstView.Items.Add(str);
-					n++; if (n > 10000) break;
+					log.Add(l);
+					imgLog.Add(imgl);
+					n++; if (n > max_log_data_counts) break;
 				}
 
 				if (mode == 0) break;				//modeが0なら終了
+			//	log.Add(l);
+			//	imgLog.Add(imgl);
 			}
+			log.Add(l);
+			imgLog.Add(imgl);
 
 			//画素データ描画
 			imgLog_Count = n-1;

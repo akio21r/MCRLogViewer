@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using Microsoft.VisualBasic.ApplicationServices;
+using System.Collections.Generic;
 //using System.Collections.Generic;
 //using System.ComponentModel;
 //using System.Data;
@@ -60,7 +61,7 @@ namespace MCRLogViewer
 			public int		pre_sens;		//先読みセンサ
 			public float	batt;           //バッテリ電圧
 		}
-		static public LogData[] log = new LogData[max_log_data_counts];
+		static public List<LogData> log = new List<LogData>();
 	
 		public struct ImgLogData{			//画素ログ
 			public byte		Center;
@@ -68,7 +69,7 @@ namespace MCRLogViewer
 			public byte		Sens;
 			public byte[]	data;
 		}
-		static public ImgLogData[] imgLog = new ImgLogData[max_log_data_counts];
+		static public List<ImgLogData> imgLog = new List<ImgLogData>();
 		int imgLog_Count = 0;
 		bool enableCenter2 = false;			//遠方センター値のデータがあるか
 

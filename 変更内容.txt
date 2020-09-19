@@ -1,1 +1,4 @@
-LOG_RECORD_BYTESを 10 -> 11 に増加  2D画像中にセンター値1,2を表示
+動的なメモリ確保成功！！  メモリ消費量を劇的に改善した！
+
+・static public List<LogData> log = new List<LogData>();
+・static public List<ImgLogData> imgLog = new List<ImgLogData>();
