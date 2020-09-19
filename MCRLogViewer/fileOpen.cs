@@ -43,49 +43,8 @@ namespace MCRLogViewer
 				return;
 			}
 
-			//前回開いたログデータの初期化
-			for(i=0; i<max_log_data_counts; i++){
-				log[i].mode		= 0;		//mode
-				//log[i].sens.Clear();		//センサの状態
-				log[i].v		= 0;
-				log[i].vt		= 0;		//速度、目標速度
-				log[i].angle	= 0;
-				log[i].angle_t	= 0;		//ハンドル角、目標角度
-				log[i].power	= 0;		//モータ出力
-				log[i].sv_pow	= 0;		//サーボモータの出力
-				log[i].fl		= 0;
-				log[i].fr		= 0;
-				log[i].rl		= 0;
-				log[i].rr		= 0;		//各輪のモータ出力
-				log[i].slope_mode	= 0;	//slope_mode;
-				log[i].slope_sw		= 0;	//坂SWの状態
-				log[i].slope_cnt	= 0;	//出発してからの坂の数
-				log[i].trip		= 0;		//トリップメータ
-				log[i].gyro		= 0;
-				log[i].gyroEx	= 0;		//ジャイロ出力値
-				log[i].side		= 0;		//サイドセンサの状態, ハーフライン
-				log[i].time		= 0;		//時間[ms]
-				log[i].floor	= 0;		//階
-
-				//Camera用
-				log[i].center	= 0;		//Cameraのセンター値
-				log[i].etc		= 0;		//他
-				log[i].hlCntL	= 0;
-				log[i].hlCntR	= 0;		//ハーフライン検出数カウント
-
-				//Remote Sens用
-				log[i].anL1	= 0;
-				log[i].anL2	= 0;
-				log[i].anL	= 0;
-				log[i].anR	= 0;
-				log[i].anR2	= 0;
-				log[i].anR1	= 0;			//anセンサ値
-
-				//以下は現在使っていないもの。
-				log[i].pre_sens	= 0;		//先読みセンサ
-				log[i].batt		= 0;        //バッテリ電圧
-			}
-			line_vPos = 0;
+			vPos = 0;
+			vPos2 = 0;
 
 			path = filename;
 			txtPath.Text = filename;
@@ -141,9 +100,12 @@ namespace MCRLogViewer
 			TextFile.Close();
 			TextFile.Dispose();
 
+			//----------------------------------------------
+			// テキスト中の特定文字列から値を読み取る
+			String	tmpStr;
 
 			// hlPos の値を取得		記述例：hlPos=8,
-			String	tmpStr	= Regex.Match(txtHead.Text, @"hlPos=\d*,").Value;
+			tmpStr	= Regex.Match(txtHead.Text, @"hlPos=\d*,").Value;
 			if(tmpStr.Length > 0){
 				int		p0		= tmpStr.IndexOf("=") + 1;
 				int		p1		= tmpStr.Length - 1;
@@ -151,6 +113,38 @@ namespace MCRLogViewer
 					hlPos	= int.Parse(tmpStr.Substring(p0, p1-p0));
 				lblHlPos.Text = "hlPos=" + hlPos.ToString();
 			}
+			else{
+				lblHlPos.Text = "";
+			}
+
+			// vPos の値を取得		記述例：vPos=20,
+			tmpStr	= Regex.Match(txtHead.Text, @"vPos=\d*,").Value;
+			if(tmpStr.Length > 0){
+				int		p0		= tmpStr.IndexOf("=") + 1;
+				int		p1		= tmpStr.Length - 1;
+				if(p1-p0 > 0)
+					vPos	= int.Parse(tmpStr.Substring(p0, p1-p0));
+				if(vPos == 0) vPos = 20;
+				lblVPos.Text = "vPos=" + vPos.ToString();
+			}
+			else{
+				lblVPos.Text = "";
+			}
+
+			// vPos2 の値を取得		記述例：vPos2=12,
+			tmpStr	= Regex.Match(txtHead.Text, @"vPos2=\d*,").Value;
+			if(tmpStr.Length > 0){
+				int		p0		= tmpStr.IndexOf("=") + 1;
+				int		p1		= tmpStr.Length - 1;
+				if(p1-p0 > 0)
+					vPos2	= int.Parse(tmpStr.Substring(p0, p1-p0));
+			//	if(vPos2 == 0) vPos2 = 12;
+				lblVPos2.Text = "vPos2=" + vPos2.ToString();
+			}
+			else{
+				lblVPos2.Text = "";
+			}
+
 
 			//==========================================================
 			// バイナリログデータの読み込み
@@ -168,6 +162,8 @@ namespace MCRLogViewer
 			time = 0;
 
 			//ログデータの読み込み
+			log.Clear();
+			imgLog.Clear();
 			switch(LOG_Version){
 				case  1:
 				case  2:

@@ -73,9 +73,9 @@ namespace MCRLogViewer
 				if(hlPos > 0){
 					int x_hlPos;
 					x_hlPos = center_x - hlPos * scaleX;
-					g2.DrawLine(Pens.DarkMagenta, x_hlPos, 0, x_hlPos, pctGraph2.Height);
+					g2.DrawLine(Pens.Teal, x_hlPos, 0, x_hlPos, pctGraph2.Height);
 					x_hlPos = center_x + hlPos * scaleX;
-					g2.DrawLine(Pens.DarkMagenta, x_hlPos, 0, x_hlPos, pctGraph2.Height);
+					g2.DrawLine(Pens.Teal, x_hlPos, 0, x_hlPos, pctGraph2.Height);
 				}
 			}
 			else{
@@ -90,10 +90,15 @@ namespace MCRLogViewer
 					}
 				}
 
-				//中央線
-				g2.DrawLine(Pens.Gray,  pctGraph.Width / 2, 0, pctGraph.Width / 2, pctGraph.Height);
-				g2.DrawRectangle(Pens.Red, 0, line_vPos*graph_vy, pctGraph.Width-3, graph_vy);
+			//	g2.DrawLine(Pens.Gray,  pctGraph.Width / 2, 0, pctGraph.Width / 2, pctGraph.Height);
+				g2.DrawRectangle(Pens.Red, 0, vPos*graph_vy, pctGraph.Width-3, graph_vy);
+				g2.DrawRectangle(Pens.Magenta, 0, vPos2*graph_vy, pctGraph.Width-3, graph_vy);
 
+				//センター値
+				g2.FillRectangle(Brushes.Red, imgLog[sel].Center*graph_vx, vPos*graph_vy, graph_vx, graph_vy);
+				if(enableCenter2){
+					g2.FillRectangle(Brushes.Magenta, imgLog[sel].Center2*graph_vx, vPos2*graph_vy, graph_vx, graph_vy);
+				}
 			}
 		}
 	}

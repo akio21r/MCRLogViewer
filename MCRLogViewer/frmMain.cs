@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using Microsoft.VisualBasic.ApplicationServices;
+using System.Collections.Generic;
 //using System.Collections.Generic;
 //using System.ComponentModel;
 //using System.Data;
@@ -27,7 +28,8 @@ namespace MCRLogViewer
 		const int GASO_HW	= 32;			//画素数（横）
 		const int GASO_VW	= 24;			//画素数（縦）
 		int hlPos			= 0;			//ハーフラインを読む位置(Camera)
-		int line_vPos		= 0;			//横１ラインを読む縦の位置(Cam)
+		int vPos			= 0;			//中央線を読む縦の位置(Cam)
+		int vPos2			= 0;			//遠方中央線を読む縦の位置(Cam)
 
 		public const int max_log_data_counts = 5000000;	//500万行分のデータ★
 		public struct LogData{				//ログデータ
@@ -59,15 +61,17 @@ namespace MCRLogViewer
 			public int		pre_sens;		//先読みセンサ
 			public float	batt;           //バッテリ電圧
 		}
-		static public LogData[] log = new LogData[max_log_data_counts];
+		static public List<LogData> log = new List<LogData>();
 	
 		public struct ImgLogData{			//画素ログ
-			public int		Center;
+			public byte		Center;
+			public byte		Center2;		//遠方
 			public byte		Sens;
 			public byte[]	data;
 		}
-		static public ImgLogData[] imgLog = new ImgLogData[max_log_data_counts];
+		static public List<ImgLogData> imgLog = new List<ImgLogData>();
 		int imgLog_Count = 0;
+		bool enableCenter2 = false;			//遠方センター値のデータがあるか
 
 		static public int log_count;		//
 		public string path;					//
