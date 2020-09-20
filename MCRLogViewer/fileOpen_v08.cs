@@ -9,8 +9,10 @@ namespace MCRLogViewer
     partial class frmMain
     {
 		public void fileOpen_v08(){
-			LogData l = new LogData();
-			int		n = 0;
+			LogData			l = new LogData();
+			StringBuilder	sbSens1;
+			byte			sens;
+			int				n = 0;
 
 			lblHead2.Text = "                      A   B    C     D   E   F   G   H   I     J         K     L    ";
 			lblHead1.Text = "  time mode   sens   hnd ang  sv    vt  v   fl  fr  rl  rr     x  slc  Slope Gyro   ";
@@ -49,23 +51,23 @@ namespace MCRLogViewer
 				l.floor		=        buf[WorkAddress + BuffAddress + 16];
 
 				//ラインセンサ
-				l.sens = new StringBuilder("  ");
+				sbSens1 = new StringBuilder("  ");
 
 				for(i=0; i<8; i++){
 					switch(i){
 						case 0: case 1: case 3: case 6: case 7:
 							if((sens & 0x80) == 0)
-								l.sens.Append("-");
+								sbSens1.Append("-");
 							else
-								l.sens.Append("*");
+								sbSens1.Append("*");
 							break;
 						case 4:
 							break;
 						case 2: case 5:
 							if((sens & 0x80) == 0)
-								l.sens.Append("-");
+								sbSens1.Append("-");
 							else
-								l.sens.Append("+");
+								sbSens1.Append("+");
 							break;
 					}		
 						
@@ -75,7 +77,7 @@ namespace MCRLogViewer
 				str  = new StringBuilder(String.Format("{0, 6}", time));
 				time += 5;
 				str.Append(String.Format("{0, 4}", l.mode));
-				str.Append(l.sens);
+				str.Append(sbSens1);
 				str.Append(String.Format("{0, 4}", l.angle_t));
 				str.Append(String.Format("{0, 4}", l.angle));
 				str.Append(String.Format("{0, 5}", l.sv_pow));

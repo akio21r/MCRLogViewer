@@ -12,9 +12,11 @@ namespace MCRLogViewer
 		//==================================================================
 		//==================================================================
 		public void fileOpen_v50(){
-			LogData		l		= new LogData();
-			ImgLogData	imgl	= new ImgLogData();
-			int			n		= 0;
+			LogData			l		= new LogData();
+			ImgLogData		imgl	= new ImgLogData();
+			StringBuilder	sbSens1;
+			byte			sens;
+			int				n		= 0;
 
 			lblHead2.Text = "                      K  A   B    C    D  E   F   G   H   I     J         L          ";
 			lblHead1.Text = "  time mode    sens  cam hnd ang  sv   vt v   fl  fr  rl  rr     x  slc  Gyr  L   R  ";
@@ -54,38 +56,38 @@ namespace MCRLogViewer
 				l.hlCntR	= buf[WorkAddress + BuffAddress + 19];	//10*cam.LineNum + sci_recvNum
 
 				//ラインセンサ
-				l.sens = new StringBuilder(" ");
-				if((l.side & 0x02) != 0) l.sens.Append("[");
-				else                          l.sens.Append(" ");
+				sbSens1 = new StringBuilder(" ");
+				if((l.side & 0x02) != 0) sbSens1.Append("[");
+				else                          sbSens1.Append(" ");
 
 				for(i=0; i<8; i++){
 					switch(i){
 						case 0: case 1: case 3: case 6: case 7:
 							if((sens & 0x80) == 0)
-								l.sens.Append("-");
+								sbSens1.Append("-");
 							else
-								l.sens.Append("*");
+								sbSens1.Append("*");
 							break;
 						case 4:
 							break;
 						case 2: case 5:
 							if((sens & 0x80) == 0)
-								l.sens.Append("-");
+								sbSens1.Append("-");
 							else
-								l.sens.Append("+");
+								sbSens1.Append("+");
 							break;
 					}		
 						
 					sens <<= 1;
 				}
-				if((l.side & 0x01) != 0) l.sens.Append("]");
-				else                          l.sens.Append(" ");
+				if((l.side & 0x01) != 0) sbSens1.Append("]");
+				else                          sbSens1.Append(" ");
 
 				str  = new StringBuilder(String.Format("{0, 6}", l.time));
 			//	str  = new StringBuilder(String.Format("{0, 6}", time));
 			//	time += 5;
 				str.Append(String.Format("{0, 4}", l.mode));
-				str.Append(l.sens);
+				str.Append(sbSens1);
 				str.Append(String.Format("{0, 4}", l.center));
 				str.Append(String.Format("{0, 4}", l.angle_t));
 				str.Append(String.Format("{0, 4}", l.angle));

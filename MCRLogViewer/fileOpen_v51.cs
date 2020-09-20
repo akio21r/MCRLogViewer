@@ -12,13 +12,16 @@ namespace MCRLogViewer
 		//==================================================================
 		//==================================================================
 		public void fileOpen_v51(){
-			LogData		l		= new LogData();
-			ImgLogData	imgl	= new ImgLogData();
-			int			n		= 0, gasoBuffPos;
-			byte		tmp;
+			LogData			l		= new LogData();
+			ImgLogData		imgl	= new ImgLogData();
+			StringBuilder	sbSens1, sbSens2;
+			byte			sens;
+			int				n		= 0;
+			int				gasoBuffPos;
+			byte			tmp;
 
-			lblHead2.Text = "                      K  A   B    C    D  E   F   G   H   I     J         L          ";
-			lblHead1.Text = "  time mode    sens  cam hnd ang  sv   vt v   fl  fr  rl  rr     x  slc  Gyr  L   R  ";
+			lblHead2.Text = "                               A   B     F    G                   ";
+			lblHead1.Text = "  time mode   sens2     sens  cam hnd    L    R                   ";
 
 			//遠方のセンター値が有効かどうかをセット
 			if(LOG_RecordBytes >= 11)	enableCenter2 = true;
@@ -35,13 +38,9 @@ namespace MCRLogViewer
 				d_int			+= buf[WorkAddress + BuffAddress + 2];
 				l.time			=  d_int;
 
-			//	sens			= buf[WorkAddress + BuffAddress + 3];			//sens
-				sens			= buf[WorkAddress + BuffAddress + 9];			//sens
-				ErrorCount		= (int)sens;
-
-				l.angle_t		= (sbyte)buf[WorkAddress + BuffAddress + 4];	//handle
-				l.rl			= (sbyte)buf[WorkAddress + BuffAddress + 5];	//mot_l
-				l.rr			= (sbyte)buf[WorkAddress + BuffAddress + 6];	//mot_r
+				l.angle			= (sbyte)buf[WorkAddress + BuffAddress + 4];	//handle
+				l.fl			= (sbyte)buf[WorkAddress + BuffAddress + 5];	//mot_l
+				l.fr			= (sbyte)buf[WorkAddress + BuffAddress + 6];	//mot_r
 
 				l.center		= (sbyte)buf[WorkAddress + BuffAddress + 7];	//cam.Center
 				l.side			= (sbyte)buf[WorkAddress + BuffAddress + 8];	//cam.halfLine
@@ -50,7 +49,6 @@ namespace MCRLogViewer
 				l.side			= tmp >> 6;
 				imgl.Center		= (byte)(tmp & 0x3f);
 
-			//	imgl.Center	= buf[WorkAddress + BuffAddress + 9];
 				if(enableCenter2)
 					imgl.Center2	= buf[WorkAddress + BuffAddress + 10];
 				else
@@ -75,33 +73,61 @@ namespace MCRLogViewer
 				}
 
 				//----------------------------------------------
-				//ラインセンサを文字列化
-				l.sens = new StringBuilder(" ");
-				if((l.side & 0x02) != 0) l.sens.Append("[");
-				else                          l.sens.Append(" ");
+				//sens を文字列化
+				sens			= buf[WorkAddress + BuffAddress + 3];	//sens
+				ErrorCount		= (int)sens;
+
+				sbSens1 = new StringBuilder(" ");
+				if((l.side & 0x02) != 0) sbSens1.Append("[");
+				else                     sbSens1.Append(" ");
 
 				for(i=0; i<8; i++){
 					switch(i){
-						case 0: case 1: case 3: case 6: case 7:
-							if((sens & 0x80) == 0)
-								l.sens.Append("-");
-							else
-								l.sens.Append("*");
+						case 0: case 1: case 2:  case 5: case 6: case 7:
+							if((sens & 0x80) == 0)	sbSens1.Append("-");
+							else				sbSens1.Append("*");
+							break;
+						case 3:
+							if((sens & 0x80) == 0)	sbSens1.Append("-");
+							else				sbSens1.Append("+");
 							break;
 						case 4:
 							break;
-						case 2: case 5:
-							if((sens & 0x80) == 0)
-								l.sens.Append("-");
-							else
-								l.sens.Append("+");
+					}
+					sens <<= 1;
+				}
+				if((l.side & 0x01) != 0) sbSens1.Append("]");
+				else                     sbSens1.Append(" ");
+
+				//----------------------------------------------
+				//sens2 を文字列化
+				sens			= buf[WorkAddress + BuffAddress + 9];	//sens2
+			//	ErrorCount		= (int)sens;
+
+				sbSens2 = new StringBuilder(" ");
+			//	if((l.side & 0x02) != 0) sbSens2.Append("[");
+			//	else                     sbSens2.Append(" ");
+				sbSens2.Append(" ");
+
+				for(i=0; i<8; i++){
+					switch(i){
+						case 0: case 1: case 2: case 5: case 6: case 7:
+							if((sens & 0x80) == 0)	sbSens2.Append("-");
+							else					sbSens2.Append("*");
+							break;
+						case 3:
+							if((sens & 0x80) == 0)	sbSens2.Append("-");
+							else					sbSens2.Append("+");
+							break;
+						case 4:
 							break;
 					}		
 						
 					sens <<= 1;
 				}
-				if((l.side & 0x01) != 0) l.sens.Append("]");
-				else                          l.sens.Append(" ");
+			//	if((l.side & 0x01) != 0) sbSens2.Append("]");
+			//	else                     sbSens2.Append(" ");
+				sbSens2.Append(" ");
 
 				//----------------------------------------------
 				// 文字情報のセット
@@ -109,24 +135,25 @@ namespace MCRLogViewer
 			//	str  = new StringBuilder(String.Format("{0, 6}", time));
 			//	time += 5;
 				str.Append(String.Format("{0, 4}", l.mode));
-				str.Append(l.sens);
+				str.Append(sbSens2);
+				str.Append(sbSens1);
 				str.Append(String.Format("{0, 4}", l.center));
-				str.Append(String.Format("{0, 4}", l.angle_t));
+			//	str.Append(String.Format("{0, 4}", l.angle_t));
 				str.Append(String.Format("{0, 4}", l.angle));
-				str.Append(String.Format("{0, 5}", l.sv_pow));
-				str.Append(String.Format("{0, 4}", l.vt));
-				str.Append(String.Format("{0, 3}", l.v));
+			//	str.Append(String.Format("{0, 5}", l.sv_pow));
+			//	str.Append(String.Format("{0, 4}", l.vt));
+			//	str.Append(String.Format("{0, 3}", l.v));
 				str.Append(String.Format("{0, 5}", l.fl));
-				str.Append(String.Format("{0, 4}", l.fr));
-				str.Append(String.Format("{0, 4}", l.rl));
-				str.Append(String.Format("{0, 4}", l.rr));
-				str.Append(String.Format("{0, 7}", l.trip));
-				str.Append(String.Format("{0, 2}", l.slope_mode));
-				str.Append(String.Format("{0, 1}", l.slope_sw));
-				str.Append(String.Format("{0, 1}", l.slope_cnt));
-				str.Append(String.Format("{0, 5}", l.gyro));
-				str.Append(String.Format("{0, 4}", l.hlCntL));
-				str.Append(String.Format("{0, 4}", l.hlCntR));
+				str.Append(String.Format("{0, 5}", l.fr));
+			//	str.Append(String.Format("{0, 5}", l.rl));
+			//	str.Append(String.Format("{0, 5}", l.rr));
+			//	str.Append(String.Format("{0, 7}", l.trip));
+			//	str.Append(String.Format("{0, 2}", l.slope_mode));
+			//	str.Append(String.Format("{0, 1}", l.slope_sw));
+			//	str.Append(String.Format("{0, 1}", l.slope_cnt));
+			//	str.Append(String.Format("{0, 5}", l.gyro));
+			//	str.Append(String.Format("{0, 4}", l.hlCntL));
+			//	str.Append(String.Format("{0, 4}", l.hlCntR));
 
 				if(mode == -1)					//終了コード(-1)なら終了
 					break;

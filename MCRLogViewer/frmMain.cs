@@ -34,7 +34,7 @@ namespace MCRLogViewer
 		public const int max_log_data_counts = 5000000;	//500万行分のデータ★
 		public struct LogData{				//ログデータ
 			public int		mode;			//mode
-			public StringBuilder	sens;	//センサの状態
+		//	public StringBuilder	sens;	//センサの状態
 			public int		v, vt;			//速度、目標速度
 			public int		angle, angle_t;	//ハンドル角、目標角度
 			public int		power;			//モータ出力
