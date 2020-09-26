@@ -6,11 +6,13 @@ using System.Text;
 
 namespace MCRLogViewer
 {
-    partial class frmMain
-    {
+	partial class frmMain
+	{
 		public void fileOpen_v01_03(){
-			LogData l = new LogData();
-			int		n = 0;
+			LogData			l = new LogData();
+			StringBuilder	sbSens1;
+			byte			sens;
+			int				n = 0;
 
 			lblHead1.Text = "  time mode  sens   hnd ang  pow  vt   v slc    trip  diff   Batt   Gyro  ";
 			lblHead2.Text = "                     A   B    C    D   E                      F      G    ";
@@ -43,22 +45,22 @@ namespace MCRLogViewer
 				l.batt			=   buf[WorkAddress + BuffAddress + 10];
 				l.gyro			=   (sbyte)buf[WorkAddress + BuffAddress + 11];
 
-				if((l.v & 0x80) != 0) l.sens = new StringBuilder("S");
-				else                  l.sens = new StringBuilder(" ");
+				if((l.v & 0x80) != 0) sbSens1 = new StringBuilder("S");
+				else                  sbSens1 = new StringBuilder(" ");
 				for(i=0; i<8; i++){
 					if(i != 4){
-						if((sens & 0x80) != 0) l.sens.Append("*");
-						else                   l.sens.Append("-");
+						if((sens & 0x80) != 0) sbSens1.Append("*");
+						else                   sbSens1.Append("-");
 					}
 					sens <<= 1;
 				}
-				if((l.v & 0x40) != 0) l.sens.Append("S");
-				else                  l.sens.Append(" ");
+				if((l.v & 0x40) != 0) sbSens1.Append("S");
+				else                  sbSens1.Append(" ");
 
 				str  = new StringBuilder(String.Format("{0, 6}", time));
 				time += 4;
 				str.Append(String.Format("{0, 4}", l.mode));
-				str.Append(l.sens);
+				str.Append(sbSens1);
 				str.Append(String.Format("{0, 4}", l.angle_t));
 				str.Append(" ");
 				str.Append(String.Format("{0, 3}", l.angle));

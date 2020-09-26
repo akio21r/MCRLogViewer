@@ -34,7 +34,7 @@ namespace MCRLogViewer
 		public const int max_log_data_counts = 5000000;	//500万行分のデータ★
 		public struct LogData{				//ログデータ
 			public int		mode;			//mode
-			public StringBuilder	sens;	//センサの状態
+		//	public StringBuilder	sens;	//センサの状態
 			public int		v, vt;			//速度、目標速度
 			public int		angle, angle_t;	//ハンドル角、目標角度
 			public int		power;			//モータ出力
@@ -219,6 +219,24 @@ namespace MCRLogViewer
 		}
 
 		//==================================================================
+		// 縦カーソルの描画
+		//==================================================================
+		private void lstView_SelectedIndexChanged(object sender, EventArgs e)
+		{
+		//	draw_cursol();
+		}
+
+		private void lstView_Click(object sender, EventArgs e)
+		{
+			draw_cursol();
+		}
+
+		private void lstView_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			draw_cursol();
+		}
+
+		//==================================================================
 		//pctGraphのマウスホイール操作イベント
 		//==================================================================
 		private void lstView_MouseWheel(object sender, MouseEventArgs e)
@@ -238,7 +256,6 @@ namespace MCRLogViewer
 
 			pctGraph.Width = width;
 			DrawGraph();
-
 		}
 
 		//==================================================================
@@ -366,7 +383,6 @@ namespace MCRLogViewer
 			pnlGraph3.Height = splitContainer1.Panel2.Height - pnlGraph3.Top;
 
 			//濃淡グラフのブラシ濃度
-		//	SolidBrush[] brsh = new SolidBrush[16];
 			for(i=0; i<16; i++){
 				brsh[i] = new SolidBrush(Color.FromArgb(i*17, i*17, i*17));
 			}

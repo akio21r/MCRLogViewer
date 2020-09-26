@@ -9,10 +9,12 @@ namespace MCRLogViewer
     partial class frmMain
     {
 		public void fileOpen_v04_07(){
-			LogData l = new LogData();
-			int		n = 0;
-			sbyte	pos_sens;
-			int		pre_sens;
+			LogData			l = new LogData();
+			StringBuilder	sbSens1;
+			byte			sens;
+			int				n = 0;
+			sbyte			pos_sens;
+			int				pre_sens;
 
 			lblHead2.Text     = "                              A   B    C     D   E   F   G   H   I     J         K     L    ";
 			if(LOG_Version >= 7)
@@ -68,49 +70,49 @@ namespace MCRLogViewer
 				pos_sens	&= 0x1f;
 
 				//先読みセンサ
-				if(pre_sens == 1)	l.sens = new StringBuilder(" P ");
-				else				l.sens = new StringBuilder("   ");
+				if(pre_sens == 1)	sbSens1 = new StringBuilder(" P ");
+				else				sbSens1 = new StringBuilder("   ");
 
 				//ラインセンサ
-				if((l.side & 0x02) != 0) l.sens.Append("S");		//★
-				else                     l.sens.Append(" ");
+				if((l.side & 0x02) != 0) sbSens1.Append("S");		//★
+				else                     sbSens1.Append(" ");
 
 				for(i=0; i<8; i++){
 					switch(i){
 						case 0: case 1: case 3: case 6: case 7:
 							if((sens & 0x80) == 0)
-								l.sens.Append("-");
+								sbSens1.Append("-");
 							else
-								l.sens.Append("*");
+								sbSens1.Append("*");
 							break;
 						case 4:
 							break;
 						case 2: case 5:
 							if((sens & 0x80) == 0)
-								l.sens.Append("-");
+								sbSens1.Append("-");
 							else
-								l.sens.Append("+");
+								sbSens1.Append("+");
 							break;
 					}		
 						
 					sens <<= 1;
 				}
-				if((l.side & 0x01) != 0) l.sens.Append("S");		//★
-				else                          l.sens.Append(" ");
+				if((l.side & 0x01) != 0) sbSens1.Append("S");		//★
+				else                          sbSens1.Append(" ");
 
 				//ポジションセンサなし
 				if(LOG_Version == 4){
-					l.sens.Append("      ");
+					sbSens1.Append("      ");
 				}
 				//ポジションセンサあり
 				else{
-					l.sens.Append(" ");
+					sbSens1.Append(" ");
 					pos_sens <<= 3;
 					for(i=0; i<5; i++){
 						if((pos_sens & 0x80) == 0)
-							l.sens.Append("-");
+							sbSens1.Append("-");
 						else
-							l.sens.Append("*");
+							sbSens1.Append("*");
 						pos_sens <<= 1;
 					}
 				}
@@ -118,7 +120,7 @@ namespace MCRLogViewer
 				str  = new StringBuilder(String.Format("{0, 6}", time));
 				time += 5;
 				str.Append(String.Format("{0, 4}", l.mode));
-				str.Append(l.sens);
+				str.Append(sbSens1);
 				str.Append(" ");
 				str.Append(String.Format("{0, 3}", l.angle_t));
 				str.Append(" ");

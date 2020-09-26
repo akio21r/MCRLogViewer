@@ -1,4 +1,1 @@
-動的なメモリ確保成功！！  メモリ消費量を劇的に改善した！
-
-・static public List<LogData> log = new List<LogData>();
-・static public List<ImgLogData> imgLog = new List<ImgLogData>();
+Cameraクラス用グラフの右ドラッグでスクロール機能を追加, 左ドラッグでのレスポンス向上

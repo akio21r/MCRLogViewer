@@ -274,15 +274,6 @@ namespace MCRLogViewer
 			}
 		}
 
-
-		//==================================================================
-		// 縦カーソルの描画
-		//==================================================================
-		private void lstView_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			draw_cursol();
-		}
-
 		//==================================================================
 		//画面上のグラフカーソル描画
 		//==================================================================
@@ -312,6 +303,7 @@ namespace MCRLogViewer
 						x = lstView.Items.Count - 1;
 					lstView.SelectedIndex = x;
 					lstView.Focus();
+					draw_cursol();
 				}
 			}
 			else if(e.Button == MouseButtons.Right){
