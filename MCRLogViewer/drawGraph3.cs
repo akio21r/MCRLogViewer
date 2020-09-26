@@ -7,15 +7,11 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using Microsoft.VisualBasic.ApplicationServices;
-//using System.Collections.Generic;
-//using System.ComponentModel;
-//using System.Data;
-//using System.Linq;
 
 namespace MCRLogViewer
 {
-    partial class frmMain
-    {
+	partial class frmMain
+	{
 		//==================================================================
 		// Graph3の描画（画素データ）
 		//==================================================================
@@ -27,12 +23,9 @@ namespace MCRLogViewer
 			if(pctGraph3.Image != null) pctGraph3.Image.Dispose();
 
 			// pctGraph3のサイズ設定
-		//	graph3_vx = (Single)pctGraph3.Width  / (Single)32;				//１画素の幅
-		//	graph3_vy = (Single)pctGraph3.Height / (Single)imgLog_Count;	//１画素の高さ
 			graph3_vx = 4;
 			graph3_vy = 6;
 	
-		//	pctGraph3.Width = 32 * (int)graph3_vx;
 			pctGraph3.Height = imgLog_Count * (int)graph3_vy;
 			pnlGraph3.Width = pctGraph3.Width + SCROLLBAR_WIDTH;
 
@@ -107,13 +100,6 @@ namespace MCRLogViewer
 			cur_x = (int)((Single)(lstView.SelectedIndex + 1) * graph_v);
 			pnlGraph.AutoScrollPosition = new Point(cur_x - pnlGraph.Width / 2, 0);
 
-//			pctGraph3.Refresh();		// PictureBoxを更新（再描画させる）
-			
-		//	draw_cursol();
-			
-		//	for(i=0; i<16; i++){
-		//		brsh[i].Dispose();
-		//	}
 			g3.Dispose();
 		}
 
@@ -145,6 +131,20 @@ namespace MCRLogViewer
 					cur3b_show = true;
 				}
 			}
+			if(e.Button == MouseButtons.Right){
+				scrPoint1 = pnlGraph3.AutoScrollPosition;
+				scrPoint2 = new Point(e.X, e.Y);
+				scrPoint2 = pctGraph3.PointToScreen(scrPoint2);
+
+				if(cur_show){
+					erase_cursol();
+					cur_show = false;
+				}
+				if(cur3_show){
+					erase_cursol3();
+					cur3_show = false;
+				}
+			}
 		}
 
 		private void pctGraph3_MouseMove(object sender, MouseEventArgs e)
@@ -166,6 +166,7 @@ namespace MCRLogViewer
 						lstView.Focus();
 					}
 
+				#if false
 					if(cur3b_show){
 						cur3b_show = false;
 						Point p1, p2, ps, pe;
@@ -175,7 +176,18 @@ namespace MCRLogViewer
 						pe = pctGraph3.PointToScreen(p2);
 						ControlPaint.DrawReversibleLine(ps, pe, Color.Black);
 					}
+				#endif
 				}
+			}
+			if(e.Button == MouseButtons.Right){
+				Point pnt = new Point(e.X, e.Y);
+				pnt = pctGraph3.PointToScreen(pnt);
+				int x = pnt.X - scrPoint2.X;
+				int y = pnt.Y - scrPoint2.Y;
+				pnlGraph3.AutoScrollPosition = new Point(-scrPoint1.X + x * -1, -scrPoint1.Y + y * -1);
+
+				//棒グラフ・２次元画像の表示
+				DrawGraph2(-pnlGraph3.AutoScrollPosition.Y / (int)graph3_vy);
 			}
 		}
 
@@ -213,16 +225,15 @@ namespace MCRLogViewer
 				cur3_show = false;
 			}
 
-			int n = -pnlGraph3.AutoScrollPosition.Y / (int)graph3_vy;
-
 			//棒グラフ・２次元画像の表示
+			int n = -pnlGraph3.AutoScrollPosition.Y / (int)graph3_vy;
 			DrawGraph2(n);
 			
 			//lstViewのカーソル位置変更
-		//	if(LOG_Version >= 51){
-		//		lstView.SelectedIndex = n;
-		//		lstView.Focus();
-		//	}
+			if(LOG_Version >= 51){
+				lstView.SelectedIndex = n;
+				lstView.Focus();
+			}
 
 		}
 

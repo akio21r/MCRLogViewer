@@ -94,7 +94,9 @@
 			this.lstView.Name = "lstView";
 			this.lstView.Size = new System.Drawing.Size(551, 184);
 			this.lstView.TabIndex = 5;
+			this.lstView.Click += new System.EventHandler(this.lstView_Click);
 			this.lstView.SelectedIndexChanged += new System.EventHandler(this.lstView_SelectedIndexChanged);
+			this.lstView.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.lstView_KeyPress);
 			// 
 			// txtHead
 			// 
@@ -488,7 +490,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menu;
 			this.Name = "frmMain";
-			this.Text = "MCR LOG Viewer  ver5.51";
+			this.Text = "MCR LOG Viewer  ver5.52";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
 			this.Load += new System.EventHandler(this.frmMain_Load);
