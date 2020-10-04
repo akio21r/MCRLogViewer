@@ -196,8 +196,6 @@ namespace MCRLogViewer
 			imgLog_Count = log_count = n;		//ログデータの個数
 			WorkAddress += BuffAddress;
 
-			InitCenterLines();					//連続中央線描画の初期化
-
 			DrawGraph3();
 			DrawGraph2(0);
 			pnlGraph3.AutoScrollPosition = new Point(0, 0);

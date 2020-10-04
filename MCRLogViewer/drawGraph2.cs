@@ -131,10 +131,6 @@ namespace MCRLogViewer
 		YamaTani[] yama = new YamaTani[GASO_N];
 		YamaTani[] tani = new YamaTani[GASO_N];
 
-		public void InitCenterLines(){
-			CenterIndex[GASO_VW-1] = 16;
-		}
-
 		//==================================================================
 		// ２Ｄ画素グラフに中央線を表示
 		//==================================================================
@@ -150,7 +146,7 @@ namespace MCRLogViewer
 			int			v, h;
 
 			//各種パラメータ
-			int			CenterDiff = 8;
+			int			CenterDiff = 6;
 
 			CenterIndex[vPos] = imgLog[sel].Center;
 			for(v=vPos-1; v>=0; v--){
@@ -308,6 +304,8 @@ namespace MCRLogViewer
 				df = df_index - CenterIndex[v+1];
 				if(df > -CenterDiff && df < CenterDiff)
 					CenterIndex[v] = (byte)df_index;		//次の中央線のIndexを更新する
+				else
+					CenterIndex[v] = CenterIndex[v+1];		//下と同じ
 
 				g2.FillRectangle(Brushes.LimeGreen, CenterIndex[v]*graph_vx, v*graph_vy, graph_vx, graph_vy);
 			}
