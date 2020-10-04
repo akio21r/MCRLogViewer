@@ -7,10 +7,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using Microsoft.VisualBasic.ApplicationServices;
-//using System.Collections.Generic;
-//using System.ComponentModel;
-//using System.Data;
-//using System.Linq;
 
 namespace MCRLogViewer
 {
@@ -42,9 +38,6 @@ namespace MCRLogViewer
 			bmp2 = new Bitmap(pctGraph2.Size.Width, pctGraph2.Size.Height);
 			pctGraph2.Image = bmp2;
 			g2 = Graphics.FromImage(pctGraph2.Image);
-		//	Bitmap bmp2 = new Bitmap(pctGraph2.Size.Width, pctGraph2.Size.Height);
-		//	pctGraph2.Image = bmp2;
-		//	Graphics g2 = Graphics.FromImage(pctGraph2.Image);
 
 
 			if(LOG_Version < 51){
@@ -101,7 +94,6 @@ namespace MCRLogViewer
 				//連続中央線の描画（ビュアー内部で計算した値）
 				DrawCenterLines(sel);
 
-			//	g2.DrawLine(Pens.Gray,  pctGraph.Width / 2, 0, pctGraph.Width / 2, pctGraph.Height);
 				g2.DrawRectangle(Pens.Red, 0, vPos*graph_vy, pctGraph.Width-3, graph_vy);
 				g2.DrawRectangle(Pens.Magenta, 0, vPos2*graph_vy, pctGraph.Width-3, graph_vy);
 
@@ -121,8 +113,6 @@ namespace MCRLogViewer
 	}
 }
 
-
-
 namespace MCRLogViewer
 {
     partial class frmMain
@@ -134,9 +124,9 @@ namespace MCRLogViewer
 		const int TH_MIN	=	0;	//-1;	//-2;		//谷の判別閾値
 
 		struct YamaTani{					//diff[]の山と谷に関する情報
-			public int vertex;						//山・谷における頂点
-			public int index;						//頂点のIndex
-			public int start, end;					//開始Index、終了Index
+			public int vertex;				//山・谷における頂点
+			public int index;				//頂点のIndex
+			public int start, end;			//開始Index、終了Index
 		}
 		YamaTani[] yama = new YamaTani[GASO_N];
 		YamaTani[] tani = new YamaTani[GASO_N];
@@ -144,7 +134,6 @@ namespace MCRLogViewer
 		public void InitCenterLines(){
 			CenterIndex[GASO_VW-1] = 16;
 		}
-
 
 		//==================================================================
 		// ２Ｄ画素グラフに中央線を表示
@@ -154,28 +143,17 @@ namespace MCRLogViewer
 			byte[]		data		= new byte[GASO_HW];
 			int[]		diff		= new int[GASO_N];		//差分データ
 			int			max, min;			//最大値、最小値
-			int			thDigital = 0;		//白黒の閾値
 			int			line_left;			//頂上の中央位置算出用
-			byte		s0;					//デジタルセンサ
 			int			yama_n, tani_n;		//山・谷の数
 			int			line_n;
 			int[]		lineIdx = new int[16];	//ラインの数, Index
 			int			v, h;
 
 			//各種パラメータ
-			int			threshold = 45;
-			int[]		dgPoint = new int[8];
 			int			CenterDiff = 8;
-			dgPoint[7]= 2;
-			dgPoint[6]= 6;
-			dgPoint[5]= 10;
-			dgPoint[4]= 15;
-			dgPoint[3]= 16;
-			dgPoint[2]= 21;
-			dgPoint[1]= 25;
-			dgPoint[0]= 29;
 
-			for(v=GASO_VW-1; v>=0; v--){
+			CenterIndex[vPos] = imgLog[sel].Center;
+			for(v=vPos-1; v>=0; v--){
 				//##########################################################################
 				//画素の1行スキャン
 				//32x24画素のうち上から vpos の位置の横32画素分をスキャンし，data[]にセット
@@ -185,55 +163,8 @@ namespace MCRLogViewer
 				}
 
 				//##########################################################################
-				//デジタルセンサ値Sens
-				//##########################################################################
-				//--------------------------------------------------------------------------
-				//data[] 全体の最大値を求め、デジタル値変換の閾値を求める
-				max = min = data[0];
-				for(int i=1; i<GASO_N; i++){
-					if(data[i] > max) max = data[i];
-					if(data[i] < min) min = data[i];
-				}
-				thDigital = (max - min) * threshold / 100 + min;
-
-				//--------------------------------------------------------------------------
-				//画素データからアナログセンサ基板代替値へ置き換える
-				s0 = 0;													//00000000
-				if(data[dgPoint[7]] > thDigital) s0 |= 0b10000000;		//10000000
-				if(data[dgPoint[6]] > thDigital) s0 |= 0b01000000;		//01000000
-				if(data[dgPoint[5]] > thDigital) s0 |= 0b00100000;		//00100000
-				if(data[dgPoint[4]] > thDigital) s0 |= 0b00011000;		//00011000
-				if(data[dgPoint[3]] > thDigital) s0 |= 0b00011000;		//00011000
-				if(data[dgPoint[2]] > thDigital) s0 |= 0b00000100;		//00000100
-				if(data[dgPoint[1]] > thDigital) s0 |= 0b00000010;		//00000010
-				if(data[dgPoint[0]] > thDigital) s0 |= 0b00000001;		//00000001
-
-				//左端のラインを読み取る
-				for(int i=0; i<dgPoint[7]; i++){
-					if(data[i] > thDigital)
-						s0 |= 0b10000000;
-				}
-
-				//右端のラインを読み取る
-				for(int i=dgPoint[0]+1; i<=GASO_N-1; i++){
-					if(data[i] > thDigital)
-						s0 |= 0b00000001;
-				}
-
-				Sens[v] = s0;					//センサ値をそのまま採用
-
-				//##########################################################################
 				//中央線の検出
 				//##########################################################################
-				//クロスラインやハーフライン上では中央線検出をやめる
-			//	switch(Sens[v] & 0x7e){
-			//		case 0b01111110:
-			//		case 0b00011110:
-			//		case 0b01111000:
-			//		case 0b00111110:
-			//		case 0b01111100:
-			//			continue;
-			//	}
 
 				//--------------------------------------------------------------------------
 				//各画素の差分をとり、diff[]へ格納する。
@@ -329,12 +260,9 @@ namespace MCRLogViewer
 						}
 					}
 
-					//CR,LC 以外の時に・・・
-				//	if( !((ms.mode >= 60 && ms.mode < 70) || (ms.mode >= 90 && ms.mode < 100)) ){
-						//左側の山と右側の谷の間隔が開き過ぎていたら、線以外と判断し、次の山へ
-						if( tani[j].index - yama[i].index > 16){		//12
-							continue;
-						}
+					//左側の山と右側の谷の間隔が開き過ぎていたら、線以外と判断し、次の山へ
+				//	if( tani[j].index - yama[i].index > 16){		//12
+				//		continue;
 				//	}
 
 					//山のすぐ右側に谷がある場合、そこに線があると認定 lineIdx[]にIndex追加
@@ -350,36 +278,25 @@ namespace MCRLogViewer
 							lineIdx[line_n] = (k + line_left) / 2;
 						}
 					}
+					g2.FillRectangle(Brushes.Red, lineIdx[line_n]*graph_vx+1, v*graph_vy+1, graph_vx-2, graph_vy-2);
 					line_n++;
-
 				}
 				line_comp_detect:
 		
 				//もし、ラインを一つも検出できなかった場合は、一つ前の値をlineIdx[0]とする。
 				if(line_n == 0){
-					if(v == GASO_VW-1)		//一番下の場合は一つ前
-						lineIdx[0] = CenterIndex[v];
-					//	line_n = 1;
-					else					//それ以外は一つ下
-						lineIdx[0] = CenterIndex[v+1];
-					//	line_n = 1;
+					lineIdx[0] = CenterIndex[v+1];
 				}
 
 				//中央線を検出する
 				//lineIdx[] の中で、一つ下の中央線に一番近いものを次の中央線とする
 				int df, df_index;
-				if(v == GASO_VW-1)		//一番下の場合は一つ前との差分
-					df = lineIdx[0] - CenterIndex[v];
-				else					//それ以外は一つ下との差分
-					df = lineIdx[0] - CenterIndex[v+1];
+				df = lineIdx[0] - CenterIndex[v+1];
 				if(df < 0) df = -df;
 				df_index = lineIdx[0];
 				min = df;
 				for(int i=1; i<line_n; i++){
-					if(v == GASO_VW-1)		//一番下の場合は一つ前との差分
-						df = lineIdx[i] - CenterIndex[v];
-					else					//それ以外は一つ下との差分
-						df = lineIdx[i] - CenterIndex[v+1];
+					df = lineIdx[i] - CenterIndex[v+1];
 					if(df < 0) df = -df;
 					if(df < min){
 						min = df;
@@ -388,37 +305,12 @@ namespace MCRLogViewer
 				}
 
 				//前回との差が大きいものは却下する
-				if(v == GASO_VW-1)		//一番下の場合は一つ前との差分
-					df = df_index - CenterIndex[v];
-				else					//それ以外は一つ下との差分
-					df = df_index - CenterIndex[v+1];
+				df = df_index - CenterIndex[v+1];
 				if(df > -CenterDiff && df < CenterDiff)
 					CenterIndex[v] = (byte)df_index;		//次の中央線のIndexを更新する
 
-				//Center 値を固定する処理
-			//	switch(CenterFix){
-			//		case 1:						//Center 値を右側に固定
-			//		//	CenterIndex = CenterBase + 9;
-			//			CenterIndex[v] = dgPoint[1];
-			//			break;
-			//		case 2:						//Center 値を左側に固定
-			//		//	CenterIndex = CenterBase - 9;
-			//			CenterIndex[v] = dgPoint[6];
-			//			break;
-			//		case 3:						//Center 値を中央に固定
-			//			CenterIndex[v] = GASO_N / 2;
-			//		//	CenterIndex = CenterBase;
-			//		//	CenterIndex = dgPoint[4];
-			//			break;
-			//	}
-
-			//	g2.FillRectangle(Brushes.Magenta, imgLog[sel].Center2*graph_vx, vPos2*graph_vy, graph_vx, graph_vy);
 				g2.FillRectangle(Brushes.LimeGreen, CenterIndex[v]*graph_vx, v*graph_vy, graph_vx, graph_vy);
-
 			}
-
-
 		}
-
 	}
 }
