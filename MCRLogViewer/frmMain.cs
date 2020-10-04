@@ -64,7 +64,7 @@ namespace MCRLogViewer
 		static public List<LogData> log = new List<LogData>();
 	
 		public struct ImgLogData{			//画素ログ
-			public byte		Center;
+			public byte		Center;			//センター値
 			public byte		Center2;		//遠方
 			public byte		Sens;
 			public byte[]	data;
@@ -106,6 +106,9 @@ namespace MCRLogViewer
 		static public Single graph_v;					//グラフの増分
 		static public Single graph3_vx, graph3_vy;		//グラフの増分
 		static public Point scrPoint1, scrPoint2;		//グラフのスクロール座標
+
+		//連続中央線描画用
+		static byte[]	CenterIndex = new byte[GASO_VW];	//センター値の配列[GASO_VW]
 
 		//==================================================================
 		//バイナリファイルの圧縮保存
