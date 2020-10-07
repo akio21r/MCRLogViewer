@@ -132,28 +132,13 @@ namespace MCRLogViewer
 				//----------------------------------------------
 				// 文字情報のセット
 				str  = new StringBuilder(String.Format("{0, 6}", l.time));
-			//	str  = new StringBuilder(String.Format("{0, 6}", time));
-			//	time += 5;
 				str.Append(String.Format("{0, 4}", l.mode));
 				str.Append(sbSens2);
 				str.Append(sbSens1);
 				str.Append(String.Format("{0, 4}", l.center));
-			//	str.Append(String.Format("{0, 4}", l.angle_t));
 				str.Append(String.Format("{0, 4}", l.angle));
-			//	str.Append(String.Format("{0, 5}", l.sv_pow));
-			//	str.Append(String.Format("{0, 4}", l.vt));
-			//	str.Append(String.Format("{0, 3}", l.v));
 				str.Append(String.Format("{0, 5}", l.fl));
 				str.Append(String.Format("{0, 5}", l.fr));
-			//	str.Append(String.Format("{0, 5}", l.rl));
-			//	str.Append(String.Format("{0, 5}", l.rr));
-			//	str.Append(String.Format("{0, 7}", l.trip));
-			//	str.Append(String.Format("{0, 2}", l.slope_mode));
-			//	str.Append(String.Format("{0, 1}", l.slope_sw));
-			//	str.Append(String.Format("{0, 1}", l.slope_cnt));
-			//	str.Append(String.Format("{0, 5}", l.gyro));
-			//	str.Append(String.Format("{0, 4}", l.hlCntL));
-			//	str.Append(String.Format("{0, 4}", l.hlCntR));
 
 				if(mode == -1)					//終了コード(-1)なら終了
 					break;
