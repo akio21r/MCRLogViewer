@@ -94,13 +94,17 @@ namespace MCRLogViewer
 				//連続中央線の描画（ビュアー内部で計算した値）
 				DrawCenterLines(sel);
 
-				g2.DrawRectangle(Pens.Red, 0, vPos*graph_vy, pctGraph.Width-3, graph_vy);
-				g2.DrawRectangle(Pens.Magenta, 0, vPos2*graph_vy, pctGraph.Width-3, graph_vy);
+				g2.DrawLine(Pens.Red, 0, vPos*graph_vy+graph_vy/2, pctGraph.Width-3, vPos*graph_vy+graph_vy/2);
+				g2.DrawLine(Pens.Magenta, 0, vPos2*graph_vy+graph_vy/2, pctGraph.Width-3, vPos2*graph_vy+graph_vy/2);
+			//	g2.DrawRectangle(Pens.Red, 0, vPos*graph_vy, pctGraph.Width-3, graph_vy);
+			//	g2.DrawRectangle(Pens.Magenta, 0, vPos2*graph_vy, pctGraph.Width-3, graph_vy);
 
 				//センター値
-				g2.FillRectangle(Brushes.Red, imgLog[sel].Center*graph_vx, vPos*graph_vy, graph_vx, graph_vy);
+				g2.FillRectangle(Brushes.Magenta, imgLog[sel].Center*graph_vx, vPos*graph_vy, graph_vx, graph_vy);
+				g2.DrawRectangle(Pens.Red, imgLog[sel].Center*graph_vx, vPos*graph_vy, graph_vx, graph_vy);
 				if(enableCenter2){
 					g2.FillRectangle(Brushes.Magenta, imgLog[sel].Center2*graph_vx, vPos2*graph_vy, graph_vx, graph_vy);
+					g2.DrawRectangle(Pens.Red, imgLog[sel].Center2*graph_vx, vPos2*graph_vy, graph_vx, graph_vy);
 				}
 
 			}
@@ -274,7 +278,7 @@ namespace MCRLogViewer
 							lineIdx[line_n] = (k + line_left) / 2;
 						}
 					}
-					g2.FillRectangle(Brushes.Red, lineIdx[line_n]*graph_vx+1, v*graph_vy+1, graph_vx-2, graph_vy-2);
+					g2.FillRectangle(Brushes.Red, lineIdx[line_n]*graph_vx, v*graph_vy, 2, 2);
 					line_n++;
 				}
 				line_comp_detect:

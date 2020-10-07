@@ -122,6 +122,7 @@ namespace MCRLogViewer
 						lstView.Focus();
 					}
 
+					//カーソルライン表示
 					Point p1 = new Point(0, e.Y);
 					Point p2 = new Point(pctGraph3.Width, e.Y);
 					Point ps = pctGraph3.PointToScreen(p1);
@@ -166,7 +167,7 @@ namespace MCRLogViewer
 						lstView.Focus();
 					}
 
-				#if false
+					//カーソルライン消去
 					if(cur3b_show){
 						cur3b_show = false;
 						Point p1, p2, ps, pe;
@@ -176,7 +177,6 @@ namespace MCRLogViewer
 						pe = pctGraph3.PointToScreen(p2);
 						ControlPaint.DrawReversibleLine(ps, pe, Color.Black);
 					}
-				#endif
 				}
 			}
 			if(e.Button == MouseButtons.Right){
