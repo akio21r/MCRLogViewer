@@ -150,7 +150,7 @@ namespace MCRLogViewer
 			int			v, h;
 
 			//各種パラメータ
-			int			CenterDiff = 6;
+			int			CenterDiff = 4;		//6  4  8
 
 			CenterIndex[vPos] = imgLog[sel].Center;
 			for(v=vPos-1; v>=0; v--){
@@ -278,14 +278,16 @@ namespace MCRLogViewer
 							lineIdx[line_n] = (k + line_left) / 2;
 						}
 					}
-					g2.FillRectangle(Brushes.Red, lineIdx[line_n]*graph_vx, v*graph_vy, 2, 2);
+					g2.FillRectangle(Brushes.Red, lineIdx[line_n]*graph_vx + graph_vx/2 - 1, v*graph_vy + graph_vy/2 - 1, 2, 2);
 					line_n++;
 				}
 				line_comp_detect:
 		
-				//もし、ラインを一つも検出できなかった場合は、一つ前の値をlineIdx[0]とする。
+				//もし、ラインを一つも検出できなかった場合
 				if(line_n == 0){
-					lineIdx[0] = CenterIndex[v+1];
+				//	lineIdx[0] = -99;				//
+					lineIdx[0] = CenterIndex[v+1];	//一つ前の値をlineIdx[0]とする
+				//	CenterIndex[v] = -99;
 				}
 
 				//中央線を検出する
@@ -309,9 +311,12 @@ namespace MCRLogViewer
 				if(df > -CenterDiff && df < CenterDiff)
 					CenterIndex[v] = (byte)df_index;		//次の中央線のIndexを更新する
 				else
+				//	CenterIndex[v] = -99;
 					CenterIndex[v] = CenterIndex[v+1];		//下と同じ
 
-				g2.FillRectangle(Brushes.LimeGreen, CenterIndex[v]*graph_vx, v*graph_vy, graph_vx, graph_vy);
+			//	g2.FillRectangle(Brushes.LimeGreen, CenterIndex[v]*graph_vx, v*graph_vy, graph_vx, graph_vy);
+				g2.DrawRectangle(Pens.LimeGreen, CenterIndex[v]*graph_vx, v*graph_vy, graph_vx, graph_vy);
+				g2.DrawRectangle(Pens.Green, CenterIndex[v]*graph_vx+1, v*graph_vy+1, graph_vx-2, graph_vy-2);
 			}
 		}
 	}

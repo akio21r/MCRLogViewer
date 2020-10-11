@@ -108,7 +108,8 @@ namespace MCRLogViewer
 		static public Point scrPoint1, scrPoint2;		//グラフのスクロール座標
 
 		//連続中央線描画用
-		static byte[]	CenterIndex = new byte[GASO_VW];	//センター値の配列[GASO_VW]
+	//	static byte[]	CenterIndex = new byte[GASO_VW];	//センター値の配列[GASO_VW]
+		static int[]	CenterIndex = new int[GASO_VW];	//センター値の配列[GASO_VW]
 
 		//==================================================================
 		//バイナリファイルの圧縮保存
