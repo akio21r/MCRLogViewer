@@ -145,6 +145,8 @@ namespace MCRLogViewer
 				lblVPos2.Text = "";
 			}
 
+			thMax = (int)frmOption1.nudThMax.Value;
+			thMin = (int)frmOption1.nudThMin.Value;
 
 			//==========================================================
 			// バイナリログデータの読み込み

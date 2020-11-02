@@ -124,8 +124,6 @@ namespace MCRLogViewer
 		const int GASO_N	=	32;
 		const int GL_START	=	0;		//開始画素		5
 		const int GL_END	=	31;		//終了画素		27
-		const int TH_MAX	=	0;	//1;	//2;		//山の判別閾値
-		const int TH_MIN	=	0;	//-1;	//-2;		//谷の判別閾値
 
 		struct YamaTani{					//diff[]の山と谷に関する情報
 			public int vertex;				//山・谷における頂点
@@ -181,31 +179,31 @@ namespace MCRLogViewer
 					tani[i].start = tani[i].end = 0;
 				}
 
-				if(diff[0] > TH_MAX){						//左端の山開始点記録
+				if(diff[0] > thMax){						//左端の山開始点記録
 					yama[yama_n].start = 0;
 				}
 				for(int i=GL_START+1; i<GL_END; i++){		//iは0-31
 					//山の開始点と終了地点、数を記録する
-					if(diff[i] > TH_MAX){
-						if(diff[i-1] <= TH_MAX){
+					if(diff[i] > thMax){
+						if(diff[i-1] <= thMax){
 							yama[yama_n].start = i;
 						}
 					}
 					else{
-						if(diff[i-1] > TH_MAX){
+						if(diff[i-1] > thMax){
 							yama[yama_n].end = i;
 							yama_n++;
 						}
 					}
 
 					//谷の開始点と終了地点、数を記録する
-					if(diff[i] < TH_MIN){
-						if(diff[i-1] >= TH_MIN){
+					if(diff[i] < thMin){
+						if(diff[i-1] >= thMin){
 							tani[tani_n].start = i;
 						}
 					}
 					else{
-						if(diff[i-1] < TH_MIN){
+						if(diff[i-1] < thMin){
 							tani[tani_n].end = i;
 							tani_n++;
 						}

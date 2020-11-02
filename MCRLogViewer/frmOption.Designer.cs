@@ -87,8 +87,8 @@
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
-			this.nudBatt_a = new System.Windows.Forms.NumericUpDown();
-			this.nudBatt_b = new System.Windows.Forms.NumericUpDown();
+			this.nudThMax = new System.Windows.Forms.NumericUpDown();
+			this.nudThMin = new System.Windows.Forms.NumericUpDown();
 			this.pnlGraphOption.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.widthL)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.widthK)).BeginInit();
@@ -115,8 +115,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.nudC)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudB)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudA)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.nudBatt_a)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.nudBatt_b)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudThMax)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudThMin)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// pnlGraphOption
@@ -801,65 +801,63 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(252, 228);
+			this.label2.Location = new System.Drawing.Point(249, 226);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(118, 12);
+			this.label2.Size = new System.Drawing.Size(87, 12);
 			this.label2.TabIndex = 24;
-			this.label2.Text = "バッテリ電圧 y = ax + b";
+			this.label2.Text = "白線検出の閾値";
 			// 
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(252, 246);
+			this.label3.Location = new System.Drawing.Point(249, 247);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(11, 12);
+			this.label3.Size = new System.Drawing.Size(40, 12);
 			this.label3.TabIndex = 25;
-			this.label3.Text = "a";
+			this.label3.Text = "th_max";
 			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(252, 271);
+			this.label4.Location = new System.Drawing.Point(249, 272);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(11, 12);
+			this.label4.Size = new System.Drawing.Size(37, 12);
 			this.label4.TabIndex = 26;
-			this.label4.Text = "b";
+			this.label4.Text = "th_min";
 			// 
-			// nudBatt_a
+			// nudThMax
 			// 
-			this.nudBatt_a.DecimalPlaces = 4;
-			this.nudBatt_a.Increment = new decimal(new int[] {
+			this.nudThMax.Location = new System.Drawing.Point(293, 245);
+			this.nudThMax.Name = "nudThMax";
+			this.nudThMax.Size = new System.Drawing.Size(77, 19);
+			this.nudThMax.TabIndex = 29;
+			this.nudThMax.Value = new decimal(new int[] {
             1,
             0,
             0,
-            262144});
-			this.nudBatt_a.Location = new System.Drawing.Point(269, 244);
-			this.nudBatt_a.Name = "nudBatt_a";
-			this.nudBatt_a.Size = new System.Drawing.Size(77, 19);
-			this.nudBatt_a.TabIndex = 29;
-			this.nudBatt_a.Value = new decimal(new int[] {
-            143,
+            0});
+			// 
+			// nudThMin
+			// 
+			this.nudThMin.Location = new System.Drawing.Point(293, 270);
+			this.nudThMin.Maximum = new decimal(new int[] {
             0,
             0,
-            262144});
-			// 
-			// nudBatt_b
-			// 
-			this.nudBatt_b.DecimalPlaces = 4;
-			this.nudBatt_b.Increment = new decimal(new int[] {
+            0,
+            0});
+			this.nudThMin.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+			this.nudThMin.Name = "nudThMin";
+			this.nudThMin.Size = new System.Drawing.Size(77, 19);
+			this.nudThMin.TabIndex = 30;
+			this.nudThMin.Value = new decimal(new int[] {
             1,
             0,
             0,
-            262144});
-			this.nudBatt_b.Location = new System.Drawing.Point(269, 271);
-			this.nudBatt_b.Name = "nudBatt_b";
-			this.nudBatt_b.Size = new System.Drawing.Size(77, 19);
-			this.nudBatt_b.TabIndex = 30;
-			this.nudBatt_b.Value = new decimal(new int[] {
-            338,
-            0,
-            0,
-            262144});
+            -2147483648});
 			// 
 			// frmOption
 			// 
@@ -868,8 +866,8 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.btnCancel;
 			this.ClientSize = new System.Drawing.Size(386, 316);
-			this.Controls.Add(this.nudBatt_b);
-			this.Controls.Add(this.nudBatt_a);
+			this.Controls.Add(this.nudThMin);
+			this.Controls.Add(this.nudThMax);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
@@ -909,8 +907,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.nudC)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudB)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudA)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.nudBatt_a)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.nudBatt_b)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudThMax)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudThMin)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -982,7 +980,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        public System.Windows.Forms.NumericUpDown nudBatt_a;
-        public System.Windows.Forms.NumericUpDown nudBatt_b;
+        public System.Windows.Forms.NumericUpDown nudThMax;
+        public System.Windows.Forms.NumericUpDown nudThMin;
 	}
 }

@@ -30,6 +30,8 @@ namespace MCRLogViewer
 		int hlPos			= 0;			//ハーフラインを読む位置(Camera)
 		int vPos			= 0;			//中央線を読む縦の位置(Cam)
 		int vPos2			= 0;			//遠方中央線を読む縦の位置(Cam)
+		int thMax			= 1;			//白線検出の閾値
+		int thMin			= -1;			//白線検出の閾値
 
 		public const int max_log_data_counts = 5000000;	//500万行分のデータ★
 		public struct LogData{				//ログデータ
@@ -440,7 +442,10 @@ namespace MCRLogViewer
 		private void btnGraphOption_Click(object sender, EventArgs e)
 		{
 			if (frmOption1.ShowDialog() == DialogResult.OK){
+				thMax = (int)frmOption1.nudThMax.Value;
+				thMin = (int)frmOption1.nudThMin.Value;
 				DrawGraph();
+				DrawGraph2(0);
 			}
 		}
 
