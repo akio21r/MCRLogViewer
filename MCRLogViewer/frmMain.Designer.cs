@@ -455,6 +455,7 @@
 			this.pctGraph2.Size = new System.Drawing.Size(128, 89);
 			this.pctGraph2.TabIndex = 23;
 			this.pctGraph2.TabStop = false;
+			this.pctGraph2.Click += new System.EventHandler(this.pctGraph2_Click);
 			// 
 			// pnlGraph3
 			// 
@@ -490,7 +491,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menu;
 			this.Name = "frmMain";
-			this.Text = "MCR LOG Viewer  ver5.52";
+			this.Text = "MCR LOG Viewer  ver5.55";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
 			this.Load += new System.EventHandler(this.frmMain_Load);

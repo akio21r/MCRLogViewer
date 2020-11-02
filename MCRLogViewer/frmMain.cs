@@ -30,6 +30,8 @@ namespace MCRLogViewer
 		int hlPos			= 0;			//ハーフラインを読む位置(Camera)
 		int vPos			= 0;			//中央線を読む縦の位置(Cam)
 		int vPos2			= 0;			//遠方中央線を読む縦の位置(Cam)
+		int thMax			= 1;			//白線検出の閾値
+		int thMin			= -1;			//白線検出の閾値
 
 		public const int max_log_data_counts = 5000000;	//500万行分のデータ★
 		public struct LogData{				//ログデータ
@@ -64,7 +66,7 @@ namespace MCRLogViewer
 		static public List<LogData> log = new List<LogData>();
 	
 		public struct ImgLogData{			//画素ログ
-			public byte		Center;
+			public byte		Center;			//センター値
 			public byte		Center2;		//遠方
 			public byte		Sens;
 			public byte[]	data;
@@ -106,6 +108,10 @@ namespace MCRLogViewer
 		static public Single graph_v;					//グラフの増分
 		static public Single graph3_vx, graph3_vy;		//グラフの増分
 		static public Point scrPoint1, scrPoint2;		//グラフのスクロール座標
+
+		//連続中央線描画用
+	//	static byte[]	CenterIndex = new byte[GASO_VW];	//センター値の配列[GASO_VW]
+		static int[]	CenterIndex = new int[GASO_VW];	//センター値の配列[GASO_VW]
 
 		//==================================================================
 		//バイナリファイルの圧縮保存
@@ -436,7 +442,10 @@ namespace MCRLogViewer
 		private void btnGraphOption_Click(object sender, EventArgs e)
 		{
 			if (frmOption1.ShowDialog() == DialogResult.OK){
+				thMax = (int)frmOption1.nudThMax.Value;
+				thMin = (int)frmOption1.nudThMin.Value;
 				DrawGraph();
+				DrawGraph2(0);
 			}
 		}
 
