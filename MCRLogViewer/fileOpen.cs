@@ -20,11 +20,11 @@ namespace MCRLogViewer
 		int		d_int;		// バッファ読込一時作業用
 		sbyte	d_sb;		// バッファ読込一時作業用
 
-        FileStream fs;
+		FileStream fs;
 		int fileSize;		// ファイルのサイズ
-        byte[] buf;			// データ格納用配列
+		byte[] buf;			// データ格納用配列
 
-        int readSize;		// Readメソッドで読み込んだバイト数
+		int readSize;		// Readメソッドで読み込んだバイト数
 		int ErrorCount = 0;	// エラーの数
 
         //パラメータ

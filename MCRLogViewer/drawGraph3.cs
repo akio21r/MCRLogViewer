@@ -186,8 +186,16 @@ namespace MCRLogViewer
 				int y = pnt.Y - scrPoint2.Y;
 				pnlGraph3.AutoScrollPosition = new Point(-scrPoint1.X + x * -1, -scrPoint1.Y + y * -1);
 
+				int n = -pnlGraph3.AutoScrollPosition.Y / (int)graph3_vy;
+
 				//棒グラフ・２次元画像の表示
-				DrawGraph2(-pnlGraph3.AutoScrollPosition.Y / (int)graph3_vy);
+				DrawGraph2(n);
+
+				//lstViewのカーソル位置変更
+				if(LOG_Version >= 51){
+					lstView.SelectedIndex = n;
+					lstView.Focus();
+				}
 			}
 		}
 
