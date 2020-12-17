@@ -14,14 +14,17 @@ namespace MCRLogViewer
 		public void fileOpen_v51(){
 			LogData			l		= new LogData();
 			ImgLogData		imgl	= new ImgLogData();
-			StringBuilder	sbSens1, sbSens2;
-			byte			sens;
+			StringBuilder	sbSens1, sbSens2, sbHalfLine;
+			byte			sens, halfLine;
 			int				n		= 0;
 			int				gasoBuffPos;
 			byte			tmp;
 
 			lblHead2.Text = "                               A   B     F    G                   ";
-			lblHead1.Text = "  time mode   sens2     sens  cam hnd    L    R                   ";
+			if(LOG_Version >= 52)
+				lblHead1.Text = "  time mode   sens2     sens  cam hnd    L    R  halfLine         ";
+			else
+				lblHead1.Text = "  time mode   sens2     sens  cam hnd    L    R                   ";
 
 			//遠方のセンター値が有効かどうかをセット
 			if(LOG_RecordBytes >= 11)	enableCenter2 = true;
@@ -102,13 +105,8 @@ namespace MCRLogViewer
 				//----------------------------------------------
 				//sens2 を文字列化
 				sens			= buf[WorkAddress + BuffAddress + 9];	//sens2
-			//	ErrorCount		= (int)sens;
-
 				sbSens2 = new StringBuilder(" ");
-			//	if((l.side & 0x02) != 0) sbSens2.Append("[");
-			//	else                     sbSens2.Append(" ");
 				sbSens2.Append(" ");
-
 				for(i=0; i<8; i++){
 					switch(i){
 						case 0: case 1: case 2: case 5: case 6: case 7:
@@ -122,11 +120,8 @@ namespace MCRLogViewer
 						case 4:
 							break;
 					}		
-						
 					sens <<= 1;
 				}
-			//	if((l.side & 0x01) != 0) sbSens2.Append("]");
-			//	else                     sbSens2.Append(" ");
 				sbSens2.Append(" ");
 
 				//----------------------------------------------
@@ -140,6 +135,27 @@ namespace MCRLogViewer
 				str.Append(String.Format("{0, 5}", l.fl));
 				str.Append(String.Format("{0, 5}", l.fr));
 
+				//----------------------------------------------
+				//halfLine を文字列化  [][][][]
+				if(LOG_Version >= 52){
+					halfLine	= buf[WorkAddress + BuffAddress + 11];	//sens2
+					sbHalfLine	= new StringBuilder("  ");
+					for(i=0; i<8; i++){
+						switch(i){
+							case 0: case 2: case 4: case 6:
+								if((sens & 0x80) == 0)	sbHalfLine.Append(".");
+								else					sbHalfLine.Append("[");
+								break;
+							case 1: case 3: case 5: case 7:
+								if((sens & 0x80) == 0)	sbHalfLine.Append(".");
+								else					sbHalfLine.Append("]");
+								break;
+						}		
+						sens <<= 1;
+					}
+					sbHalfLine.Append(" ");
+					str.Append(String.Format("{0, 5}", sbHalfLine));
+				}
 				if(mode == -1)					//終了コード(-1)なら終了
 					break;
 
