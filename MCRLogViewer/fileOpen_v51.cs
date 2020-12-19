@@ -81,7 +81,7 @@ namespace MCRLogViewer
 				ErrorCount		= (int)sens;
 
 				sbSens1 = new StringBuilder(" ");
-				if((l.side & 0x02) != 0) sbSens1.Append("[");
+				if((l.side & 0x02) != 0) sbSens1.Append("<");
 				else                     sbSens1.Append(" ");
 
 				for(i=0; i<8; i++){
@@ -99,7 +99,7 @@ namespace MCRLogViewer
 					}
 					sens <<= 1;
 				}
-				if((l.side & 0x01) != 0) sbSens1.Append("]");
+				if((l.side & 0x01) != 0) sbSens1.Append(">");
 				else                     sbSens1.Append(" ");
 
 				//----------------------------------------------
@@ -142,16 +142,20 @@ namespace MCRLogViewer
 					sbHalfLine	= new StringBuilder("  ");
 					for(i=0; i<8; i++){
 						switch(i){
-							case 0: case 2: case 4: case 6:
-								if((sens & 0x80) == 0)	sbHalfLine.Append(".");
-								else					sbHalfLine.Append("[");
+							case 0: case 3: case 6:
+								if((halfLine & 0x80) == 0)	sbHalfLine.Append(".");
+								else						sbHalfLine.Append("<");
 								break;
-							case 1: case 3: case 5: case 7:
-								if((sens & 0x80) == 0)	sbHalfLine.Append(".");
-								else					sbHalfLine.Append("]");
+							case 1: case 4: case 7:
+								if((halfLine & 0x80) == 0)	sbHalfLine.Append(".");
+								else						sbHalfLine.Append(">");
+								break;
+							case 2: case 5:
+								if((halfLine & 0x80) == 0)	sbHalfLine.Append(".");
+								else						sbHalfLine.Append("|");
 								break;
 						}		
-						sens <<= 1;
+						halfLine <<= 1;
 					}
 					sbHalfLine.Append(" ");
 					str.Append(String.Format("{0, 5}", sbHalfLine));
