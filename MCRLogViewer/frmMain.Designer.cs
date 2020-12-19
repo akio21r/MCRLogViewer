@@ -92,7 +92,7 @@
 			this.lstView.ItemHeight = 12;
 			this.lstView.Location = new System.Drawing.Point(3, 32);
 			this.lstView.Name = "lstView";
-			this.lstView.Size = new System.Drawing.Size(551, 184);
+			this.lstView.Size = new System.Drawing.Size(551, 172);
 			this.lstView.TabIndex = 5;
 			this.lstView.Click += new System.EventHandler(this.lstView_Click);
 			this.lstView.SelectedIndexChanged += new System.EventHandler(this.lstView_SelectedIndexChanged);
@@ -125,7 +125,7 @@
             this.menuFile});
 			this.menu.Location = new System.Drawing.Point(0, 0);
 			this.menu.Name = "menu";
-			this.menu.Size = new System.Drawing.Size(1538, 24);
+			this.menu.Size = new System.Drawing.Size(1370, 24);
 			this.menu.TabIndex = 10;
 			this.menu.Text = "menuStrip1";
 			// 
@@ -302,8 +302,8 @@
 			this.splitContainer1.Panel2.Controls.Add(this.panel2);
 			this.splitContainer1.Panel2.Controls.Add(this.pnlImage);
 			this.splitContainer1.Panel2.Resize += new System.EventHandler(this.splitContainer1_Panel2_Resize);
-			this.splitContainer1.Size = new System.Drawing.Size(1538, 548);
-			this.splitContainer1.SplitterDistance = 764;
+			this.splitContainer1.Size = new System.Drawing.Size(1370, 548);
+			this.splitContainer1.SplitterDistance = 680;
 			this.splitContainer1.TabIndex = 22;
 			// 
 			// splitContainer2
@@ -325,8 +325,8 @@
 			this.splitContainer2.Panel2.Controls.Add(this.lblHead2);
 			this.splitContainer2.Panel2.Controls.Add(this.lstView);
 			this.splitContainer2.Panel2.Controls.Add(this.lblHead1);
-			this.splitContainer2.Size = new System.Drawing.Size(764, 548);
-			this.splitContainer2.SplitterDistance = 110;
+			this.splitContainer2.Size = new System.Drawing.Size(680, 548);
+			this.splitContainer2.SplitterDistance = 109;
 			this.splitContainer2.TabIndex = 12;
 			this.splitContainer2.SizeChanged += new System.EventHandler(this.splitContainer2_SizeChanged);
 			// 
@@ -361,7 +361,7 @@
 			this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel2.Location = new System.Drawing.Point(232, 0);
 			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(534, 544);
+			this.panel2.Size = new System.Drawing.Size(450, 544);
 			this.panel2.TabIndex = 26;
 			// 
 			// chkImg
@@ -485,13 +485,13 @@
 			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1538, 572);
+			this.ClientSize = new System.Drawing.Size(1370, 572);
 			this.Controls.Add(this.splitContainer1);
 			this.Controls.Add(this.menu);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menu;
 			this.Name = "frmMain";
-			this.Text = "MCR LOG Viewer  ver5.56";
+			this.Text = "MCR LOG Viewer  ver5.57";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
 			this.Load += new System.EventHandler(this.frmMain_Load);

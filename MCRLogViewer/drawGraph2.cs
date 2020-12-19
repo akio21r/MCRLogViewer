@@ -315,6 +315,13 @@ namespace MCRLogViewer
 			//	g2.FillRectangle(Brushes.LimeGreen, CenterIndex[v]*graph_vx, v*graph_vy, graph_vx, graph_vy);
 				g2.DrawRectangle(Pens.LimeGreen, CenterIndex[v]*graph_vx, v*graph_vy, graph_vx, graph_vy);
 				g2.DrawRectangle(Pens.Green, CenterIndex[v]*graph_vx+1, v*graph_vy+1, graph_vx-2, graph_vy-2);
+
+				//ハーフライン読み取り位置
+				if(v >= vPos - HL_VW3){
+					g2.DrawRectangle(Pens.Teal, (CenterIndex[v] - hlPos)*graph_vx, v*graph_vy, graph_vx, graph_vy);
+					g2.DrawRectangle(Pens.Teal, (CenterIndex[v] + hlPos)*graph_vx, v*graph_vy, graph_vx, graph_vy);
+				}
+
 			}
 		}
 	}

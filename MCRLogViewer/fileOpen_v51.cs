@@ -22,9 +22,9 @@ namespace MCRLogViewer
 
 			lblHead2.Text = "                               A   B     F    G                   ";
 			if(LOG_Version >= 52)
-				lblHead1.Text = "  time mode   sens2     sens  cam hnd    L    R  halfLine         ";
+				lblHead1.Text = "  time mode   sens2     sens  cam hnd    L    R  halfLine  ex1 ex2 ";
 			else
-				lblHead1.Text = "  time mode   sens2     sens  cam hnd    L    R                   ";
+				lblHead1.Text = "  time mode   sens2     sens  cam hnd    L    R                    ";
 
 			//遠方のセンター値が有効かどうかをセット
 			if(LOG_RecordBytes >= 11)	enableCenter2 = true;
@@ -139,6 +139,8 @@ namespace MCRLogViewer
 				//halfLine を文字列化  [][][][]
 				if(LOG_Version >= 52){
 					halfLine	= buf[WorkAddress + BuffAddress + 11];	//sens2
+					l.ex1		= buf[WorkAddress + BuffAddress + 12];	//ext
+					l.ex2		= buf[WorkAddress + BuffAddress + 13];	//ext
 					sbHalfLine	= new StringBuilder("  ");
 					for(i=0; i<8; i++){
 						switch(i){
@@ -159,6 +161,8 @@ namespace MCRLogViewer
 					}
 					sbHalfLine.Append(" ");
 					str.Append(String.Format("{0, 5}", sbHalfLine));
+					str.Append(String.Format("{0, 4}", l.ex1));
+					str.Append(String.Format("{0, 4}", l.ex2));
 				}
 				if(mode == -1)					//終了コード(-1)なら終了
 					break;
