@@ -92,7 +92,7 @@
 			this.lstView.ItemHeight = 12;
 			this.lstView.Location = new System.Drawing.Point(3, 32);
 			this.lstView.Name = "lstView";
-			this.lstView.Size = new System.Drawing.Size(551, 184);
+			this.lstView.Size = new System.Drawing.Size(551, 172);
 			this.lstView.TabIndex = 5;
 			this.lstView.Click += new System.EventHandler(this.lstView_Click);
 			this.lstView.SelectedIndexChanged += new System.EventHandler(this.lstView_SelectedIndexChanged);
@@ -125,7 +125,7 @@
             this.menuFile});
 			this.menu.Location = new System.Drawing.Point(0, 0);
 			this.menu.Name = "menu";
-			this.menu.Size = new System.Drawing.Size(1538, 26);
+			this.menu.Size = new System.Drawing.Size(1370, 24);
 			this.menu.TabIndex = 10;
 			this.menu.Text = "menuStrip1";
 			// 
@@ -137,14 +137,14 @@
             this.menuFileSaveTXT,
             this.menuFileExit});
 			this.menuFile.Name = "menuFile";
-			this.menuFile.Size = new System.Drawing.Size(89, 22);
+			this.menuFile.Size = new System.Drawing.Size(70, 20);
 			this.menuFile.Text = "ファイル (&F)";
 			// 
 			// menuFileOpen
 			// 
 			this.menuFileOpen.Name = "menuFileOpen";
 			this.menuFileOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Space)));
-			this.menuFileOpen.Size = new System.Drawing.Size(197, 22);
+			this.menuFileOpen.Size = new System.Drawing.Size(178, 22);
 			this.menuFileOpen.Text = "開く (&O)";
 			this.menuFileOpen.Click += new System.EventHandler(this.FileOpen_Click);
 			// 
@@ -153,7 +153,7 @@
 			this.menuFileSave.Enabled = false;
 			this.menuFileSave.Name = "menuFileSave";
 			this.menuFileSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.menuFileSave.Size = new System.Drawing.Size(197, 22);
+			this.menuFileSave.Size = new System.Drawing.Size(178, 22);
 			this.menuFileSave.Text = "圧縮保存 (&S)";
 			this.menuFileSave.Click += new System.EventHandler(this.menuFileSave_Click);
 			// 
@@ -161,14 +161,14 @@
 			// 
 			this.menuFileSaveTXT.Enabled = false;
 			this.menuFileSaveTXT.Name = "menuFileSaveTXT";
-			this.menuFileSaveTXT.Size = new System.Drawing.Size(197, 22);
+			this.menuFileSaveTXT.Size = new System.Drawing.Size(178, 22);
 			this.menuFileSaveTXT.Text = "TXT形式で保存 (&S)";
 			this.menuFileSaveTXT.Click += new System.EventHandler(this.menuFileSaveTXT_Click);
 			// 
 			// menuFileExit
 			// 
 			this.menuFileExit.Name = "menuFileExit";
-			this.menuFileExit.Size = new System.Drawing.Size(197, 22);
+			this.menuFileExit.Size = new System.Drawing.Size(178, 22);
 			this.menuFileExit.Text = "終了 (&X)";
 			this.menuFileExit.Click += new System.EventHandler(this.menuFileExit_Click);
 			// 
@@ -289,7 +289,7 @@
 			// 
 			this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
 			this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer1.Location = new System.Drawing.Point(0, 26);
+			this.splitContainer1.Location = new System.Drawing.Point(0, 24);
 			this.splitContainer1.Name = "splitContainer1";
 			// 
 			// splitContainer1.Panel1
@@ -302,8 +302,8 @@
 			this.splitContainer1.Panel2.Controls.Add(this.panel2);
 			this.splitContainer1.Panel2.Controls.Add(this.pnlImage);
 			this.splitContainer1.Panel2.Resize += new System.EventHandler(this.splitContainer1_Panel2_Resize);
-			this.splitContainer1.Size = new System.Drawing.Size(1538, 546);
-			this.splitContainer1.SplitterDistance = 764;
+			this.splitContainer1.Size = new System.Drawing.Size(1370, 548);
+			this.splitContainer1.SplitterDistance = 680;
 			this.splitContainer1.TabIndex = 22;
 			// 
 			// splitContainer2
@@ -325,8 +325,8 @@
 			this.splitContainer2.Panel2.Controls.Add(this.lblHead2);
 			this.splitContainer2.Panel2.Controls.Add(this.lstView);
 			this.splitContainer2.Panel2.Controls.Add(this.lblHead1);
-			this.splitContainer2.Size = new System.Drawing.Size(764, 546);
-			this.splitContainer2.SplitterDistance = 110;
+			this.splitContainer2.Size = new System.Drawing.Size(680, 548);
+			this.splitContainer2.SplitterDistance = 109;
 			this.splitContainer2.TabIndex = 12;
 			this.splitContainer2.SizeChanged += new System.EventHandler(this.splitContainer2_SizeChanged);
 			// 
@@ -361,7 +361,7 @@
 			this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel2.Location = new System.Drawing.Point(232, 0);
 			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(534, 542);
+			this.panel2.Size = new System.Drawing.Size(450, 544);
 			this.panel2.TabIndex = 26;
 			// 
 			// chkImg
@@ -417,7 +417,7 @@
 			this.pnlImage.Dock = System.Windows.Forms.DockStyle.Left;
 			this.pnlImage.Location = new System.Drawing.Point(0, 0);
 			this.pnlImage.Name = "pnlImage";
-			this.pnlImage.Size = new System.Drawing.Size(232, 542);
+			this.pnlImage.Size = new System.Drawing.Size(232, 544);
 			this.pnlImage.TabIndex = 25;
 			// 
 			// lblVPos2
@@ -485,13 +485,13 @@
 			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1538, 572);
+			this.ClientSize = new System.Drawing.Size(1370, 572);
 			this.Controls.Add(this.splitContainer1);
 			this.Controls.Add(this.menu);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menu;
 			this.Name = "frmMain";
-			this.Text = "MCR LOG Viewer  ver5.55";
+			this.Text = "MCR LOG Viewer  ver5.57";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
 			this.Load += new System.EventHandler(this.frmMain_Load);

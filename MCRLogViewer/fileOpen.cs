@@ -20,11 +20,11 @@ namespace MCRLogViewer
 		int		d_int;		// バッファ読込一時作業用
 		sbyte	d_sb;		// バッファ読込一時作業用
 
-        FileStream fs;
+		FileStream fs;
 		int fileSize;		// ファイルのサイズ
-        byte[] buf;			// データ格納用配列
+		byte[] buf;			// データ格納用配列
 
-        int readSize;		// Readメソッドで読み込んだバイト数
+		int readSize;		// Readメソッドで読み込んだバイト数
 		int ErrorCount = 0;	// エラーの数
 
         //パラメータ
@@ -184,7 +184,10 @@ namespace MCRLogViewer
 				case 11: fileOpen_v11(); break;
 				case 12: fileOpen_v12(); break;
 				case 50: fileOpen_v50(); break;		// C Class
-				case 51: fileOpen_v51(); break;		// C Class 2DLog
+				case 51:							// C Class 2DLog
+				case 52:
+					fileOpen_v51();
+					break;
 			}
 
 			//==========================================================

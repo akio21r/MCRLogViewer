@@ -27,11 +27,12 @@ namespace MCRLogViewer
 		const int Camera_N	= 32;			//画素数
 		const int GASO_HW	= 32;			//画素数（横）
 		const int GASO_VW	= 24;			//画素数（縦）
-		int hlPos			= 0;			//ハーフラインを読む位置(Camera)
+		int hlPos			= 8;			//ハーフラインを読む位置(Camera)
 		int vPos			= 0;			//中央線を読む縦の位置(Cam)
 		int vPos2			= 0;			//遠方中央線を読む縦の位置(Cam)
 		int thMax			= 1;			//白線検出の閾値
 		int thMin			= -1;			//白線検出の閾値
+		const int HL_VW3	= 8;			//ハーフライン読み取りの縦幅(Cam)
 
 		public const int max_log_data_counts = 5000000;	//500万行分のデータ★
 		public struct LogData{				//ログデータ
@@ -50,6 +51,7 @@ namespace MCRLogViewer
 			public int		side;			//サイドセンサの状態, ハーフライン
 			public int		time;			//時間[ms]
 			public int		floor;			//階
+			public byte		ex1, ex2;		//ext
 
 			//Camera用
 			public int		center;			//Cameraのセンター値
