@@ -115,6 +115,10 @@ namespace MCRLogViewer
 	//	static byte[]	CenterIndex = new byte[GASO_VW];	//センター値の配列[GASO_VW]
 		static int[]	CenterIndex = new int[GASO_VW];	//センター値の配列[GASO_VW]
 
+		static int		logPos = 0;							//ログのPosition
+		static bool		logPlay = false;					//再生
+	//	static int		logTime = 0;						//ログの時間[ms]
+
 		//==================================================================
 		//バイナリファイルの圧縮保存
 		//==================================================================
@@ -237,6 +241,7 @@ namespace MCRLogViewer
 		private void lstView_Click(object sender, EventArgs e)
 		{
 			draw_cursol();
+			logPos = lstView.SelectedIndex;
 		}
 
 		private void lstView_KeyPress(object sender, KeyPressEventArgs e)
@@ -416,6 +421,36 @@ namespace MCRLogViewer
 		private void btnX8_Click(object sender, EventArgs e){
 			pctGraph.Width = log_count * 8;
 			DrawGraph();
+		}
+
+		private void timer1_Tick(object sender, EventArgs e)
+		{
+			if(logPlay && logPos < imgLog_Count){
+				pnlGraph3.AutoScrollPosition = new Point(-scrPoint1.X, -scrPoint1.Y + logPos * (int)graph3_vy);
+				
+				//棒グラフ・２次元画像の表示
+				DrawGraph2(logPos);
+
+				//lstViewのカーソル位置変更
+				if(LOG_Version >= 51){
+					lstView.SelectedIndex = logPos;
+					lstView.Focus();
+				}
+
+				logPos++;
+			}
+		}
+
+		private void btnPlay_Click(object sender, EventArgs e)
+		{
+			logPlay = true;
+			timer1.Enabled = true;
+		}
+
+		private void btnStop_Click(object sender, EventArgs e)
+		{
+			logPlay = false;
+			timer1.Enabled = false;
 		}
 
 		private void btnX1_Click(object sender, EventArgs e){
