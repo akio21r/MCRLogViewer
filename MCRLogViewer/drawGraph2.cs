@@ -1,5 +1,5 @@
 ﻿//==========================================================================
-// グラフ描画２  （画素データを棒グラフで画面上部に表示）
+// グラフ描画２  （画素データを2D画像or棒グラフで画面上部に表示）
 //==========================================================================
 using System;
 using System.Drawing;
@@ -106,7 +106,8 @@ namespace MCRLogViewer
 					g2.FillRectangle(Brushes.Magenta, imgLog[sel].Center2*graph_vx, vPos2*graph_vy, graph_vx, graph_vy);
 					g2.DrawRectangle(Pens.Red, imgLog[sel].Center2*graph_vx, vPos2*graph_vy, graph_vx, graph_vy);
 				}
-
+				float x = (log[sel].center + 16f + 0.5f) * graph_vx;
+				g2.DrawLine(Pens.Yellow, x, 0, x, pctGraph2.Height);
 			}
 		}
 		private void pctGraph2_Click(object sender, EventArgs e)
