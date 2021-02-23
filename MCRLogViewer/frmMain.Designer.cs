@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
 			this.lstView = new System.Windows.Forms.ListBox();
 			this.txtHead = new System.Windows.Forms.TextBox();
@@ -58,12 +59,15 @@
 			this.btnX8 = new System.Windows.Forms.Button();
 			this.btnW8 = new System.Windows.Forms.Button();
 			this.pnlImage = new System.Windows.Forms.Panel();
+			this.btnStop = new System.Windows.Forms.Button();
+			this.btnPlay = new System.Windows.Forms.Button();
 			this.lblVPos2 = new System.Windows.Forms.Label();
 			this.lblVPos = new System.Windows.Forms.Label();
 			this.lblHlPos = new System.Windows.Forms.Label();
 			this.pctGraph2 = new System.Windows.Forms.PictureBox();
 			this.pnlGraph3 = new System.Windows.Forms.Panel();
 			this.pctGraph3 = new System.Windows.Forms.PictureBox();
+			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.menu.SuspendLayout();
 			this.pnlGraph.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pctGraph)).BeginInit();
@@ -409,6 +413,8 @@
 			// 
 			// pnlImage
 			// 
+			this.pnlImage.Controls.Add(this.btnStop);
+			this.pnlImage.Controls.Add(this.btnPlay);
 			this.pnlImage.Controls.Add(this.lblVPos2);
 			this.pnlImage.Controls.Add(this.lblVPos);
 			this.pnlImage.Controls.Add(this.lblHlPos);
@@ -419,6 +425,28 @@
 			this.pnlImage.Name = "pnlImage";
 			this.pnlImage.Size = new System.Drawing.Size(232, 544);
 			this.pnlImage.TabIndex = 25;
+			// 
+			// btnStop
+			// 
+			this.btnStop.Location = new System.Drawing.Point(186, 69);
+			this.btnStop.Name = "btnStop";
+			this.btnStop.Size = new System.Drawing.Size(40, 23);
+			this.btnStop.TabIndex = 27;
+			this.btnStop.Text = "Stop";
+			this.btnStop.UseVisualStyleBackColor = true;
+			this.btnStop.Visible = false;
+			this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+			// 
+			// btnPlay
+			// 
+			this.btnPlay.Location = new System.Drawing.Point(137, 67);
+			this.btnPlay.Name = "btnPlay";
+			this.btnPlay.Size = new System.Drawing.Size(40, 25);
+			this.btnPlay.TabIndex = 26;
+			this.btnPlay.Text = "Play";
+			this.btnPlay.UseVisualStyleBackColor = true;
+			this.btnPlay.Visible = false;
+			this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
 			// 
 			// lblVPos2
 			// 
@@ -480,6 +508,11 @@
 			this.pctGraph3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pctGraph3_MouseMove);
 			this.pctGraph3.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pctGraph3_MouseUp);
 			// 
+			// timer1
+			// 
+			this.timer1.Interval = 50;
+			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+			// 
 			// frmMain
 			// 
 			this.AllowDrop = true;
@@ -491,7 +524,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menu;
 			this.Name = "frmMain";
-			this.Text = "MCR LOG Viewer  ver5.58";
+			this.Text = "MCR LOG Viewer  ver5.59";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
 			this.Load += new System.EventHandler(this.frmMain_Load);
@@ -562,6 +595,9 @@
 		private System.Windows.Forms.Label lblHlPos;
 		private System.Windows.Forms.Label lblVPos2;
 		private System.Windows.Forms.Label lblVPos;
+		private System.Windows.Forms.Timer timer1;
+		private System.Windows.Forms.Button btnPlay;
+		private System.Windows.Forms.Button btnStop;
 	}
 }
 
